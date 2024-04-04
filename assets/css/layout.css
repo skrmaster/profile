@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+.flex {
+  display: flex;
+}
+
+.flex__center {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex__end {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  position: relative;
+}
+

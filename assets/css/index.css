@@ -1,0 +1,14 @@
+@charset "utf-8";
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  font-family: "PingFang SC", "Microsoft YaiHei", sans-serif;
+}
+
+:root {
+  --primary-color: #0a0b0b;
+  --border-radius: 2px;
+}
