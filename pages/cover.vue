@@ -31,6 +31,7 @@ function initCanvas() {
     canvas.height = window.innerHeight
     line.x = Math.ceil(window.innerWidth / 2)
   }
+
   toolGetPos = new CanvasUtils(window.innerWidth, window.innerHeight)
   let { x, y } = toolGetPos.getCanvasCenterPointPosition()
   ball.x = x

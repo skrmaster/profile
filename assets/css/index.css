@@ -12,3 +12,7 @@
   --primary-color: #0a0b0b;
   --border-radius: 2px;
 }
+
+html {
+  font-size: 16px;
+}

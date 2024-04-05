@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-import { useSlots, useAttrs } from 'vue'
+import { useSlots } from 'vue'
 
 const props = withDefaults(defineProps<{
   config: {
@@ -21,15 +21,19 @@ const slots = useSlots();
 function generateElement() {
   const boolSize = props.config.backgroundDefaultSize
   const boolColor = props.config.backgroundChangeColor
+  
   const className = {
     'background': boolColor,
     'default-size': boolSize
   }
   const style = props.config.backgroundChangeColorContent
 
-  return <div class={ className } style={ boolColor ? style : '' }>{ slots.default() }</div>
+  return (
+    <div class={ className } style={ boolColor ? style : '' }>
+      { slots && slots.default ? slots.default() : null  }
+    </div>
+  )
 }
-
 </script>
 <template>
   <generateElement />

@@ -8,7 +8,7 @@ const config: Pick<BackgroundSettingProps, "config"> = {
 </script>
 <template>
   <NuxtLayout name="background-setting" :config="config.config">
-    1234
+    <the-navigation></the-navigation>
   </NuxtLayout>
 </template>
 <style scoped>
