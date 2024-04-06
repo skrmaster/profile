@@ -1,44 +1,37 @@
 <script lang="tsx" setup>
-import type { JSX } from 'vue/jsx-runtime';
-
-const isGenerate = ref(false)
-let elementDiv: null | JSX.Element = null
-
-onNuxtReady(() => {
-
-  elementDiv = generateLineWave()
-  isGenerate.value = true
-})
-
-function generateLineWave(): JSX.Element {
-  const maxWidth = window.innerWidth
-
-  return (
-    <svg width={ maxWidth } height={ 1 }>
-      <line x1={0} y1={0} x2={0} y2={maxWidth} />
-    </svg>
-  )
-}
 
 </script>
 <template>
   <div class="nav-box">
 
-    <div v-if="isGenerate" class="line-wave">
-      <elementDiv />
+    <div>
+
     </div>
+    <div class="line-wave__up"></div>
+    <div class="line-wave__down"></div>
   </div>
 </template>
 <style scoped>
 .nav-box {
-  height: 81px;
+  height: 80px;
   position: relative;
 }
 
-.line-wave {
-  width: 100vw;
+.line-wave__up {
+  width: 100%;
+  position: absolute;
+  bottom: 2px;
+  height: 2px;
+  background-image: linear-gradient(to right, var(--primary-color) 50%, transparent 50%);
+  background-size: 20px 100%;
+}
+
+.line-wave__down {
+  width: 100%;
   position: absolute;
   bottom: 0;
-  height: 1px;
+  height: 2px;
+  background-image: linear-gradient(to left, var(--primary-color) 50%, transparent 50%);
+  background-size: 20px 100%;
 }
 </style>
