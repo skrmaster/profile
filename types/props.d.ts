@@ -1,7 +1,5 @@
-declare interface BackgroundSettingProps {
-  config: {
-    backgroundChangeColor?: boolean;
-    backgroundChangeColorContent?: string;
-    backgroundDefaultSize?: boolean;
-  }
+declare interface BgSettingProps {
+  bgChangeColor?: boolean;
+  bgStyleContent?: string;
+  bgDefaultSize?: boolean;
 }

@@ -16,10 +16,3 @@
   flex-flow: row wrap;
   justify-content: flex-end;
 }
-
-.container {
-  max-width: 1600px;
-  margin: 0 auto;
-  position: relative;
-}
-

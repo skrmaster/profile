@@ -1,32 +1,26 @@
 <script lang="tsx" setup>
-import { useSlots } from 'vue'
+interface BgSettingProps {
+  bgChangeColor?: boolean;
+  bgStyleContent?: string;
+  bgDefaultSize?: boolean;
+}
 
-const props = withDefaults(defineProps<{
-  config: {
-    backgroundChangeColor?: boolean;
-    backgroundChangeColorContent?: string;
-    backgroundDefaultSize?: boolean;
-  }
-}>(), {
-  config: () => {
-    return {
-      backgroundChangeColor: true,
-      backgroundDefaultSize: false,
-      backgroundChangeColorContent: 'background: #FFFFFF;'
-    }
-  }
+const props = withDefaults(defineProps<BgSettingProps>(), {
+  bgChangeColor: false,
+  bgDefaultSize: false,
+  bgStyleContent: 'background: #FFFFFF;'
 })
+
 const slots = useSlots();
 
 function generateElement() {
-  const boolSize = props.config.backgroundDefaultSize
-  const boolColor = props.config.backgroundChangeColor
-  
+  const boolSize = props.bgDefaultSize
+  const boolColor = props.bgChangeColor
   const className = {
-    'background': boolColor,
+    'background': !boolColor,
     'default-size': boolSize
   }
-  const style = props.config.backgroundChangeColorContent
+  const style = props.bgStyleContent
 
   return (
     <div class={ className } style={ boolColor ? style : '' }>
@@ -36,7 +30,7 @@ function generateElement() {
 }
 </script>
 <template>
-  <generateElement />
+  <generate-element />
 </template>
 <style scoped>
 .background {

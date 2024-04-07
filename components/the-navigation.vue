@@ -20,7 +20,7 @@
 .line-wave__up {
   width: 100%;
   position: absolute;
-  bottom: 2px;
+  bottom: 1px;
   height: 2px;
   background-image: linear-gradient(to right, var(--primary-color) 50%, transparent 50%);
   background-size: 20px 100%;

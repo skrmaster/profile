@@ -16,11 +16,15 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
     head: {
+      htmlAttrs: {
+        lang: "en-us"
+      },
       link: [],
     }
   },
   plugins: [],
   typescript: {
+    builder: 'vite',
     typeCheck: true,
     strict: true,
     tsConfig: {

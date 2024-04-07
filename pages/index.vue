@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-const config: Pick<BackgroundSettingProps, "config"> = {
-  config: {
-    backgroundDefaultSize: true
-  }
-}
+// const config: BackgroundSettingProps = {
+//   backgroundDefaultSize: true
+// }
 
 </script>
 <template>
-  <NuxtLayout name="background-setting" :config="config.config">
+  <NuxtLayout name="background-setting">
     <the-navigation></the-navigation>
   </NuxtLayout>
 </template>
