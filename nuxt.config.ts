@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-import { fileURLToPath } from 'node:url';
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
@@ -10,16 +7,19 @@ export default defineNuxtConfig({
     lintOnStart: true,
     cache: false,
   },
-  alias: {
-    '/#/': fileURLToPath(new URL('./types', import.meta.url))
-  },
-  devtools: { enabled: false },
+  alias: {},
+  devtools: { enabled: true },
   app: {
     head: {
       htmlAttrs: {
         lang: "en-us"
       },
       link: [],
+      script: [
+        {
+          src: '/js/iconfont.js'
+        }
+      ]
     }
   },
   plugins: [],
