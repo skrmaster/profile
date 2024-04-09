@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 interface Props {
+  modelValue: string;
   placeholder?: string;
   autocomplete?: string;
   type?: string;
@@ -23,15 +24,38 @@ const props = withDefaults(defineProps<Props>(), {
   disable: false,
   readonly: false
 });
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+}>();
+
+const input = ref();
+const prepend = ref();
 
 const inputValue = ref('');
 const placeholderStatus = ref<Status>(1);
-const isInputFocus = ref(false)
-const width = computed(() => {
+const isInputFocus = ref(false);
+const canShowClearIcon = ref(false);
+const positionOfPlaceholder = ref(10);
+
+const width = computed((): string | number => {
   if (!isNaN(props.width as number * 1)) {
-    return props.width + 'px'
+    return props.width + 'px';
   } else {
-    return props.width
+    return props.width;
+  }
+});
+
+watch(inputValue, (val: string) => {
+  if (val.length > 0 && props.clearable) {
+    canShowClearIcon.value = true;
+  } else {
+    canShowClearIcon.value = false;
+  }
+});
+
+onMounted(() => {
+  if (prepend.value) {
+    positionOfPlaceholder.value += prepend.value.offsetWidth
   }
 })
 
@@ -43,8 +67,9 @@ function autoSetStatusOfPlaceholder() {
   }
 }
 
-function handlerChange() {
+function handlerContent() {    
   autoSetStatusOfPlaceholder();
+  emit('update:modelValue', inputValue.value);
 }
 
 function handlerFocus() {
@@ -57,33 +82,48 @@ function handlerBlur() {
   autoSetStatusOfPlaceholder();
 }
 
+ function handlerClear() {
+  inputValue.value = '';
+  input.value.focus();
+ }
+
 </script>
 <template>
-  <div 
-    class="form__input-box"
+  <div
     :class="{
+      'form__input-box': true,
       'form__input-box--active': isInputFocus
     }"
     :style="{
-      'width': width
+      'width': width,
+      '--input-placeholder-gap': `${positionOfPlaceholder}px`
     }"
   >
-    <slot name="prepend"></slot>
+    <div ref="prepend">
+      <slot name="prepend"></slot>
+    </div>
     <input 
+      ref="input"
       class="form__input-field"
       autocomplete="off"
       type="text"
       v-model="inputValue"
-      @change="handlerChange"
+      @input="handlerContent"
       @focus="handlerFocus"
       @blur="handlerBlur"
     />
-    <span class="form__placeholder" 
+    <span
       :class="{
+        'form__placeholder': true,
         'form__placeholder--active': placeholderStatus === 0 || isInputFocus
       }"
     >{{ props.placeholder }}</span>
-    <svg class="icon " aria-hidden="true">
+    <svg 
+      v-if="canShowClearIcon" 
+      class="icon" 
+      aria-hidden="true"
+      @click.stop="handlerClear"
+    >
       <use xlink:href="#icon-profilea-ziyuan37close-circle"></use>
     </svg>
     <slot name="append"></slot>
@@ -92,6 +132,7 @@ function handlerBlur() {
 <style scoped>
 .form__input-box {
   display: flex;
+  align-items: center;
   position: relative;
   padding: 0 10px;
   border-color: var(--input-border-color);
@@ -111,6 +152,7 @@ function handlerBlur() {
   height: 50px;
   border: 0;
   outline: 0;
+  flex: 1;
 }
 
 .form__placeholder {
@@ -118,7 +160,7 @@ function handlerBlur() {
   color: #999999;
   position: absolute;
   top: 50%;
-  left: 10px;
+  left: var(--input-placeholder-gap);
   transform: translate(0, -50%);
   user-select: none;
   pointer-events: none;
@@ -133,5 +175,9 @@ function handlerBlur() {
   left: 10px;
   transform: translate(0, -50%);
   background: #FFFFFF;
+}
+
+.error--shake {
+  animation: shake .5s linear 1s 1 normal none running;
 }
 </style>

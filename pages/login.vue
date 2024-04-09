@@ -2,6 +2,9 @@
 useHead({
   title: "登录"
 })
+
+const name = ref('');
+
 </script>
 <template>
   <NuxtLayout 
@@ -18,7 +21,13 @@ useHead({
         </div>
       </div>
       <div class="input-box">
-        <form-input />
+        <com-form-input 
+          v-model="name"
+          placeholder="请输入邮箱" 
+          clearable
+        >
+        </com-form-input>
+        <com-button>123</com-button>
       </div>
     </div>
   </NuxtLayout>

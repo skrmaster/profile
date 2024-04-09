@@ -6,7 +6,7 @@
 </script>
 <template>
   <NuxtLayout name="background-setting">
-    <the-navigation></the-navigation>
+    <page-navigation></page-navigation>
   </NuxtLayout>
 </template>
 <style scoped>
