@@ -8,6 +8,7 @@ interface Props {
   clearable?: boolean;
   disable?: boolean;
   readonly?: boolean;
+  isError?: boolean;
 }
 
 enum Status {
@@ -22,7 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
   width: '300px',
   clearable: false,
   disable: false,
-  readonly: false
+  readonly: false,
+  isError: false
 });
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -36,6 +38,15 @@ const placeholderStatus = ref<Status>(1);
 const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
+const showPassword = ref('password');
+
+const isTypePassword = computed((): boolean => {
+  return props.type !== 'password';
+});
+
+const isError = computed((): boolean => {
+  return props.isError;
+})
 
 const width = computed((): string | number => {
   if (!isNaN(props.width as number * 1)) {
@@ -82,42 +93,55 @@ function handlerBlur() {
   autoSetStatusOfPlaceholder();
 }
 
- function handlerClear() {
+function handlerClear() {
   inputValue.value = '';
   input.value.focus();
- }
+}
+
+function handlePasswordIcon() {
+  showPassword.value === 'password'
+  ? showPassword.value = 'text'
+  : showPassword.value = 'password'
+}
 
 </script>
 <template>
   <div
+    class="form__input-box mb15"
     :class="{
-      'form__input-box': true,
-      'form__input-box--active': isInputFocus
+      'form__input-box--active': isInputFocus,
+      'error': isError,
     }"
     :style="{
       'width': width,
       '--input-placeholder-gap': `${positionOfPlaceholder}px`
     }"
   >
-    <div ref="prepend">
-      <slot name="prepend"></slot>
-    </div>
+    <slot ref="prepend" name="prepend"></slot>
+    <label
+      :class="{
+        'form__placeholder': true,
+        'form__placeholder--active': placeholderStatus === 0 || isInputFocus
+      }"
+    >{{ props.placeholder }}</label>
     <input 
       ref="input"
       class="form__input-field"
-      autocomplete="off"
-      type="text"
+      :autocomplete="props.autocomplete"
+      :type="isTypePassword ? props.type : showPassword"
       v-model="inputValue"
       @input="handlerContent"
       @focus="handlerFocus"
       @blur="handlerBlur"
     />
-    <span
-      :class="{
-        'form__placeholder': true,
-        'form__placeholder--active': placeholderStatus === 0 || isInputFocus
-      }"
-    >{{ props.placeholder }}</span>
+    <svg
+      v-if="props.type === 'password' && (inputValue && inputValue.length > 0)"
+      class="icon mr1" 
+      aria-hidden="true"
+      @click="handlePasswordIcon"
+    >
+      <use :xlink:href="showPassword !== 'password' ? '#icon-profilesee' : '#icon-profilenosee'"></use>
+    </svg>
     <svg 
       v-if="canShowClearIcon" 
       class="icon" 
@@ -139,12 +163,18 @@ function handlerBlur() {
   border-width: 1.2px;
   border-style: solid;
   border-radius: 4px;
+  background: var(--white-color)
 }
 
 .form__input-box--active {
   outline: 2px solid #c3c1c6;
   border-color: var(--primary-color);
 }
+
+.form__input-box.error {
+  border-color: var(--error-color);
+}
+
 
 .form__input-field {
   font-size: 18px;
@@ -175,6 +205,10 @@ function handlerBlur() {
   left: 10px;
   transform: translate(0, -50%);
   background: #FFFFFF;
+}
+
+.form__input-box.error .form__placeholder {
+  color: var(--error-color);
 }
 
 .error--shake {

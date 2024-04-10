@@ -3,7 +3,38 @@ useHead({
   title: "登录"
 })
 
-const name = ref('');
+const config: Array<FormConfig> = [
+  {
+    require: true,
+    field: 'name',
+    type: 'text',
+    rule: '',
+    elementConfig: {
+      width: '368px',
+      placeholder: '请输入邮箱'
+    }
+  },
+  {
+    require: true,
+    field: 'password',
+    type: 'password',
+    rule: '',
+    elementConfig: {
+      width: '368px',
+      placeholder: '请输入密码'
+    }
+  },
+  {
+    require: true,
+    field: 'code',
+    type: 'verification-code',
+    rule: '',
+    elementConfig: {
+      width: '227px',
+      placeholder: '请输入验证码'
+    }
+  }
+]
 
 </script>
 <template>
@@ -14,20 +45,24 @@ const name = ref('');
     :bg-default-size="true"
     class="flex__center"
   >
-    <div class="login-box">
+    <div class="login-box p80">
       <div class="notice-box">
         <div class="notic-box--resize">
           <p>我认帐，但是老子不给！嘻嘻...老子不给！不给！</p>
         </div>
       </div>
-      <div class="input-box">
-        <com-form-input 
-          v-model="name"
-          placeholder="请输入邮箱" 
-          clearable
-        >
-        </com-form-input>
-        <com-button>123</com-button>
+      <div class="input-box pt100">
+        <div class="register-icon flex__center">
+          <svg 
+            class="sign-up--icon"
+            aria-hidden="true"
+          >
+            <use xlink:href="#icon-profilesign-up"></use>
+          </svg>
+        </div>
+        <com-form :model="config">
+          <com-button class="mt50">注册</com-button>
+        </com-form>
       </div>
     </div>
   </NuxtLayout>
@@ -35,7 +70,6 @@ const name = ref('');
 <style scoped>
 
 .login-box {
-  margin: 0 0.25rem;
   border-radius: 15px;
   box-shadow: var(--box-shadow);
   width: 1411px;
@@ -44,7 +78,6 @@ const name = ref('');
   background-size: 10px 10px;
   background-image: radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
   overflow: hidden;
-  padding: 0.4rem;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -53,12 +86,10 @@ const name = ref('');
 .notice-box {
   flex: 1 1 0;
   font-size: 28px;
-  margin-right: 0.2rem;
   display: flex;
   flex-flow: row nowrap;
   align-items: start;
   justify-content: center;
-  /* margin-bottom: 1rem; */
 }
 
 .notic-box--resize {
@@ -74,5 +105,24 @@ const name = ref('');
   background-color: #ffffff;
   width: 499px;
   height: 564px;
+  position: relative;
+}
+
+.register-icon {
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 50%;
+  background-color: var(--white-color);
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  z-index: 999;
+  transform: translate(-50%, 0);
+}
+
+.sign-up--icon {
+  width: 60px;
+  height: 60px;
 }
 </style> 

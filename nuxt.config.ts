@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     cache: false,
   },
   alias: {},
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   app: {
     head: {
       htmlAttrs: {
