@@ -30,7 +30,7 @@ class FormInstance implements Form {
   generateTextInput(config: FormConfig, vaild = false): VNode {
 
     return (
-      <com-form-input 
+      <com-form-input
         v-model={ this.data[config.field] }
         {...config.elementConfig}
         type={ config.type }
@@ -64,7 +64,7 @@ class FormInstance implements Form {
   }
   renderForm(): VNode {
     return (
-      <form style="font-size: 0px">
+      <form style="font-size: 0">
         { 
           this.config.map((e: FormConfig) => {
             if (e.type === 'verification-code') {
@@ -74,9 +74,7 @@ class FormInstance implements Form {
             }
           }) 
         }
-        <div>
-          { slots && slots.default ? slots.default() : null }
-        </div>
+        { slots && slots.default ? slots.default() : null }
       </form>
     )
   }

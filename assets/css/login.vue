@@ -3,8 +3,6 @@ useHead({
   title: "登录"
 })
 
-const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！')
-
 const config: Array<FormConfig> = [
   {
     require: true,
@@ -12,7 +10,7 @@ const config: Array<FormConfig> = [
     type: 'text',
     rule: '',
     elementConfig: {
-      width: '100%',
+      width: '368px',
       placeholder: '请输入邮箱',
       clearable: true
     }
@@ -23,7 +21,7 @@ const config: Array<FormConfig> = [
     type: 'password',
     rule: '',
     elementConfig: {
-      width: '100%',
+      width: '368px',
       placeholder: '请输入密码',
       clearable: false
     }
@@ -34,6 +32,7 @@ const config: Array<FormConfig> = [
     type: 'verification-code',
     rule: '',
     elementConfig: {
+      width: '227px',
       placeholder: '请输入验证码'
     }
   }
@@ -48,10 +47,10 @@ const config: Array<FormConfig> = [
     :bg-default-size="true"
     class="flex__center"
   >
-    <div class="container login-box p5">
+    <div class="login-box">
       <div class="notice-box">
         <div class="notic-box--resize">
-          <a :href="`https://cn.bing.com/search?q=${speech}`" target="_blank">{{ speech }}</a>
+          <p>我认帐，但是老子不给！嘻嘻...老子不给！不给！</p>
         </div>
       </div>
       <div class="input-box">
@@ -73,7 +72,7 @@ const config: Array<FormConfig> = [
 .login-box {
   border-radius: 15px;
   box-shadow: var(--box-shadow);
-  /* width: 1411px; */
+  width: 1411px;
   height: 867px;
   border-top: 16px solid var(--primary-border-color);
   background-size: 10px 10px;
@@ -86,7 +85,7 @@ const config: Array<FormConfig> = [
 
 .notice-box {
   flex: 1 1 0;
-  font-size: 26px;
+  font-size: 28px;
   display: flex;
   flex-flow: row nowrap;
   align-items: start;
@@ -96,7 +95,6 @@ const config: Array<FormConfig> = [
 .notic-box--resize {
   max-width: 450px;
   height: 100%;
-  padding: 50px;
 }
 
 .input-box {
@@ -108,7 +106,7 @@ const config: Array<FormConfig> = [
   width: 499px;
   height: 564px;
   position: relative;
-  padding: 100px 50px 50px 50px;
+  padding: 100px 25px 25px 25px;
 }
 
 .register-icon {
@@ -131,7 +129,7 @@ const config: Array<FormConfig> = [
 }
 
 .action-btn {
-  width: 100%;
+  width: 347px;
   height: 66px;
 }
 </style> 
