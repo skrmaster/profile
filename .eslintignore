@@ -1,4 +1,7 @@
 .nuxt
+.git
+.github
+.vs
 node_modules
 public
 assets

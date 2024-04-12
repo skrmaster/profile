@@ -31,21 +31,19 @@ class FormInstance implements Form {
 
     return (
       <com-form-input
+        class="mb1"
         v-model={ this.data[config.field] }
         {...config.elementConfig}
         type={ config.type }
         is-error={ vaild } 
       >
-        <template>
-
-        </template>
       </com-form-input>
     )
   }
   generateVerificationCode(config: FormConfig, vaild = false): VNode {
 
     return (
-      <com-form-verification-code>
+      <com-form-verification-code class="mb4">
 
       </com-form-verification-code>
     )
@@ -64,7 +62,7 @@ class FormInstance implements Form {
   }
   renderForm(): VNode {
     return (
-      <form style="font-size: 0">
+      <form>
         { 
           this.config.map((e: FormConfig) => {
             if (e.type === 'verification-code') {

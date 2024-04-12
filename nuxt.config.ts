@@ -1,14 +1,19 @@
+const mode = process.env.NODE_ENV;
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    '@nuxtjs/eslint-module'
+    [
+      //https://nuxt.com/modules/eslint-module
+      '@nuxtjs/eslint-module', 
+      { 
+        lintOnStart: true,
+        cache: true
+      }
+    ]
   ],
-  eslint: {
-    lintOnStart: true,
-    cache: false,
-  },
   alias: {},
-  devtools: { enabled: false },
+  devtools: { enabled: mode === 'development' },
   app: {
     head: {
       htmlAttrs: {
@@ -17,6 +22,7 @@ export default defineNuxtConfig({
       link: [],
       script: [
         {
+          type: 'module',
           src: '/js/iconfont.js'
         }
       ]

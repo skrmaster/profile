@@ -46,24 +46,27 @@ const config: Array<FormConfig> = [
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="true"
-    class="flex__center"
   >
-    <div class="container login-box p5">
-      <div class="notice-box">
+    <div class="container flex__center">
+      <div class="login-box row">
+        <div class="notice-box p1">
         <div class="notic-box--resize">
           <a :href="`https://cn.bing.com/search?q=${speech}`" target="_blank">{{ speech }}</a>
         </div>
       </div>
-      <div class="input-box">
-        <div class="register-icon flex__center">
-          <com-icon
-            class="sign-up--icon"
-            icon="profilesign-up"
-          ></com-icon>
+      <div class="p1 flex1">
+        <div class="input-box mx-auto">
+          <div class="register-icon flex__center">
+            <com-icon
+              class="sign-up--icon"
+              icon="profilesign-up"
+            ></com-icon>
+          </div>
+          <com-form :model="config">
+            <com-button class="action-btn fs24">注册</com-button>
+          </com-form>
         </div>
-        <com-form :model="config">
-          <com-button class="action-btn fs24">注册</com-button>
-        </com-form>
+      </div>
       </div>
     </div>
   </NuxtLayout>
@@ -71,21 +74,21 @@ const config: Array<FormConfig> = [
 <style scoped>
 
 .login-box {
+  max-width: 1411px;
+  max-height: 867px;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   box-shadow: var(--box-shadow);
-  /* width: 1411px; */
-  height: 867px;
   border-top: 16px solid var(--primary-border-color);
   background-size: 10px 10px;
   background-image: radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
   overflow: hidden;
-  display: flex;
-  flex-flow: row wrap;
   align-items: center;
 }
 
 .notice-box {
-  flex: 1 1 0;
+  flex: 1;
   font-size: 26px;
   display: flex;
   flex-flow: row nowrap;
@@ -94,9 +97,10 @@ const config: Array<FormConfig> = [
 }
 
 .notic-box--resize {
-  max-width: 450px;
+  max-width: 300px;
+  width: 100%;
+  min-width: 200px;
   height: 100%;
-  padding: 50px;
 }
 
 .input-box {
@@ -105,10 +109,11 @@ const config: Array<FormConfig> = [
   border-style: solid;
   border-radius: 10px;
   background-color: #ffffff;
-  width: 499px;
-  height: 564px;
+  max-width: 430px;
+  width: 100%;
+  min-width: 300px;
   position: relative;
-  padding: 100px 50px 50px 50px;
+  padding: 100px 30px 50px 30px;
 }
 
 .register-icon {

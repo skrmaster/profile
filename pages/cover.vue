@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-let dom_canvas: HTMLCanvasElement
-let toolGetPos: CanvasUtil
+let dom_canvas: HTMLCanvasElement;
+let toolGetPos: CanvasUtil;
 const ball = {
   x: 0,
   y: 0,
@@ -17,18 +17,18 @@ const line = {
 onNuxtReady(() => {
   initCanvas()
 
-  const resizeHandler = debounce(initCanvas)
-  window.addEventListener('resize', resizeHandler)
+  const resizeHandler = debounce(initCanvas);
+  window.addEventListener('resize', resizeHandler);
 })
 
 
 function initCanvas() {
-  dom_canvas = <HTMLCanvasElement>document.getElementById('cover')
-  const canvas = <HTMLCanvasElement>document.getElementById('cover')
+  dom_canvas = document.getElementById('cover') as HTMLCanvasElement;
+  const canvas = document.getElementById('cover') as HTMLCanvasElement;
 
   if (canvas) {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     line.x = Math.ceil(window.innerWidth / 2)
   }
 

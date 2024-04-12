@@ -1,36 +1,165 @@
 @charset "utf-8";
 
+:root {
+  --row-gutter: 16px;
+  --breakpoint-1: 576px;
+  --breakpoint-2: 768px;
+  --breakpoint-3: 992px;
+  --breakpoint-4: 1200px;
+  --breakpoint-5: 1400px;
+}
+
 [class^=container] {
   width: 100%;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.row {
+  display: flex;
+  flex-flow: row wrap;
+  margin-left: calc(-1 * var(--row-gutter));
+  margin-right: calc(-1 * var(--row-gutter));
+}
+
+.column-auto {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.column-1 {
+  flex: 0 0 auto;
+  width: 8.33333333%;
+}
+
+.column-2 {
+  flex: 0 0 auto;
+  width: 16.66666667%;
+}
+
+.column-3 {
+  flex: 0 0 auto;
+  width: 25%;
+}
+
+.column-4 {
+  flex: 0 0 auto;
+  width: 33.33333333%;
+}
+
+.column-5 {
+  flex: 0 0 auto;
+  width: 41.66666667%;
+}
+
+.column-6 {
+  flex: 0 0 auto;
+  width: 50%;
+}
+
+.column-7 {
+  flex: 0 0 auto;
+  width: 58.33333333%;
+}
+
+.column-8 {
+  flex: 0 0 auto;
+  width: 66.66666667%;
+}
+
+.column-9 {
+  flex: 0 0 auto;
+  width: 75%;
+}
+
+.column-10 {
+  flex: 0 0 auto;
+  width: 83.33333333%;
+}
+
+.column-11 {
+  flex: 0 0 auto;
+  width: 91.66666667%;
+}
+
+.column-12 {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.offset-1 {
+  margin-left: 8.33333333%;
+}
+
+.offset-2 {
+  margin-left: 16.66666667%;
+}
+
+.offset-3 {
+  margin-left: 25%;
+}
+
+.offset-4 {
+  margin-left: 33.33333333%;
+}
+
+.offset-5 {
+  margin-left: 41.66666667%;
+}
+
+.offset-6 {
+  margin-left: 50%;
+}
+
+.offset-7 {
+  margin-left: 58.33333333%;
+}
+
+.offset-8 {
+  margin-left: 66.66666667%;
+}
+
+.offset-9 {
+  margin-left: 75%;
+}
+
+.offset-10 {
+  margin-left: 83.33333333%;
+}
+
+.offset-11 {
+  margin-left: 91.66666667%;
 }
 
 @media only screen and (max-width: 576px) {
   .container {
-    max-width: 375px;
+    max-width: 540px;
   }
+
 }
 
 @media only screen and (min-width: 576px) {
   .container {
-    max-width: 728px;
+    max-width: 720px;
   }
 }
 
 @media only screen and (min-width: 768px) {
   .container {
-    max-width: 962px;
+    max-width: 960px;
   }
 }
 
 @media only screen and (min-width: 992px) {
   .container {
-    max-width: 1160px;
+    max-width: 1140px;
   }
 }
 
 @media only screen and (min-width: 1200px) {
   .container {
-    max-width: 1360px;
+    max-width: 1320px;
   }
 }
 

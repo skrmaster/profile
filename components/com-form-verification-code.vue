@@ -5,14 +5,17 @@ const text = '发送验证码';
 const start = ref(false);
 const countdown = ref(time);
 let counter: ReturnType<typeof setTimeout>;
+const localStorage = new StorageSuger('localStorage');
 
 function running() {
   return setTimeout(() => {
     countdown.value--;
+    localStorage.setValue('verifyCode', countdown.value);
     if (countdown.value === 0) {
       clearTimeout(counter);
       start.value = false;
       countdown.value = time;
+      localStorage.removeValue('verifyCode');
     } else {
       running();
     }
@@ -23,6 +26,14 @@ function handleClick() {
   start.value = true;
   counter = running();
 }
+
+onMounted(() => {
+  const existTime = localStorage.getValue('verifyCode');
+  if (existTime) {
+    countdown.value = parseInt(existTime as string);
+    handleClick();
+  }
+})
 </script>
 <template>
   <div class="verification">
