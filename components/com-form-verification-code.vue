@@ -23,11 +23,14 @@ function running() {
 }
 
 function handleClick() {
+  if (start.value) {
+    return;
+  }
   start.value = true;
   counter = running();
 }
 
-onMounted(() => {
+onNuxtReady(() => {
   const existTime = localStorage.getValue('verifyCode');
   if (existTime) {
     countdown.value = parseInt(existTime as string);

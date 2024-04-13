@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import textdata from 'assets/json/text-path.json';
+
 useHead({
   title: "登录"
 })
+const textArray = textdata.data;
 
 const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！')
 
@@ -39,6 +42,62 @@ const config: Array<FormConfig> = [
   }
 ]
 
+function drawClock() {
+  const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
+  if (!canvas) {
+    return;
+  }
+  const ctx = canvas.getContext('2d');
+  
+  if (!ctx) {
+    return;
+  }
+  
+  ctx.save();
+  ctx.translate(150, 150);
+  ctx.beginPath();
+  ctx.strokeStyle = "color: black";
+  ctx.arc(0, 0, 140, 0, 2 * Math.PI, true);
+  ctx.stroke();
+  ctx.restore();
+
+  
+  ctx.save();
+  ctx.translate(150, 150);
+  for (let i = 0; i < 12; i++) {
+    ctx.save();
+    ctx.rotate(Math.PI / 6 * i);
+    ctx.translate(0, -128);
+    ctx.beginPath();
+    ctx.scale(2, 2);
+    const tmp: Record<string, Path2D> = {};
+    textArray[i].forEach((e: string, i: number) => {
+      tmp[`p${i}`] = new Path2D(e);
+    });
+    
+    const p = new Path2D();
+    for (const key in tmp) {
+      p.addPath(tmp[key]);
+    }
+    
+    ctx.fill(p);
+    ctx.restore();
+  }
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(150, 150);
+  ctx.beginPath();
+  ctx.strokeStyle = "color: black";
+  ctx.arc(0, 0, 100, 0, 2 * Math.PI, true);
+  ctx.stroke();
+  ctx.restore();
+}
+
+onNuxtReady(() => {
+  drawClock();
+})
+
 </script>
 <template>
   <NuxtLayout 
@@ -49,24 +108,28 @@ const config: Array<FormConfig> = [
   >
     <div class="container flex__center">
       <div class="login-box row">
-        <div class="notice-box p1">
-        <div class="notic-box--resize">
-          <a :href="`https://cn.bing.com/search?q=${speech}`" target="_blank">{{ speech }}</a>
-        </div>
-      </div>
-      <div class="p1 flex1">
-        <div class="input-box mx-auto">
-          <div class="register-icon flex__center">
-            <com-icon
-              class="sign-up--icon"
-              icon="profilesign-up"
-            ></com-icon>
+        <div class="notice-box p1 z-index9">
+          <div class="notic-box--resize">
+            <a 
+              :href="`https://cn.bing.com/search?q=${speech}`" 
+              target="_blank"
+            >{{ speech }}</a>
           </div>
-          <com-form :model="config">
-            <com-button class="action-btn fs24">注册</com-button>
-          </com-form>
         </div>
-      </div>
+        <div class="p1 flex1 z-index9">
+          <div class="input-box mx-auto">
+            <div class="register-icon flex__center">
+              <com-icon
+                class="sign-up--icon"
+                icon="profilesign-up"
+              ></com-icon>
+            </div>
+            <com-form :model="config">
+              <com-button class="action-btn fs24">注册</com-button>
+            </com-form>
+          </div>
+        </div>
+        <canvas viewBox="0 0 8.5 6.71" id="login-canvas" width="300" height="300" class="clock"></canvas>
       </div>
     </div>
   </NuxtLayout>
@@ -85,6 +148,7 @@ const config: Array<FormConfig> = [
   background-image: radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
   overflow: hidden;
   align-items: center;
+  position: relative;
 }
 
 .notice-box {
@@ -138,5 +202,13 @@ const config: Array<FormConfig> = [
 .action-btn {
   width: 100%;
   height: 66px;
+}
+
+
+.clock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 </style> 
