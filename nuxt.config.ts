@@ -10,7 +10,8 @@ export default defineNuxtConfig({
         lintOnStart: true,
         cache: true
       }
-    ]
+    ],
+    'dayjs-nuxt'
   ],
   alias: {},
   devtools: { enabled: mode === 'development' },
@@ -56,8 +57,4 @@ export default defineNuxtConfig({
       ],
     }
   },
-  vite: {
-    mode: "development",
-    root: "./"
-  }
 })

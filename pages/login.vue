@@ -1,13 +1,18 @@
 <script lang="ts" setup>
-import textdata from 'assets/json/text-path.json';
+import textdata from 'assets/json/constellation.json';
+
+const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
+const dayjs = useDayjs();
 
 useHead({
   title: "登录"
-})
+});
 const textArray = textdata.data;
-
-const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！')
-
+const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
+const dayDate = new DayDate();
+let deg = 0;
+let canvasAnimateSwitch = true;
+const currentTimeRotateDeg = getRotateDeg();
 const config: Array<FormConfig> = [
   {
     require: true,
@@ -40,58 +45,107 @@ const config: Array<FormConfig> = [
       placeholder: '请输入验证码'
     }
   }
-]
+];
 
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
   if (!canvas) {
-    return;
+    throw new Error('canvas element is null!');
   }
+  const w_canvas = canvas.width;
+  const h_canvas = canvas.height;
   const ctx = canvas.getContext('2d');
   
   if (!ctx) {
-    return;
+    throw new Error('canvas context is null!');
   }
-  
-  ctx.save();
-  ctx.translate(150, 150);
-  ctx.beginPath();
-  ctx.strokeStyle = "color: black";
-  ctx.arc(0, 0, 140, 0, 2 * Math.PI, true);
-  ctx.stroke();
-  ctx.restore();
 
-  
+  ctx.clearRect(0, 0, w_canvas, h_canvas);
   ctx.save();
-  ctx.translate(150, 150);
-  for (let i = 0; i < 12; i++) {
+  ctx.translate(0, 500);
+  ctx.scale(2, 2);
+  ctx.save();
+    ctx.rotate(-(Math.PI / 60));
     ctx.save();
-    ctx.rotate(Math.PI / 6 * i);
-    ctx.translate(0, -128);
-    ctx.beginPath();
-    ctx.scale(2, 2);
-    const tmp: Record<string, Path2D> = {};
-    textArray[i].forEach((e: string, i: number) => {
-      tmp[`p${i}`] = new Path2D(e);
-    });
-    
-    const p = new Path2D();
-    for (const key in tmp) {
-      p.addPath(tmp[key]);
-    }
-    
-    ctx.fill(p);
+      ctx.strokeStyle = "color: black";
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 158, 0, 2 * Math.PI, true);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 122, 0, 2 * Math.PI, true);
+      ctx.stroke();
+
+      for (let i = 0; i < 12; i++) {
+        ctx.save();
+          ctx.rotate(Math.PI / 6 * i);
+          ctx.translate(0, -145);
+          ctx.beginPath();
+          ctx.scale(1.5, 1.5);
+          const tmp: Record<string, Path2D> = {};
+          textArray[i].forEach((e: string, i: number) => {
+            tmp[`p${i}`] = new Path2D(e);
+          });
+
+          const p = new Path2D();
+          for (const key in tmp) {
+            p.addPath(tmp[key]);
+          }
+
+          ctx.fill(p);
+        ctx.restore();
+      }
     ctx.restore();
-  }
   ctx.restore();
 
-  ctx.save();
-  ctx.translate(150, 150);
+  //指针圆环
   ctx.beginPath();
-  ctx.strokeStyle = "color: black";
-  ctx.arc(0, 0, 100, 0, 2 * Math.PI, true);
+  ctx.arc(0, 0, 10, 0, 2 * Math.PI, true);
   ctx.stroke();
-  ctx.restore();
+  ctx.closePath();
+
+  //指针
+  if (deg < currentTimeRotateDeg) {
+    ctx.rotate(deg * Math.PI / 180);
+  } else {
+    canvasAnimateSwitch = false;
+  }
+  ctx.beginPath();
+  ctx.moveTo(0, -10);
+  ctx.lineTo(0, -125);
+  ctx.stroke();
+    
+  ctx.beginPath();
+  ctx.moveTo(5, -125);
+  ctx.lineTo(-5, -125);
+  ctx.lineTo(0, -133);
+  ctx.fill();
+
+  
+  if (!canvasAnimateSwitch) {
+    return;
+  } else {
+    ctx.restore();
+    deg++;
+  }
+  
+  window.requestAnimationFrame(drawClock);
+}
+
+function getRotateDeg(): number {
+  const year = dayDate.yearDayCount();
+  const oneOfDeg = Math.ceil(360 / year);
+  const point = DayDate.numberPointNumberOfMonth('3.21', DayDate.monthMap(dayDate.yearDayCount()));
+  const currentDay = getTodayNumber();
+  return (currentDay - point) * oneOfDeg;
+}
+
+function getTodayNumber(): number {
+  const currentDate = dayjs();
+  const formattedDate = currentDate.format('M.D');
+
+  return DayDate.numberPointNumberOfMonth(formattedDate, DayDate.monthMap(dayDate.yearDayCount()))
 }
 
 onNuxtReady(() => {
@@ -111,7 +165,7 @@ onNuxtReady(() => {
         <div class="notice-box p1 z-index9">
           <div class="notic-box--resize">
             <a 
-              :href="`https://cn.bing.com/search?q=${speech}`" 
+              :href="`${url}/search?q=${speech}`" 
               target="_blank"
             >{{ speech }}</a>
           </div>
@@ -129,7 +183,7 @@ onNuxtReady(() => {
             </com-form>
           </div>
         </div>
-        <canvas viewBox="0 0 8.5 6.71" id="login-canvas" width="300" height="300" class="clock"></canvas>
+        <canvas id="login-canvas" width="500" height="500" class="clock"></canvas>
       </div>
     </div>
   </NuxtLayout>

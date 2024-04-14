@@ -19,6 +19,7 @@
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
     "@vue/babel-plugin-jsx": "^1.2.2",
+    "dayjs-nuxt": "^2.1.9",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.24.0",
     "typescript": "^5.4.3",
