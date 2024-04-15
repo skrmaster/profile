@@ -28,6 +28,11 @@ function handleClick() {
   }
   start.value = true;
   counter = running();
+  fetchCode();
+}
+
+function fetchCode() {
+
 }
 
 onNuxtReady(() => {

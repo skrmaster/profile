@@ -7,6 +7,7 @@ const dayjs = useDayjs();
 useHead({
   title: "登录"
 });
+const form = ref();
 const textArray = textdata.data;
 const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
 const dayDate = new DayDate();
@@ -16,9 +17,9 @@ const currentTimeRotateDeg = getRotateDeg();
 const config: Array<FormConfig> = [
   {
     require: true,
-    field: 'name',
+    field: 'email',
     type: 'text',
-    rule: '',
+    rule: 'email',
     elementConfig: {
       width: '100%',
       placeholder: '请输入邮箱',
@@ -29,7 +30,7 @@ const config: Array<FormConfig> = [
     require: true,
     field: 'password',
     type: 'password',
-    rule: '',
+    rule: 'password',
     elementConfig: {
       width: '100%',
       placeholder: '请输入密码',
@@ -65,6 +66,12 @@ function drawClock() {
   ctx.translate(0, 500);
   ctx.scale(2, 2);
   ctx.save();
+    if (deg < currentTimeRotateDeg) {
+      ctx.rotate((deg * Math.PI / 180));
+    } else {
+      ctx.rotate((deg * Math.PI / 180));
+      canvasAnimateSwitch = false;
+    }
     ctx.rotate(-(Math.PI / 60));
     ctx.save();
       ctx.strokeStyle = "color: black";
@@ -106,11 +113,7 @@ function drawClock() {
   ctx.closePath();
 
   //指针
-  if (deg < currentTimeRotateDeg) {
-    ctx.rotate(deg * Math.PI / 180);
-  } else {
-    canvasAnimateSwitch = false;
-  }
+  ctx.rotate(Math.PI / 4);
   ctx.beginPath();
   ctx.moveTo(0, -10);
   ctx.lineTo(0, -125);
@@ -148,6 +151,14 @@ function getTodayNumber(): number {
   return DayDate.numberPointNumberOfMonth(formattedDate, DayDate.monthMap(dayDate.yearDayCount()))
 }
 
+function handleSubmit() {
+  if (form.value) {
+    const vaild = form.value.element.vaildForm();
+    console.log(vaild);
+    
+  }
+}
+
 onNuxtReady(() => {
   drawClock();
 })
@@ -178,8 +189,8 @@ onNuxtReady(() => {
                 icon="profilesign-up"
               ></com-icon>
             </div>
-            <com-form :model="config">
-              <com-button class="action-btn fs24">注册</com-button>
+            <com-form ref="form" :model="config">
+              <com-button class="action-btn fs24" @click="handleSubmit">注册</com-button>
             </com-form>
           </div>
         </div>

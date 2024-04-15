@@ -15,3 +15,13 @@ declare type FormConfig = {
     isError?: boolean;
   }
 }
+
+interface Form {
+  generateTextInput(config: FormConfig, vaild?: boolean): VNode;
+  generateVerificationCode(config: FormConfig, vaild?: boolean): VNode,
+  generateNumberInput(): void;
+  generateRateInput(): void;
+  generateCheckBox(): void;
+  generateRadioBox(): void;
+  vaildForm(): boolean;
+}

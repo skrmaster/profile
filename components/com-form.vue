@@ -1,14 +1,5 @@
 <script lang="tsx" setup>
 
-interface Form {
-  generateTextInput(config: FormConfig, vaild?: boolean): VNode;
-  generateVerificationCode(config: FormConfig, vaild?: boolean): VNode,
-  generateNumberInput(): void;
-  generateRateInput(): void;
-  generateCheckBox(): void;
-  generateRadioBox(): void;
-}
-
 const props = defineProps<{
   model: Array<FormConfig>
 }>()
@@ -80,12 +71,26 @@ class FormInstance implements Form {
     for (let i = 0; i < this.config.length; i++) {
       if (this.config[i].require) {
         const currentRowVaild = vaildTest(this.data[this.config[i].field], this.config[i].rule)
+        
+        
+        
+        if (!currentRowVaild[0]) {
+          return false;
+        } else {
+          continue;
+        }
       }
     }
+
+    return true;
   }
 }
-const FormElement = new FormInstance(props.model);
-const elementForm = FormElement.renderForm();
+const formElement = new FormInstance(props.model);
+const elementForm = shallowRef(formElement.renderForm());
+
+defineExpose({
+  element: formElement
+})
 </script>
 <template>
   <elementForm class="flex__center" />
