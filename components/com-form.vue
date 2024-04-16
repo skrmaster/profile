@@ -8,7 +8,8 @@ const slots = useSlots();
 class FormInstance implements Form {
   vnode: VNode;
   config: Array<FormConfig>;
-  data: Record<string, string>
+  data: Record<string, string>;
+
   constructor(config: Array<FormConfig>) {
     this.vnode = (<div></div>);
     this.config = config;
@@ -17,25 +18,30 @@ class FormInstance implements Form {
     for (let i = 0; i < config.length; i++) {
       this.data[this.config[i].field] = '';
     }
-  }
-  generateTextInput(config: FormConfig, vaild = false): VNode {
 
+    console.log(this.data, "this.data");
+    
+  }
+
+  generateTextInput(config: FormConfig): VNode {    
     return (
       <com-form-input
         class="mb1"
         v-model={ this.data[config.field] }
         {...config.elementConfig}
         type={ config.type }
-        is-error={ vaild } 
       >
       </com-form-input>
     )
   }
-  generateVerificationCode(config: FormConfig, vaild = false): VNode {
+  generateVerificationCode(config: FormConfig): VNode {
 
     return (
-      <com-form-verification-code class="mb4">
-
+      <com-form-verification-code 
+        class="mb4"
+        v-model={ this.data[config.field] }
+        {...config.elementConfig}
+      >
       </com-form-verification-code>
     )
   }
@@ -70,11 +76,10 @@ class FormInstance implements Form {
   vaildForm() {
     for (let i = 0; i < this.config.length; i++) {
       if (this.config[i].require) {
-        const currentRowVaild = vaildTest(this.data[this.config[i].field], this.config[i].rule)
-        
-        
+        const currentRowVaild = vaildTest(this.data[this.config[i].field], this.config[i].rule);
         
         if (!currentRowVaild[0]) {
+          this.config[i].elementConfig.isError = true;
           return false;
         } else {
           continue;
@@ -88,8 +93,17 @@ class FormInstance implements Form {
 const formElement = new FormInstance(props.model);
 const elementForm = shallowRef(formElement.renderForm());
 
+function vaildForm(): Promise<boolean> {
+  const val = formElement.vaildForm();
+  elementForm.value = formElement.renderForm();
+
+  return new Promise((reslove) => {
+    return reslove(val);
+  });
+}
+
 defineExpose({
-  element: formElement
+  vaildForm
 })
 </script>
 <template>

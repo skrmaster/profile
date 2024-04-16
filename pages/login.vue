@@ -23,7 +23,8 @@ const config: Array<FormConfig> = [
     elementConfig: {
       width: '100%',
       placeholder: '请输入邮箱',
-      clearable: true
+      clearable: true,
+      errorMsg: '请输入正确的邮箱格式'
     }
   },
   {
@@ -34,7 +35,8 @@ const config: Array<FormConfig> = [
     elementConfig: {
       width: '100%',
       placeholder: '请输入密码',
-      clearable: false
+      clearable: false,
+      errorMsg: '请输入8~16位数字,大小写字母的密码'
     }
   },
   {
@@ -153,9 +155,10 @@ function getTodayNumber(): number {
 
 function handleSubmit() {
   if (form.value) {
-    const vaild = form.value.element.vaildForm();
-    console.log(vaild);
-    
+    form.value.vaildForm()
+    .then((vaild: boolean) => {
+      console.log(vaild);
+    });
   }
 }
 

@@ -3,7 +3,7 @@ declare type FormConfig = {
   field: string
   type: string
   rule?: RegExp | string
-  elementConfig?: {
+  elementConfig: {
     modelValue?: string;
     placeholder?: string;
     autocomplete?: string;
@@ -13,6 +13,7 @@ declare type FormConfig = {
     disable?: boolean;
     readonly?: boolean;
     isError?: boolean;
+    errorMsg?: string;
   }
 }
 

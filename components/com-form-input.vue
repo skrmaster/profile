@@ -9,6 +9,7 @@ interface Props {
   disable?: boolean;
   readonly?: boolean;
   isError?: boolean;
+  errorMsg?: string;
 }
 
 enum Status {
@@ -27,7 +28,8 @@ const props = withDefaults(defineProps<Props>(), {
   isError: false
 });
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: string],
+  'change': [value: string]
 }>();
 
 const input = ref();
@@ -78,9 +80,10 @@ function autoSetStatusOfPlaceholder() {
   }
 }
 
-function handlerContent() {    
+function handlerContent() {
   autoSetStatusOfPlaceholder();
   emit('update:modelValue', inputValue.value);
+  emit('change', inputValue.value);
 }
 
 function handlerFocus() {
@@ -123,10 +126,11 @@ function handlePasswordIcon() {
         'form__placeholder': true,
         'form__placeholder--active': placeholderStatus === 0 || isInputFocus
       }"
-    >{{ props.placeholder }}</label>
+    >{{ (props.isError && inputValue && props.errorMsg) ? props.errorMsg : props.placeholder }}</label>
     <input 
       ref="input"
       class="form__input-field"
+      :placeholder="props.placeholder"
       :autocomplete="props.autocomplete"
       :type="isTypePassword ? props.type : showPasswordType"
       v-model="inputValue"
@@ -167,6 +171,7 @@ function handlePasswordIcon() {
 
 .form__input-box.error {
   border-color: var(--error-color);
+  outline-color: var(--error-color-rgba);
 }
 
 .form__input-field {
@@ -176,6 +181,10 @@ function handlePasswordIcon() {
   border: 0;
   outline: 0;
   flex: 1;
+}
+
+.form__input-field::placeholder {
+  visibility: hidden;
 }
 
 .form__placeholder {

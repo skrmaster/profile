@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+type Prop = {
+  isError?: boolean;
+}
+
+const props = withDefaults(defineProps<Prop>(), {
+  isError: false
+});
+
 const time = 10;
 const code = ref('');
 const text = '发送验证码';
@@ -50,6 +58,7 @@ onNuxtReady(() => {
         v-model="code" 
         clearable 
         type="text" 
+        :is-error="props.isError"
         width="100%"
         placeholder="请填写验证码"
       ></com-form-input>

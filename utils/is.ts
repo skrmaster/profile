@@ -22,3 +22,16 @@ export function isSubSet<T>(subObj: T, superObj: T): boolean {
   }
   return true;
 }
+
+/**
+ * @description 判断字符串是否是正则表达式
+ */
+export function isRegExp(str: string | RegExp): boolean {
+  try {
+    new RegExp(str);
+    return Boolean(str) && true;
+  } catch (e) {
+    return false;
+  }
+}
+
