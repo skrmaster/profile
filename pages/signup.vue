@@ -40,12 +40,13 @@ const config: Array<FormConfig> = [
     }
   },
   {
-    require: false,
-    field: 'remember',
-    type: 'checkbox',
+    require: true,
+    field: 'code',
+    type: 'verification-code',
+    rule: 'numberCode',
     elementConfig: {
-      width: '100%',
-      label: '记住我',
+      placeholder: '请输入验证码',
+      errorMsg: '请输入6位数字验证码'
     }
   }
 ];
@@ -191,20 +192,20 @@ onNuxtReady(() => {
             <div class="register-icon flex__center">
               <com-icon
                 class="sign-up--icon"
-                icon="profilesign-in"
+                icon="profilesign-up"
               ></com-icon>
             </div>
             <com-form ref="form" :model="config">
-              <div class="w100 mb2 flex__row--between">
-                <!-- <com-form-checkbox></com-form-checkbox> -->
-                <NuxtLink to="/signup">
-                  <span class="fs12 underline">👉还没账号，立即注册</span>
-                </NuxtLink>
+              <div class="w100 mb2">
+                <NuxtLink 
+                  to="/login" 
+                  class="fs12 underline"
+                >👍已有帐号，前往登录</NuxtLink>
               </div>
               <com-button 
                 class="action-btn fs24" 
                 @click="handleSubmit"
-              >登录</com-button>
+              >注册</com-button>
             </com-form>
           </div>
         </div>

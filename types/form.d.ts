@@ -14,15 +14,16 @@ declare type FormConfig = {
     readonly?: boolean;
     isError?: boolean;
     errorMsg?: string;
+    label?: string;
   }
 }
 
 interface Form {
-  generateTextInput(config: FormConfig, vaild?: boolean): VNode;
-  generateVerificationCode(config: FormConfig, vaild?: boolean): VNode,
-  generateNumberInput(): void;
-  generateRateInput(): void;
-  generateCheckBox(): void;
-  generateRadioBox(): void;
+  generateTextInput(config: FormConfig): VNode;
+  generateVerificationCode(config: FormConfig): VNode,
+  generateNumberInput(config: FormConfig): VNode;
+  generateRateInput(config: FormConfig): VNode;
+  generateCheckBox(config: FormConfig): VNode;
+  generateRadioBox(config: FormConfig): VNode;
   vaildForm(): boolean;
 }

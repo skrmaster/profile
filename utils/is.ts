@@ -29,7 +29,7 @@ export function isSubSet<T>(subObj: T, superObj: T): boolean {
 export function isRegExp(str: string | RegExp): boolean {
   try {
     new RegExp(str);
-    return Boolean(str) && true;
+    return true;
   } catch (e) {
     return false;
   }

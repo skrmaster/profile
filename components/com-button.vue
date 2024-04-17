@@ -64,6 +64,10 @@ function handleClick($event: Event) {
   cursor: not-allowed;
 }
 
+.btn:hover {
+  opacity: 0.9;
+}
+
 .btn:not(.disabled, .plain):active {
   opacity: 1;
   box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2);

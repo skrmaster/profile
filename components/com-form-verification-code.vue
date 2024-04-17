@@ -1,11 +1,30 @@
 <script lang="ts" setup>
 type Prop = {
+  modelValue: string;
+  placeholder?: string;
+  autocomplete?: string;
+  type?: string;
+  width?: string | number;
+  clearable?: boolean;
+  disable?: boolean;
+  readonly?: boolean;
   isError?: boolean;
+  errorMsg?: string;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
+  placeholder: '请输入内容',
+  autocomplete: 'off',
+  width: '100%',
+  clearable: false,
+  disable: false,
+  readonly: false,
   isError: false
 });
+
+const emit = defineEmits<{
+  'update:modelValue': [val: string]
+}>();
 
 const time = 10;
 const code = ref('');
@@ -43,7 +62,11 @@ function fetchCode() {
 
 }
 
-onNuxtReady(() => {
+function handleCodeData() {
+  emit('update:modelValue', code.value);
+}
+
+onMounted(() => {
   const existTime = localStorage.getValue('verifyCode');
   if (existTime) {
     countdown.value = parseInt(existTime as string);
@@ -59,8 +82,10 @@ onNuxtReady(() => {
         clearable 
         type="text" 
         :is-error="props.isError"
+        :error-msg="props.errorMsg"
         width="100%"
         placeholder="请填写验证码"
+        @change="handleCodeData"
       ></com-form-input>
     </div>
     <div class="verification__btn">

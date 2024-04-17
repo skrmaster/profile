@@ -31,11 +31,13 @@ html {
   --input-border-color: #898989;
   --box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.25);
   --border-radius: 2px;
+  --readonly-color: #eeeeee;
 }
 
 a {
   text-decoration: none;
   color: var(--primary-color);
+  cursor: pointer;
 }
 
 .c-p {
@@ -44,6 +46,36 @@ a {
 
 .c-na {
   cursor: not-allowed;
+}
+
+.p-r {
+  position: relative;
+}
+
+.underline {
+  padding-bottom: 1px;
+  position: relative;
+}
+
+.underline::after {
+  content: "";
+  width: 0;
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary-border-color);
+  transform-origin: center;
+  transition: all .2s;
+}
+
+.underline:hover::after {
+  width: 100%;
+}
+
+.w100 {
+  width: 100%;
 }
 
 input[type="password"]::-ms-reveal {

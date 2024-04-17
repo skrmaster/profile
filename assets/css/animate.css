@@ -13,3 +13,11 @@
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
+
+@keyframes presence2absence {
+  0% { width: 100%; }
+  25% { width: 75%; }
+  50% { width: 50%; }
+  75% { width: 25%; }
+  100% { width: 0; }
+}

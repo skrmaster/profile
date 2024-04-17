@@ -99,6 +99,7 @@ function handlerBlur() {
 function handlerClear() {
   inputValue.value = '';
   input.value.focus();
+  emit('update:modelValue', inputValue.value);
 }
 
 function handlePasswordIcon() {
@@ -113,7 +114,7 @@ function handlePasswordIcon() {
     class="form__input-box"
     :class="{
       'form__input-box--active': isInputFocus,
-      'error': isError,
+      'error error--shake': isError,
     }"
     :style="{
       'width': width,
@@ -214,6 +215,6 @@ function handlePasswordIcon() {
 }
 
 .error--shake {
-  animation: shake .5s linear 1s 1 normal none running;
+  animation: shake .5s linear 0.1s 1 normal none running;
 }
 </style>

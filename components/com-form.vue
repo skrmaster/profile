@@ -18,9 +18,6 @@ class FormInstance implements Form {
     for (let i = 0; i < config.length; i++) {
       this.data[this.config[i].field] = '';
     }
-
-    console.log(this.data, "this.data");
-    
   }
 
   generateTextInput(config: FormConfig): VNode {    
@@ -38,24 +35,30 @@ class FormInstance implements Form {
 
     return (
       <com-form-verification-code 
-        class="mb4"
+        class="mb1"
         v-model={ this.data[config.field] }
         {...config.elementConfig}
       >
       </com-form-verification-code>
     )
   }
-  generateNumberInput() {
-
+  generateNumberInput(config: FormConfig): VNode {
+    return (<></>)
   }
-  generateRateInput() {
-
+  generateRateInput(config: FormConfig): VNode {
+    return (<></>)
   }
-  generateCheckBox() {
-
+  generateCheckBox(config: FormConfig): VNode {
+    return (
+      <com-form-checkbox
+        class="mb1 w100"
+        v-model={ this.data[config.field] }
+        {...config.elementConfig}
+      ></com-form-checkbox>
+    )
   }
-  generateRadioBox() {
-
+  generateRadioBox(config: FormConfig): VNode {
+    return (<></>)
   }
   renderForm(): VNode {
     return (
@@ -64,6 +67,8 @@ class FormInstance implements Form {
           this.config.map((e: FormConfig) => {
             if (e.type === 'verification-code') {
               return this.generateVerificationCode(e);
+            } else if (e.type === 'checkbox') {
+              return this.generateCheckBox(e);
             } else {
               return this.generateTextInput(e);
             }
@@ -73,7 +78,7 @@ class FormInstance implements Form {
       </form>
     )
   }
-  vaildForm() {
+  vaildForm() {    
     for (let i = 0; i < this.config.length; i++) {
       if (this.config[i].require) {
         const currentRowVaild = vaildTest(this.data[this.config[i].field], this.config[i].rule);
@@ -82,6 +87,7 @@ class FormInstance implements Form {
           this.config[i].elementConfig.isError = true;
           return false;
         } else {
+          this.config[i].elementConfig.isError = false;
           continue;
         }
       }

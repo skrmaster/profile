@@ -11,6 +11,13 @@
   align-items: center;
 }
 
+.flex__row--between {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .flex__end {
   display: flex;
   flex-flow: row wrap;
