@@ -142,7 +142,7 @@ function handlePasswordIcon() {
     <com-icon
       v-if="props.type === 'password' && (inputValue && inputValue.length > 0)"
       @click="handlePasswordIcon"
-      :icon="showPasswordType !== 'password' ? 'profilesee1' : 'profilenosee1'"
+      :icon="showPasswordType !== 'password' ? 'profilesee' : 'profileno-see'"
     ></com-icon>
     <com-icon
       v-if="canShowClearIcon"

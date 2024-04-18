@@ -25,7 +25,7 @@ function handleChange($event: Event) {
 }
 </script>
 <template>
-  <div class="checkbox__box" v-bind="$attrs">
+  <div class="checkbox__box">
     <div class="c-p p-r flex">
       <input 
         class="c-p"
@@ -61,6 +61,10 @@ function handleChange($event: Event) {
   font-size: 14px;
 }
 
+.gap::selection {
+  background: var(--white-color);
+}
+
 input {
   width: 14px;
   height: 14px;
@@ -84,13 +88,13 @@ input {
 .cover__checkbox-inner::before{
   box-sizing: content-box;
   content: "";
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   border-left: 0;
   border-top: 0;
   height: 7px;
-  left: 5px;
+  left: 4.8px;
   position: absolute;
-  top: 2px;
+  top: 1.4px;
   width: 3px;
   transition: transform .15s ease-in .05s;
   transform-origin: center;

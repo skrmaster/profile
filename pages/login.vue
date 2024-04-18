@@ -8,6 +8,7 @@ useHead({
   title: "登录"
 });
 const form = ref();
+
 const textArray = textdata.data;
 const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
 const dayDate = new DayDate();
@@ -37,15 +38,6 @@ const config: Array<FormConfig> = [
       placeholder: '请输入密码',
       clearable: false,
       errorMsg: '请输入8~16位数字,大小写字母的密码'
-    }
-  },
-  {
-    require: false,
-    field: 'remember',
-    type: 'checkbox',
-    elementConfig: {
-      width: '100%',
-      label: '记住我',
     }
   }
 ];
@@ -79,13 +71,16 @@ function drawClock() {
       ctx.strokeStyle = "color: black";
 
       ctx.beginPath();
+      ctx.lineWidth = 1.5;
       ctx.arc(0, 0, 158, 0, 2 * Math.PI, true);
       ctx.stroke();
 
       ctx.beginPath();
+      ctx.lineWidth = 1.5;
       ctx.arc(0, 0, 122, 0, 2 * Math.PI, true);
       ctx.stroke();
 
+      ctx.lineWidth = 1;
       for (let i = 0; i < 12; i++) {
         ctx.save();
           ctx.rotate(Math.PI / 6 * i);
@@ -158,8 +153,12 @@ function getTodayNumber(): number {
 function handleSubmit() {
   if (form.value) {
     form.value.vaildForm()
-    .then((vaild: boolean) => {
-      console.log(vaild);
+    .then(async (vaild: boolean) => {
+      if (vaild) {
+        await navigateTo({
+          path: '/'
+        })
+      }
     });
   }
 }
@@ -196,9 +195,9 @@ onNuxtReady(() => {
             </div>
             <com-form ref="form" :model="config">
               <div class="w100 mb2 flex__row--between">
-                <!-- <com-form-checkbox></com-form-checkbox> -->
-                <NuxtLink to="/signup">
-                  <span class="fs12 underline">👉还没账号，立即注册</span>
+                <com-form-checkbox label="记住我"></com-form-checkbox>
+                <NuxtLink to="/signup?type=forget">
+                  <span class="fs14 underline">忘记密码?</span>
                 </NuxtLink>
               </div>
               <com-button 
@@ -206,6 +205,9 @@ onNuxtReady(() => {
                 @click="handleSubmit"
               >登录</com-button>
             </com-form>
+            <NuxtLink to="/signup" class="w100 mt2 text-center">
+              <span class="fs12 underline">👉还没账号，立即注册</span>
+            </NuxtLink>
           </div>
         </div>
         <canvas 
@@ -262,7 +264,7 @@ onNuxtReady(() => {
   width: 100%;
   min-width: 300px;
   position: relative;
-  padding: 100px 30px 50px 30px;
+  padding: 100px 30px 20px 30px;
 }
 
 .register-icon {

@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-// const config: BackgroundSettingProps = {
-//   backgroundDefaultSize: true
-// }
 
 </script>
 <template>
-  <NuxtLayout name="background-setting">
-    <page-navigation></page-navigation>
+  <NuxtLayout 
+    name="background-setting"
+    :bg-change-color="false"
+    :bg-style-content="''"
+    :bg-default-size="true"
+  >
+    <com-navigation></com-navigation>
   </NuxtLayout>
 </template>
 <style scoped>

@@ -7,6 +7,7 @@ const dayjs = useDayjs();
 useHead({
   title: "登录"
 });
+const route = useRoute();
 const form = ref();
 const textArray = textdata.data;
 const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
@@ -51,6 +52,10 @@ const config: Array<FormConfig> = [
   }
 ];
 
+const isForget = computed(() => {
+  return route.query && route.query.type && route.query.type === 'forget';
+})
+
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
   if (!canvas) {
@@ -80,13 +85,16 @@ function drawClock() {
       ctx.strokeStyle = "color: black";
 
       ctx.beginPath();
+      ctx.lineWidth = 1.5;
       ctx.arc(0, 0, 158, 0, 2 * Math.PI, true);
       ctx.stroke();
 
       ctx.beginPath();
+      ctx.lineWidth = 1.5;
       ctx.arc(0, 0, 122, 0, 2 * Math.PI, true);
       ctx.stroke();
 
+      ctx.lineWidth = 1;
       for (let i = 0; i < 12; i++) {
         ctx.save();
           ctx.rotate(Math.PI / 6 * i);
@@ -159,8 +167,12 @@ function getTodayNumber(): number {
 function handleSubmit() {
   if (form.value) {
     form.value.vaildForm()
-    .then((vaild: boolean) => {
-      console.log(vaild);
+    .then(async (vaild: boolean) => {
+      if (vaild) {
+        await navigateTo({
+          path: '/center-notice'
+        })
+      }
     });
   }
 }
@@ -192,7 +204,7 @@ onNuxtReady(() => {
             <div class="register-icon flex__center">
               <com-icon
                 class="sign-up--icon"
-                icon="profilesign-up"
+                :icon="isForget ? 'profilemima' : 'profilesign-up'"
               ></com-icon>
             </div>
             <com-form ref="form" :model="config">
@@ -200,12 +212,12 @@ onNuxtReady(() => {
                 <NuxtLink 
                   to="/login" 
                   class="fs12 underline"
-                >👍已有帐号，前往登录</NuxtLink>
+                >{{ isForget ? '👌记起密码，前往登录' : '👍已有帐号，前往登录' }}</NuxtLink>
               </div>
               <com-button 
-                class="action-btn fs24" 
+                class="action-btn fs24"
                 @click="handleSubmit"
-              >注册</com-button>
+              >{{ isForget ? '找回密码' : '注册' }}</com-button>
             </com-form>
           </div>
         </div>

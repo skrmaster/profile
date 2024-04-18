@@ -9,7 +9,7 @@ const emit = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<Props>(), {
-  icon: 'profilea-ziyuan37close-circle',
+  icon: '',
   prefix: '#icon'
 });
 
@@ -24,6 +24,7 @@ function handleClick($event: Event) {
 </script>
 <template>
   <svg
+    v-if="props.icon"
     class="icon" 
     aria-hidden="true"
     v-bind="$attrs"
