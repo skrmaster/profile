@@ -57,6 +57,10 @@ a {
   text-align: center;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .underline {
   padding-bottom: 1px;
   position: relative;
@@ -89,4 +93,8 @@ a {
 
 input[type="password"]::-ms-reveal {
   display: none;
+}
+
+.font-bold {
+  font-weight: bold;
 }

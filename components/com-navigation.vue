@@ -1,9 +1,10 @@
-<script lang="tsx" setup>
+<script lang="ts" setup>
 type NavItemType = {
   link?: string;
   name?: string;
-  type: 'link' | 'button' | 'theme',
-  button?: Record<string, NavItemType>
+  type: 'link' | 'button' | 'theme';
+  button?: Array<NavItemType>;
+  flex?: number;
 }
 
 const navList: Array<NavItemType> = [
@@ -32,40 +33,112 @@ const navList: Array<NavItemType> = [
   },
   {
     type: 'button',
-    button: {
-      login: {
+    button: [
+      {
         type: 'link',
         link: '/login',
+        name: '登录'
       },
-      signup: {
+      {
         type: 'link',
-        link: '/signup'
+        link: '/signup',
+        name: '注册'
       }
-    }
+    ]
   }
 ]
+const route = useRoute();
+const currentPath = route.path;
+
+function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
+  const argCopy = arg;
+  let minV = (argCopy[0].name?.length || 0);
+  const total = argCopy.reduce((pre, cur) => {
+    const curLen = (cur.name?.length || 0);
+    if (cur.type === 'link') {
+      minV <= curLen ? 0 : minV = curLen;
+    }
+    return pre + (cur.name?.length || 1);
+  }, 0);
+  
+  argCopy.forEach(e => {
+    e.flex = e.name?.length ? e.name.length / total : minV / total;
+    if (e.flex < 1 && e.flex > 0) {
+      e.flex *= 10;
+    }
+  })
+
+  return argCopy;
+}
+
+async function handleLink(url?: string) {
+  await navigateTo({
+    path: url
+  })
+}
+
+function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
+  if (!arg1 || !arg2) {
+    return false;
+  }
+
+  if (arg1?.type !== arg2?.type) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 </script>
 <template>
   <div class="nav-box">
     <div class="container">
-      <nav class="offset-4">
+      <nav>
         <li 
-          v-for="(item, index) in navList" 
+          v-for="(item, index) in getFlex(navList)" 
           :key="index"
           class="nav__item flex__center"
+          :style="`flex: ${item.flex}`"
+          :class="{
+            'is--active': item.link === currentPath
+          }"
+          :data-type="item.type"
         >
           <div 
-            class="item__box flex__center" 
             v-if="item.type === 'link'"
+            class="item__box flex__center"
+            :class="{
+              line: getLine(navList[index+1], item)
+            }"
           >
             <span>{{ item.name }}</span>
           </div>
-          <div v-if="item.type === 'theme'">
+          <div 
+            v-if="item.type === 'theme'"
+            class="item__box flex__center"
+            :class="{
+              line: getLine(navList[index+1], item)
+            }"
+          >
             <com-theme-button></com-theme-button>
           </div>
-          <div v-if="item.type === 'button'">
-          
+          <div 
+            v-if="item.type === 'button'"
+            class="item__box flex__center nowrap"
+            :class="{
+              line: getLine(navList[index+1], item)
+            }"
+          >
+            <com-button 
+              v-for="(e, i) in item.button" 
+              :key="i"
+              link
+              :class="{
+                mr1: i < item.button!.length - 1
+              }"
+              class="underline"
+              @click="handleLink(e.link)"
+            >{{ e.name }}</com-button>
           </div>
         </li>
       </nav>
@@ -101,23 +174,37 @@ const navList: Array<NavItemType> = [
 }
 
 nav {
+  margin-left: auto;
+  max-width: 1000px;
+  width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
 }
 
-nav li {
+.nav__item {
   width: 100%;
   height: 100%;
   list-style: none;
   cursor: pointer;
+  border-radius: 0 0 10px 10px;
 }
 
-.nav__item {
+[data-type="link"].nav__item:not(.is--active):hover {
+  background: var(--readonly-color);
+}
 
+.nav__item.is--active {
+  color: var(--white-color);
+  background-color: var(--primary-color);
 }
 
 .item__box {
   height: 58px;
+  width: 100%;
+}
+
+.line {
+  border-right: 1px solid var(--primary-border-color);
 }
 </style>

@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 type Props = {
-  type?: string
-  plain?: boolean
-  disabled?: boolean
-  loading?: boolean
+  prefixIcon?: string;
+  suffixIcon?: string;
+  type?: string;
+  plain?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  link?: boolean;
 }
 const emit = defineEmits<{
   click: [event: Event]
@@ -12,7 +15,8 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'primary',
   plain: false,
   disabled: false,
-  loading: false
+  loading: false,
+  link: false
 });
 
 function handleClick($event: Event) {
@@ -23,6 +27,7 @@ function handleClick($event: Event) {
 </script>
 <template>
   <button 
+    v-if="!props.link"
     :aria-disabled="props.disabled"
     class="btn c-p"
     :class="{
@@ -33,7 +38,20 @@ function handleClick($event: Event) {
     v-bind="$attrs"
     @click="handleClick"
   >
+    <com-icon :icon="props.prefixIcon"></com-icon>
     <slot />
+    <com-icon :icon="props.suffixIcon"></com-icon>
+  </button>
+  <button v-else
+    type="button"
+    :aria-disabled="props.disabled"
+    role="link"
+    class="btn--link c-p"
+    @click="handleClick"
+  >
+    <com-icon :icon="props.prefixIcon"></com-icon>
+    <slot />
+    <com-icon :icon="props.suffixIcon"></com-icon>
   </button>
 </template>
 <style scoped>
@@ -71,5 +89,10 @@ function handleClick($event: Event) {
 .btn:not(.disabled, .plain):active {
   opacity: 1;
   box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn--link {
+  background: transparent;
+  height: auto;
 }
 </style>
