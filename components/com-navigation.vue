@@ -111,7 +111,7 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
               line: getLine(navList[index+1], item)
             }"
           >
-            <span>{{ item.name }}</span>
+            <span class="p1 nowrap">{{ item.name }}</span>
           </div>
           <div 
             v-if="item.type === 'theme'"

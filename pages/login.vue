@@ -37,7 +37,7 @@ const config: Array<FormConfig> = [
       width: '100%',
       placeholder: '请输入密码',
       clearable: false,
-      errorMsg: '请输入8~16位数字,大小写字母的密码'
+      errorMsg: '请输入8~16位包含数字,大小写字母的密码'
     }
   }
 ];

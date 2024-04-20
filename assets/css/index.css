@@ -98,3 +98,7 @@ input[type="password"]::-ms-reveal {
 .font-bold {
   font-weight: bold;
 }
+
+.gaussian-blur {
+  background: rgba(248, 248, 248, 0.4);
+}
