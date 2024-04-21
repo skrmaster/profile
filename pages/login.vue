@@ -169,7 +169,7 @@ onNuxtReady(() => {
 
 </script>
 <template>
-  <NuxtLayout 
+  <NuxtLayout
     name="background-setting" 
     :bg-change-color="false"
     :bg-style-content="''"

@@ -35,6 +35,7 @@ function generateElement() {
 <style scoped>
 .background {
   background-image: radial-gradient(#ffffff 0, #eef1f5 100%);
+  /* background: #FFFFFF; */
   background-blend-mode: screen;
 }
 

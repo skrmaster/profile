@@ -150,7 +150,10 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
 <style scoped>
 .nav-box {
   height: 80px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #ffffff;
 }
 
 .line-wave__up {
