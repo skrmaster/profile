@@ -22,8 +22,20 @@
   100% { width: 0; }
 }
 
-@keyframes slowFloat {
+@keyframes slowFloatX {
   0% { transform: translateX(0); }
   50% { transform: translateX(10px); }
   100% { transform: translateX(0); }
+}
+
+@keyframes slowFloatY {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes slowFloatXY {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(10px, 10px); }
+  100% { transform: translate(0, 0); }
 }
