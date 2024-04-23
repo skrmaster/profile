@@ -7,8 +7,8 @@
     {
       "type": "msedge",
       "request": "launch",
-      "name": "profile edge debuge",
-      "url": "http://localhost:3000/login",
+      "name": "debuge",
+      "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
     }
   ]

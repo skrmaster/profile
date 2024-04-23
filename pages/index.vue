@@ -15,6 +15,32 @@ const roadWidth = 642;
 const roadHeight = 573;
 const roadGap = -55;
 let roadCount = 0;
+const formConfig: Array<FormConfig> = [
+  {
+    require: true,
+    field: 'name',
+    type: 'text',
+    rule: '',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请输入姓名',
+      clearable: true,
+    }
+  },
+  {
+    require: true,
+    field: 'contactWay',
+    type: 'text',
+    rule: '',
+    elementConfig: {
+      width: '100%',
+      placeholder: '联系方式',
+      clearable: true,
+    }
+  }
+];
+
+
 const parkCanvas: Park = {
   ctx: null,
   width: 0,
@@ -301,6 +327,33 @@ onNuxtReady(() => {
       </div>
     </section>
     <index-skills></index-skills>
+    <com-arc-div></com-arc-div>
+    <index-projects></index-projects>
+    <div class="container">
+      <div class="text-center">
+        <p class="fs48">对作者说点什么</p>
+        <p class="fs18 text-uppercase">Say something to the author</p>
+      </div>
+      <div class="contact my5">
+        <div class="contact__item flex__column--center">
+          <com-icon class="contact__icon" icon="profilephone"></com-icon>
+          <p class="contact__item-gap fs24">电话</p>
+          <p class="fs30">+8618283170317</p>
+        </div>
+        <div class="contact__item flex__column--center borderx">
+          <com-icon class="contact__icon" icon="profilewechat"></com-icon>
+          <p class="contact__item-gap fs24">微信</p>
+          <p class="fs30">skrMogul</p>
+        </div>
+        <div class="contact__item flex__column--center">
+          <com-icon class="contact__icon" icon="profileemail"></com-icon>
+          <p class="contact__item-gap fs24">邮箱</p>
+          <p class="fs30">18283170317zy@gmail.com</p>
+        </div>
+      </div>
+      <com-form class="index__form" :model="formConfig"></com-form>
+    </div>
+    <com-footer></com-footer>
   </NuxtLayout>
 </template>
 <style scoped>
@@ -344,5 +397,52 @@ onNuxtReady(() => {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.contact {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.contact__item {
+  max-width: 500px;
+  width: 100%;
+  height: 338px;
+  min-width: 400px;
+  margin: 0 auto;
+}
+
+.contact__icon {
+  height: 60px;
+  width: 60px
+}
+
+.borderx {
+  border-left: 1px solid var(--primary-border-color);
+  border-right: 1px solid var(--primary-border-color);
+}
+
+.contact__item-gap {
+  margin-top: 15px;
+  margin-bottom: 50px;
+}
+
+.index__form {
+  max-width: 622px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+:deep(.index__form .form__input-box) {
+  border-style: dashed!important;
+  background: #eeeeee;
+}
+
+:deep(.index__form .form__input-box .form__placeholder--active) {
+  background: #eeeeee;
+}
+
+:deep(.index__form .form__input-box input) {
+  background: #eeeeee;
 }
 </style>

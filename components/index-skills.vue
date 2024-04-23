@@ -46,10 +46,10 @@ function inactive() {
 
 onMounted(() => { 
   
-  const minWidth = skillCircle.value!.offsetLeft;
-  const minHeight = skillCircle.value!.offsetTop;
-  const maxWidth = minWidth + 250;
-  const maxHeight = minHeight + 250;
+  let minWidth = skillCircle.value!.offsetLeft;
+  let minHeight = skillCircle.value!.offsetTop;
+  let maxWidth = minWidth + 250;
+  let maxHeight = minHeight + 250;
 
   heightGap = skillBox.value!.clientHeight / 5;
 
@@ -88,20 +88,53 @@ onMounted(() => {
       moveVector: 20,
       originX: xCount * widthGap,
       originY: yCount * heightGap,
-      class: `skills-animate-${Math.floor(Math.random() * 3) + 1} pos-fix`
+      class: `skills-animate-${Math.floor(Math.random() * 3) + 1}`
     }
   });
 
   nextTick(() => {
+    const gap = 30;
+    minWidth -= gap;
+    maxWidth += gap;
+    minHeight -= gap;
+    maxHeight += gap;
     skills.value.forEach(e => {
       const _self = document.getElementById(e.id);
 
       if (_self) {
         let _selfWidth = _self.offsetWidth;
         let _selfHeight = _self.offsetHeight;
+        const _selfHalfWidth = _selfWidth / 2;
+        const _selfHalfHeight = _selfHeight / 2;
+        
 
-        if (e.x >= minWidth && e.x <= maxWidth && e.y >= minHeight && e.y <= maxHeight) {
-          1
+        if (
+          e.x + _selfWidth >= minWidth
+          && e.x <= maxWidth
+          && e.y + _selfHeight >= minHeight
+          && e.y <= maxHeight
+        ) {
+          
+          if (e.x + _selfWidth - minWidth < e.y + _selfHeight - minHeight) {
+            if ((e.x + _selfWidth - minWidth) <= (maxWidth - minWidth) / 2) {
+              e.x = e.x - (e.x + _selfWidth - minWidth);
+              e.originX = e.x;
+            } else {
+              e.x = e.x + (maxWidth - e.x);
+              e.originX = e.x;
+            }
+          } else {
+            if ((e.y + _selfHeight - minHeight) <= (maxHeight - minHeight) / 2) {
+              e.y = e.y - (e.y + _selfHeight - minHeight);
+              e.originY = e.y;
+            } else {
+              e.y = e.y + (maxHeight - e.y);
+              e.originY = e.y;
+            }
+          }
+        } else {
+          e.x -= _selfHalfWidth;
+          e.originX = e.x;
         }
       }
     });
@@ -178,11 +211,10 @@ onMounted(() => {
   transition: all .2s ease-in-out;
 }
 
-.pos-fix {
-  transform: translateX(-50%);
+.none-transform {
+  transform: none;
 }
 
-/* 
 .skills-animate-1 {
   animation: slowFloatX 2s ease-in-out infinite;
 }
@@ -193,5 +225,5 @@ onMounted(() => {
 
 .skills-animate-3 {
   animation: slowFloatXY 2s ease-in-out infinite;
-} */
+}
 </style>
