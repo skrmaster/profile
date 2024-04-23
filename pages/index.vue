@@ -37,6 +37,18 @@ const formConfig: Array<FormConfig> = [
       placeholder: '联系方式',
       clearable: true,
     }
+  },
+  {
+    require: true,
+    field: 'contactWay',
+    type: 'textarea',
+    rule: '',
+    elementConfig: {
+      width: '100%',
+      placeholder: '内容',
+      clearable: false,
+      rows: 8,
+    }
   }
 ];
 
@@ -106,9 +118,9 @@ function initCanvas() {
     throw new Error('canvas element is null!');
   }
 
-  canvas.width = window.innerWidth - scrollBarWidth;
+  canvas.width = window.innerWidth - scrollBarWidth - 1;
   canvas.height = 1006;
-  parkCanvas.width = canvas.width - scrollBarWidth;
+  parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
   roadCount = Math.ceil((window.innerWidth + 50) / roadWidth);
   grass.count = Math.ceil(window.innerWidth / grass.width);
@@ -146,7 +158,7 @@ function draw(): void {
   ctx.clip();
   ctx.closePath();
   for (let i = 0; i <= grass.count; i++) {
-    featherImage(ctx, grassImg, i * grass.width, 400, grass.width, grass.height);
+    // featherImage(ctx, grassImg, i * grass.width, 400, grass.width, grass.height);
     // ctx.drawImage(
     //   grassImg, 
     //   0,
@@ -284,7 +296,7 @@ onNuxtReady(() => {
   grassImg.src = '/images/grass2.jpg';
 
   initCanvas();
-  const resizeHandler = debounce(initCanvas, 10);
+  const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
 });
 
@@ -340,7 +352,7 @@ onNuxtReady(() => {
           <p class="contact__item-gap fs24">电话</p>
           <p class="fs30">+8618283170317</p>
         </div>
-        <div class="contact__item flex__column--center borderx">
+        <div class="contact__item flex__column--center contact__borderx">
           <com-icon class="contact__icon" icon="profilewechat"></com-icon>
           <p class="contact__item-gap fs24">微信</p>
           <p class="fs30">skrMogul</p>
@@ -351,7 +363,9 @@ onNuxtReady(() => {
           <p class="fs30">18283170317zy@gmail.com</p>
         </div>
       </div>
-      <com-form class="index__form" :model="formConfig"></com-form>
+      <com-form class="index__form mx-auto mb4" :model="formConfig">
+        <com-button class="submit-btn mt1 fs24">提交</com-button>
+      </com-form>
     </div>
     <com-footer></com-footer>
   </NuxtLayout>
@@ -405,10 +419,11 @@ onNuxtReady(() => {
 }
 
 .contact__item {
+  flex: 1;
   max-width: 500px;
   width: 100%;
   height: 338px;
-  min-width: 400px;
+  min-width: 390px;
   margin: 0 auto;
 }
 
@@ -417,10 +432,7 @@ onNuxtReady(() => {
   width: 60px
 }
 
-.borderx {
-  border-left: 1px solid var(--primary-border-color);
-  border-right: 1px solid var(--primary-border-color);
-}
+
 
 .contact__item-gap {
   margin-top: 15px;
@@ -430,7 +442,6 @@ onNuxtReady(() => {
 .index__form {
   max-width: 622px;
   width: 100%;
-  margin: 0 auto;
 }
 
 :deep(.index__form .form__input-box) {
@@ -444,5 +455,10 @@ onNuxtReady(() => {
 
 :deep(.index__form .form__input-box input) {
   background: #eeeeee;
+}
+
+.submit-btn {
+  width: 250px;
+  height: 92px;
 }
 </style>

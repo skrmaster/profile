@@ -15,6 +15,9 @@ declare type FormConfig = {
     isError?: boolean;
     errorMsg?: string;
     label?: string;
+    maxLength?: number;
+    minLength?: number;
+    rows?: number;
   }
 }
 

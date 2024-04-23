@@ -10,6 +10,9 @@ interface Props {
   readonly?: boolean;
   isError?: boolean;
   errorMsg?: string;
+  maxLength?: number;
+  minLength?: number;
+  rows?: number;
 }
 
 enum Status {
@@ -25,7 +28,8 @@ const props = withDefaults(defineProps<Props>(), {
   clearable: false,
   disable: false,
   readonly: false,
-  isError: false
+  isError: false,
+  rows: 2
 });
 const emit = defineEmits<{
   'update:modelValue': [value: string],
@@ -125,10 +129,12 @@ function handlePasswordIcon() {
     <label
       :class="{
         'form__placeholder': true,
-        'form__placeholder--active': placeholderStatus === 0 || isInputFocus
+        'form__placeholder--active': placeholderStatus === 0 || isInputFocus,
+        'form__placeholder--textarea': props.type === 'textarea'
       }"
     >{{ (props.isError && inputValue && props.errorMsg) ? props.errorMsg : props.placeholder }}</label>
-    <input 
+    <input
+      v-if="props.type !== 'textarea'"
       ref="input"
       class="form__input-field"
       :placeholder="props.placeholder"
@@ -139,6 +145,20 @@ function handlePasswordIcon() {
       @focus="handlerFocus"
       @blur="handlerBlur"
     />
+    <textarea v-else
+      ref="input"
+      class="form__input-field"
+      :placeholder="props.placeholder"
+      v-model="inputValue"
+      :max-length="props.maxLength"
+      :min-length="props.minLength"
+      :rows="`${props.rows}`"
+      @input="handlerContent"
+      @focus="handlerFocus"
+      @blur="handlerBlur"
+    >
+
+    </textarea>
     <com-icon
       v-if="props.type === 'password' && (inputValue && inputValue.length > 0)"
       @click="handlePasswordIcon"
@@ -157,7 +177,6 @@ function handlePasswordIcon() {
   display: flex;
   align-items: center;
   position: relative;
-  padding: 0 10px;
   border-color: var(--input-border-color);
   border-width: 1.2px;
   border-style: solid;
@@ -176,12 +195,19 @@ function handlePasswordIcon() {
 }
 
 .form__input-field {
+  text-indent: 0.5em;
+  border-radius: 5px;
   font-size: 18px;
   width: 100%;
   height: 50px;
   border: 0;
   outline: 0;
   flex: 1;
+}
+
+textarea.form__input-field {
+  background: transparent;
+  height: auto
 }
 
 .form__input-field::placeholder {
@@ -198,6 +224,10 @@ function handlePasswordIcon() {
   user-select: none;
   pointer-events: none;
   transition: all .2s;
+}
+
+.form__placeholder--textarea {
+  top: 20px;
 }
 
 .form__placeholder--active {

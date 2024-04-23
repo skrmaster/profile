@@ -138,11 +138,19 @@
     max-width: 540px;
   }
 
+  .contact__borderx {
+    border: 0;
+  }
+
 }
 
 @media only screen and (min-width: 576px) {
   .container {
     max-width: 720px;
+  }
+
+  .contact__borderx {
+    border: 0;
   }
 }
 
@@ -150,11 +158,19 @@
   .container {
     max-width: 960px;
   }
+
+  .contact__borderx {
+    border: 0;
+  }
 }
 
 @media only screen and (min-width: 992px) {
   .container {
     max-width: 1140px;
+  }
+
+  .contact__borderx {
+    border: 0;
   }
 }
 
@@ -162,10 +178,20 @@
   .container {
     max-width: 1320px;
   }
+
+  .contact__borderx {
+    border-left: 1px solid var(--primary-border-color);
+    border-right: 1px solid var(--primary-border-color);
+  }
 }
 
 @media only screen and (min-width: 1400px) {
   .container {
     max-width: 1500px;
+  }
+
+  .contact__borderx {
+    border-left: 1px solid var(--primary-border-color);
+    border-right: 1px solid var(--primary-border-color);
   }
 }
