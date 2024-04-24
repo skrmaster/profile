@@ -13,6 +13,8 @@ interface Props {
   maxLength?: number;
   minLength?: number;
   rows?: number;
+  isLabel?: boolean;
+  textAlign?: 'start' | 'center' | 'end';
 }
 
 enum Status {
@@ -21,6 +23,7 @@ enum Status {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  isLabel: true,
   placeholder: '请输入内容',
   autocomplete: 'off',
   type: 'text',
@@ -29,7 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
   disable: false,
   readonly: false,
   isError: false,
-  rows: 2
+  rows: 2,
+  textAlign: 'start'
 });
 const emit = defineEmits<{
   'update:modelValue': [value: string],
@@ -121,12 +125,14 @@ function handlePasswordIcon() {
       'error error--shake': isError,
     }"
     :style="{
-      'width': width,
+      'max-width': width,
+      'width': '100%',
       '--input-placeholder-gap': `${positionOfPlaceholder}px`
     }"
   >
     <slot ref="prepend" name="prepend"></slot>
     <label
+      v-if="props.isLabel"
       :class="{
         'form__placeholder': true,
         'form__placeholder--active': placeholderStatus === 0 || isInputFocus,
@@ -137,6 +143,13 @@ function handlePasswordIcon() {
       v-if="props.type !== 'textarea'"
       ref="input"
       class="form__input-field"
+      :class="{
+        'no-label': !props.isLabel
+      }"
+      :style="{
+        textAlign: props.textAlign,
+        textIndent: props.textAlign === 'start' ? '0.5em' : 'auto'
+      }"
       :placeholder="props.placeholder"
       :autocomplete="props.autocomplete"
       :type="isTypePassword ? props.type : showPasswordType"
@@ -181,7 +194,7 @@ function handlePasswordIcon() {
   border-width: 1.2px;
   border-style: solid;
   border-radius: 4px;
-  background: var(--white-color)
+  background: var(--white-color);
 }
 
 .form__input-box--active {
@@ -195,7 +208,6 @@ function handlePasswordIcon() {
 }
 
 .form__input-field {
-  text-indent: 0.5em;
   border-radius: 5px;
   font-size: 18px;
   width: 100%;
@@ -206,11 +218,13 @@ function handlePasswordIcon() {
 }
 
 textarea.form__input-field {
+  padding: 10px 0;
+  text-indent: 0.5em;
   background: transparent;
-  height: auto
+  height: auto;
 }
 
-.form__input-field::placeholder {
+.form__input-field:not(.no-label)::placeholder {
   visibility: hidden;
 }
 

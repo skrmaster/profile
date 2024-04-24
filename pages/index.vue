@@ -9,6 +9,10 @@ type Park = {
   horizon: number;
 }
 
+useHead({
+  title: "首页"
+});
+
 const benchData = benchPath.data;
 const roadData = roadPath.data;
 const roadWidth = 642;

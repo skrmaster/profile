@@ -2,7 +2,8 @@
 
 </script>
 <template>
-  <div>
+  <div class="flex__center mb2">
+    <img src="/images/signpost.png" />
   </div>
 </template>
 <style scoped>

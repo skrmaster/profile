@@ -14,17 +14,17 @@ const navList: Array<NavItemType> = [
     type: 'link'
   },
   {
-    link: '',
+    link: '/project-list',
     name: '项目列表',
     type: 'link'
   },
   {
-    link: '',
+    link: '/record-list',
     name: '个人纪录',
     type: 'link'
   },
   {
-    link: '',
+    link: '/address-list',
     name: '地址导航',
     type: 'link'
   },
@@ -107,6 +107,7 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
           <div 
             v-if="item.type === 'link'"
             class="item__box flex__center"
+            @click="handleLink(item.link)"
             :class="{
               line: getLine(navList[index+1], item)
             }"
@@ -153,7 +154,10 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
   position: sticky;
   top: 0;
   z-index: 999;
-  background: #ffffff;
+  background-image: radial-gradient(transparent 1px, #eef1f5 1px);
+  background-size: 6px 6px;
+  backdrop-filter: saturate(50%) blur(4px);
+  -webkit-backdrop-filter: saturate(50%) blur(4px);
 }
 
 .line-wave__up {
