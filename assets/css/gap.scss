@@ -1,0 +1,67 @@
+$font-size: 1;
+
+@for $i from 1 through 10 {
+  .m#{$i} {
+    margin: #{calc($i / $font-size)}rem;
+  }
+  .mx#{$i} {
+    margin: 0 #{calc($i / $font-size)}rem;
+  }
+  .mx-#{$i} {
+    margin: 0 -#{calc($i / $font-size)}rem;
+  }
+  .my#{$i} {
+    margin: #{calc($i / $font-size)}rem 0;
+  }
+  .my-#{$i} {
+    margin: -#{calc($i / $font-size)}rem 0;
+  }
+  .mt#{$i} {
+    margin-top: #{calc($i / $font-size)}rem;
+  }
+  .ml#{$i} {
+    margin-left: #{calc($i / $font-size)}rem;
+  }
+  .mb#{$i} {
+    margin-bottom: #{calc($i / $font-size)}rem;
+  }
+  .mr#{$i} {
+    margin-right: #{calc($i / $font-size)}rem;
+  }
+
+  .p#{$i} {
+    padding: #{calc($i / $font-size)}rem;
+  }
+  .px#{$i} {
+    padding: 0 #{calc($i / $font-size)}rem;
+  }
+  .py#{$i} {
+    padding: #{calc($i / $font-size)}rem 0;
+  }
+  .pt#{$i} {
+    padding-top: #{calc($i / $font-size)}rem;
+  }
+  .pl#{$i} {
+    padding-left: #{calc($i / $font-size)}rem;
+  }
+  .pb#{$i} {
+    padding-bottom: #{calc($i / $font-size)}rem;
+  }
+  .pr#{$i} {
+    padding-right: #{calc($i / $font-size)}rem;
+  }
+}
+
+@for $i from 1 through 100 {
+  .fs#{$i} {
+    font-size: #{$i}px;
+  }
+
+  .flex#{$i} {
+    flex: #{$i};
+  }
+
+  .z-index#{$i} {
+    z-index: #{$i};
+  }
+}

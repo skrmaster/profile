@@ -313,6 +313,7 @@ onNuxtReady(() => {
     :bg-default-size="false"
   >
     <com-navigation></com-navigation>
+    <com-navigation-small></com-navigation-small>
     <section class="p-r">
       <canvas id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
@@ -343,7 +344,6 @@ onNuxtReady(() => {
       </div>
     </section>
     <index-skills></index-skills>
-    <com-arc-div></com-arc-div>
     <index-projects></index-projects>
     <div class="container">
       <div class="text-center">

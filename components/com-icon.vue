@@ -24,15 +24,17 @@ function handleClick($event: Event) {
 </script>
 <template>
   <svg
-    v-if="props.icon"
+    v-if="props.icon"  
     class="icon" 
     aria-hidden="true"
-    v-bind="$attrs"
     @click="handleClick"
   >
     <use :xlink:href="icon"></use>
   </svg>
 </template>
 <style scoped>
-
+.inhert {
+  width: inherit;
+  height: inherit;
+}
 </style>

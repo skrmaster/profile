@@ -180,7 +180,7 @@ function handlePasswordIcon() {
     <com-icon
       v-if="canShowClearIcon"
       @click.stop="handlerClear"
-      icon="profilea-ziyuan37close-circle"
+      icon="profileclose-circle"
     ></com-icon>
     <slot name="append"></slot>
   </div>
@@ -195,6 +195,7 @@ function handlePasswordIcon() {
   border-style: solid;
   border-radius: 4px;
   background: var(--white-color);
+  min-height: 50px;
 }
 
 .form__input-box--active {
@@ -211,7 +212,6 @@ function handlePasswordIcon() {
   border-radius: 5px;
   font-size: 18px;
   width: 100%;
-  height: 50px;
   border: 0;
   outline: 0;
   flex: 1;

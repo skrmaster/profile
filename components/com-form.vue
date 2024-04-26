@@ -113,7 +113,7 @@ defineExpose({
 })
 </script>
 <template>
-  <elementForm class="flex__center" />
+  <elementForm class="flex__center flex-wrap" />
 </template>
 <style scoped>
 
