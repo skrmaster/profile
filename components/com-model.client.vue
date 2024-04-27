@@ -21,7 +21,7 @@ const propModelValue = computed(() => {
 
 watch(propModelValue, (newVal: boolean) => {
   setVisiable.value = newVal;
-})
+});
 
 watch(setVisiable, (newVal: boolean) => {
   if (newVal) {    
@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
       }"
     >
       <div class="flex__center flex1">
-        <div>
+        <div v-bind="$attrs">
           <slot />
         </div>
       </div>

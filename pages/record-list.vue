@@ -94,7 +94,7 @@ const rank = ref([
             </com-icon>
           </template>
           <template #append>
-            <com-button class="search__btn mr2" plain>
+            <com-button class="search__btn mr2" plain is-ripple>
               <span class="fs20" style="pointer-events: none;">搜索</span>
             </com-button>
           </template>

@@ -7,6 +7,7 @@ type Props = {
   disabled?: boolean;
   loading?: boolean;
   link?: boolean;
+  isRipple?: boolean;
 }
 const emit = defineEmits<{
   click: [event: Event]
@@ -16,7 +17,8 @@ const props = withDefaults(defineProps<Props>(), {
   plain: false,
   disabled: false,
   loading: false,
-  link: false
+  link: false,
+  isRipple: false
 });
 
 const rippleRef = ref();
@@ -51,7 +53,9 @@ function ripple(el: HTMLElement, e: MouseEvent) {
 }
 
 function handleClick($event: Event) {
-  ripple(rippleRef.value, $event as MouseEvent);
+  if (props.isRipple) {
+    ripple(rippleRef.value, $event as MouseEvent);
+  }
   $event.preventDefault();
   emit('click', $event);
 }
