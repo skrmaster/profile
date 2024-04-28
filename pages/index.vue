@@ -312,14 +312,14 @@ onNuxtReady(() => {
     :bg-style-content="''"
     :bg-default-size="false"
   >
-    <com-navigation></com-navigation>
-    <com-navigation-small></com-navigation-small>
+    <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
+    <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
     <section class="p-r">
       <canvas id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
       <div class="container z-index4">
         <div class="introduction">
-          <div class="flex__center introduciton-text-height">
+          <div class="flex__center flex-wrap introduciton-text-height">
             <div class="fs48 text-right self-introduction">
               <p>嗨,</p>
               <p class="my1">我是<span class="font-bold fs60">郑洋</span></p>
@@ -347,22 +347,22 @@ onNuxtReady(() => {
     <index-projects></index-projects>
     <div class="container">
       <div class="text-center">
-        <p class="fs48">对作者说点什么</p>
-        <p class="fs18 text-uppercase">Say something to the author</p>
+        <p class="fs48">联系我</p>
+        <p class="fs18 text-uppercase">contact me</p>
       </div>
       <div class="contact my5">
         <div class="contact__item flex__column--center">
-          <com-icon class="contact__icon" icon="profilephone"></com-icon>
+          <com-icon width="60px" height="60px" icon="profilephone"></com-icon>
           <p class="contact__item-gap fs24">电话</p>
           <p class="fs30">+8618283170317</p>
         </div>
         <div class="contact__item flex__column--center contact__borderx">
-          <com-icon class="contact__icon" icon="profilewechat"></com-icon>
+          <com-icon width="60px" height="60px" icon="profilewechat"></com-icon>
           <p class="contact__item-gap fs24">微信</p>
           <p class="fs30">skrMogul</p>
         </div>
         <div class="contact__item flex__column--center">
-          <com-icon class="contact__icon" icon="profileemail"></com-icon>
+          <com-icon width="60px" height="60px" icon="profileemail"></com-icon>
           <p class="contact__item-gap fs24">邮箱</p>
           <p class="fs30">18283170317zy@gmail.com</p>
         </div>
@@ -372,6 +372,7 @@ onNuxtReady(() => {
       </com-form>
     </div>
     <com-footer></com-footer>
+    <div style="height: 120px;"></div>
   </NuxtLayout>
 </template>
 <style scoped>

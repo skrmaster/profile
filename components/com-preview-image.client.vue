@@ -8,15 +8,17 @@ const props = withDefaults(defineProps<Prop>(), {
 });
 
 const visiable = ref(false);
-const currentImageUrl = ref<string | undefined>();
+const currentIndex = ref(0);
 const enlarge = ref(1);
 const enlargeStep = ref(0.5);
 const rorateDeg = ref(0);
 const rorateStep = ref(90);
 const isLoaded = ref(false);
+const duration = ref(0.2);
+const imageRef = ref<HTMLElement>();
 
-const firstImageUrl = computed(() => {
-  return props.imageUrls[0];
+const minmax = computed(() => {
+  return [0, props.imageUrls.length];
 });
 
 const cssRorate = computed(() => {
@@ -29,19 +31,56 @@ const cssEnlarge = computed(() => {
 
 const styleList = computed(() => {
   return {
-    transform: cssEnlarge.value + ' ' + cssRorate.value
+    transform: cssEnlarge.value + ' ' + cssRorate.value,
+    transitionDuration: `${duration.value}s`
   };
 });
 
 function openModel() {
-  currentImageUrl.value = firstImageUrl.value;
   visiable.value = true;
-  isLoaded.value = true;
+  nextTick(() => {
+    isLoaded.value = true;
+  });
 }
 
 function closeModel() {
   visiable.value = false;
-  isLoaded.value = false;
+}
+
+function nextPic() {
+  handleReset();
+  if (minmax.value[1] - 1 === currentIndex.value) {
+    currentIndex.value = 0;
+    return
+  }
+  currentIndex.value++;
+}
+
+function prevPic() {
+  handleReset();
+  if (minmax.value[0] === currentIndex.value) {
+    currentIndex.value = minmax.value[1] - 1;
+    return
+  }
+  currentIndex.value--;
+}
+
+function generateImage() {
+  if (isLoaded.value) {
+    return (
+      props.imageUrls.map((e, i: number) => {
+        return <img
+          ref={ i === currentIndex.value ? imageRef : undefined }
+          id={ `id${i}` }
+          v-drag 
+          v-show={ i === currentIndex.value } 
+          style={ styleList.value }
+          src={ e } 
+          alt="展示图片" 
+        />
+      })
+    )
+  }
 }
 
 function handleEnlarge(e: WheelEvent) {
@@ -74,8 +113,15 @@ function handleRotate(type: 1 | -1) {
 }
 
 function handleReset() {
+  duration.value = 0;
   enlarge.value = 1;
   rorateDeg.value = 0;
+  if (imageRef.value) {
+    imageRef.value.style.translate = '0 0';
+  }
+  setTimeout(() => {
+    duration.value = 0.2;
+  }, 0)
 }
 
 defineExpose({
@@ -84,30 +130,86 @@ defineExpose({
 </script>
 <template>
   <com-model 
-    class="wh100 flex1 flex__center"
+    class="wh100 flex1"
     v-model="visiable" 
     to-body
     @wheel="handleEnlarge"
     @click="openModel"
   >
-    <div class="image__box">
-      <img v-drag="isLoaded" :style="styleList" :src="currentImageUrl" alt="展示图片" />
+    <div class="image__box wh100 flex__center">
+      <generateImage v-if="isLoaded" />
     </div>
-    <div class="prev flex__center">
-      <com-icon class="control__icon" icon="profilearrow"></com-icon>
+    <div class="prev flex__center" @click="prevPic" title="上一张">
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        icon="profilearrow"
+      ></com-icon>
     </div>
-    <div class="next flex__center">
-      <com-icon class="control__icon" icon="profilearrow"></com-icon>
+    <div class="next flex__center" @click="nextPic" title="下一张">
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        icon="profilearrow"
+      ></com-icon>
     </div>
-    <div class="close flex__center" @click="closeModel">
-      <com-icon class="close__icon" icon="profileclose-circle"></com-icon>
+    <div class="close flex__center" title="关闭" @click.stop="closeModel">
+      <com-icon 
+        width="15px" 
+        height="15px" 
+        color="var(--white-color)" 
+        class="close__icon" 
+        icon="profileclose"
+      ></com-icon>
     </div>
     <div class="control flex__row">
-      <com-icon class="control__icon mx1" icon="profileenlarge" @click="scaleImage(1)"></com-icon>
-      <com-icon class="control__icon mx1" icon="profileshrink" @click="scaleImage(-1)"></com-icon>
-      <com-icon class="control__icon mx2" icon="profilereset" @click="handleReset"></com-icon>
-      <com-icon class="control__icon mx1" icon="profilerorate-left" @click="handleRotate(-1)"></com-icon>
-      <com-icon class="control__icon mx1" icon="profilerorate-right" @click="handleRotate(1)"></com-icon>
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        class="mx1" 
+        icon="profileenlarge"
+        title="放大"
+        @click="scaleImage(1)"
+      ></com-icon>
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        class="mx1" 
+        icon="profileshrink" 
+        title="缩小"
+        @click="scaleImage(-1)"
+      ></com-icon>
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        class="mx2" 
+        icon="profilereset" 
+        title="还原"
+        @click="handleReset"
+      ></com-icon>
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        class="mx1" 
+        icon="profilerorate-left" 
+        title="向左旋转"
+        @click="handleRotate(-1)"
+      ></com-icon>
+      <com-icon 
+        width="20px" 
+        height="20px" 
+        color="var(--white-color)" 
+        class="mx1" 
+        icon="profilerorate-right" 
+        title="向右旋转"
+        @click="handleRotate(1)"
+      ></com-icon>
     </div>
   </com-model>
 </template>
@@ -121,6 +223,7 @@ defineExpose({
   transform: translateX(-50%);
   border-radius: 25px;
   padding: 5px 10px;
+  user-select: none;
 }
 
 .control__icon {
@@ -129,9 +232,13 @@ defineExpose({
   color: var(--white-color);
 }
 
-.image__box img {
-  transform-origin: center center;
-  transition: all .3s ease; 
+.image__box {
+  flex: 1;
+}
+
+.image__box>img {
+  transition: all .2s ease; 
+  user-select: none;
 }
 
 .prev {
@@ -144,6 +251,7 @@ defineExpose({
   width: 40px;
   border-radius: 50%;
   background: var(--model-control-bg-color);
+  user-select: none;
 }
 
 .next {
@@ -156,9 +264,11 @@ defineExpose({
   width: 40px;
   border-radius: 50%;
   background: var(--model-control-bg-color);
+  user-select: none;
 }
 
 .close {
+  cursor: pointer;
   position: absolute;
   right: 10%;
   top: 10%;
@@ -167,11 +277,6 @@ defineExpose({
   width: 40px;
   border-radius: 50%;
   background: var(--model-control-bg-color);
-}
-
-.close__icon {
-  height: 40px;
-  width: 40px;
-  color: var(--white-color);
+  user-select: none;
 }
 </style>

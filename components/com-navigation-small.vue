@@ -3,17 +3,49 @@
 const navList = ref([
   {
     name: '首页',
-    icon: 'profilegithub'
-  }
-])
+    icon: 'profilehome1'
+  },
+  {
+    name: '项目',
+    icon: 'profileprojects'
+  },
+  {
+    name: '记录',
+    icon: 'profileblogs'
+  },
+  {
+    name: '地址',
+    icon: 'profileaddress'
+  },
+]);
+const currentIndex = ref(0);
+
+function handleNav(index: number) {
+  currentIndex.value = index;
+}
 </script>
 <template>
-  <div class="navigation--small">
-    <div>
+  <div class="navigation--small px1">
+    <div class="mr1">
       <com-avatar avatar-url="/images/pd3.png" nickname="五五开"></com-avatar>
     </div>
-    <div></div>
-    <div></div>
+    <nav class="flex1 flex__row--between">
+      <div 
+        v-for="(item, index) in navList" 
+        :key="index"
+        class="navigation__item"
+        :class="{
+          'active': currentIndex === index
+        }"
+        @click="handleNav(index)"
+      >
+        <com-icon class="nav__icon" :icon="item.icon"></com-icon>
+        <span v-show="currentIndex === index" class="fs18">{{ item.name }}</span>
+      </div>
+    </nav>
+    <div class="theme__control flex__row--end">
+      <com-theme-button></com-theme-button>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -23,7 +55,7 @@ const navList = ref([
   bottom: 20px;
   transform: translateX(-50%);
   min-height: 90px;
-  max-width: 638px;
+  max-width: 480px;
   width: 100%;
   background-color: rgb(238, 238, 238);
   /* background-image: radial-gradient(transparent 1px, rgb(238, 238, 238) 1px);
@@ -33,5 +65,35 @@ const navList = ref([
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
   z-index: 99;
   border-radius: 45px;
+  display: flex;
+  align-items: center;
+}
+
+/* nav {
+  margin: 0 -20px;
+} */
+
+.navigation__item {
+  display: flex;
+  align-items: center;
+  transition: all .2s ease;
+  transform-origin: center center;
+}
+
+.navigation__item.active {
+  padding: 10px 18px;
+  background: var(--nav-active-bg-color);
+  border-radius: 5px;
+}
+
+.navigation__item.active .nav__icon {
+  margin-right: 4px;
+}
+
+
+.theme__control {
+  border-left: 2px solid var(--primary-border-color);
+  max-width: 84px;
+  width: 100%;
 }
 </style>

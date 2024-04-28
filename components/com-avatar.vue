@@ -5,27 +5,15 @@ type Prop = {
 }
 
 const props = defineProps<Prop>();
-const preview = ref();
 
-function handlePreview() {
-  console.log(preview);
-  
-  preview.value.open();
-}
 </script>
 <template>
   <div class="avatar flex__center">
-    <com-preview-image 
-      ref="preview"
-      :image-urls="[props.avatarUrl]"
-    >
-    </com-preview-image>
     <img 
       v-if="props.avatarUrl" 
       :src="props.avatarUrl" 
       :alt="props.nickname"
       class="scale-down"
-      @click="handlePreview"
     />
     <div v-else>
       <span class="fs14 line1__ellipsis">{{ props.nickname }}</span>

@@ -14,27 +14,21 @@ const emit = defineEmits<{
 
 const { $zIndex } = useNuxtApp();
 const zIndex: number = $zIndex();
-const setVisiable = toRef(props.modelValue);
-const propModelValue = computed(() => {
+const visible = computed(() => {
   return props.modelValue;
 });
 
-watch(propModelValue, (newVal: boolean) => {
-  setVisiable.value = newVal;
-});
-
-watch(setVisiable, (newVal: boolean) => {
+watch(visible, (newVal: boolean) => {
   if (newVal) {    
     document.documentElement.style.overflow = 'hidden';
   } else {
     document.documentElement.style.overflow = 'scroll';
   }
-  emit('update:modelValue', newVal);
-})
+});
 
 function escapeKeyUp(e: KeyboardEvent) {
   if (e.code === 'Escape') {
-    setVisiable.value = false;
+    emit('update:modelValue', false);
     document.documentElement.style.overflow = 'scroll';
   }
 }
@@ -51,13 +45,13 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body" :disabled="!props.toBody">
     <div 
-      v-show="setVisiable"
+      v-show="visible"
       class="model" 
       :style="{
         zIndex: zIndex
       }"
     >
-      <div class="flex__center flex1">
+      <div class="wh100">
         <div v-bind="$attrs">
           <slot />
         </div>
@@ -70,10 +64,8 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  height: 100%;
+  bottom: 0;
+  right: 0;
   background: var(--model-bg-color);
 }
 </style>

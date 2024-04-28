@@ -3,6 +3,7 @@ const dictionary: Record<string, RegExp> = {
   'phone': /^1[34578]\d{9}$/g,
   'password': /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/g,
   'numberCode': /^\d{6}$/g,
+  'number': /(-|\+)?\d+(\.\d+)?/g
 }
 
 export function vaildTest(val: string, rule: string | RegExp | undefined): [boolean, number] {
@@ -24,4 +25,9 @@ export function vaildTest(val: string, rule: string | RegExp | undefined): [bool
   } else {
     return [result, 1];
   }
+}
+
+export function stringRegexp(str: string, type: keyof typeof dictionary) {
+  const result = str.match(dictionary[type]);
+  return result;
 }

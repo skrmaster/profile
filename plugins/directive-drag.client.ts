@@ -1,43 +1,49 @@
+import { stringRegexp } from '@/utils/regexp';
+
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.directive('drag', {
-    mounted(el: HTMLElement, binding) {
-      if (!binding.value) {
-        return;
-      }
-      
-      const w = el.offsetWidth;
-      const h = el.offsetHeight;
-      const parent = el.parentElement;
-      let div: HTMLElement;
+    mounted(el: HTMLElement) {
+      el.draggable = false;
       let start = false;
-      nextTick(() => {
-        console.log(el, w, h);
-      });
+      let mouseX: number;
+      let mouseY: number;
+      let originTranslate;
+      let translateX: number, translateY: number;
+      const originDuration = el.style.transitionDuration;
 
-      el.addEventListener('mousedown', function(e: MouseEvent) {
-        console.log(e);
+      function dragMouseDown(e: MouseEvent) {
         start = true;
-        div = document.createElement('div');
-        div.style.width = `${w}px`;
-        div.style.height = `${h}px`;
-        div.style.visibility = 'hidden';
-        parent?.appendChild(div);
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        el.style.transitionDuration = '0s';
+        originTranslate = stringRegexp(el.style.translate, 'number');
+        translateX = originTranslate && originTranslate[0] 
+          ? parseInt(originTranslate[0]) 
+          : 0;
+        translateY = originTranslate && originTranslate[1] 
+          ? parseInt(originTranslate[1]) 
+          : 0;
+      }
 
-        el.style.position = 'absolute';
-        // el.style.left = `${e.clientX - w / 2}px`
-        // el.style.top = `${e.clientY - h / 2}px`
+      el.addEventListener('mousedown', dragMouseDown);
 
+      document.addEventListener('mousemove', function(e: MouseEvent) {
+        if (!start) {
+          return
+        }
+        const x = e.clientX;
+        const y = e.clientY;
+        const dx = x - mouseX;
+        const dy = y - mouseY;
+        el.style.translate = `${translateX + dx}px ${translateY + dy}px`;
       });
 
-      el.addEventListener('mousedown', function(e: MouseEvent) {
-        console.log(e);
-        
-      });
-
-      el.addEventListener('mouseup', function(e: MouseEvent) {
-        console.log(e);
+      document.addEventListener('mouseup', function(e: MouseEvent) {
         start = false;
-        
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        el.style.transitionDuration = originDuration;
+        document.removeEventListener('mousedown', dragMouseDown);
       });
     }
   });
