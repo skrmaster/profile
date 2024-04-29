@@ -9,7 +9,7 @@
   --breakpoint-5: 1400px;
 }
 
-[class^=container] {
+[class^="container"] {
   width: 100%;
   height: 100%;
   margin-right: auto;
@@ -136,6 +136,7 @@
 @media only screen and (max-width: 576px) {
   .container {
     max-width: 540px;
+    padding: 10px;
   }
 
   .contact__borderx {

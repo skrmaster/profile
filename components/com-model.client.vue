@@ -22,14 +22,14 @@ watch(visible, (newVal: boolean) => {
   if (newVal) {    
     document.documentElement.style.overflow = 'hidden';
   } else {
-    document.documentElement.style.overflow = 'scroll';
+    document.documentElement.style.overflow = 'auto';
   }
 });
 
 function escapeKeyUp(e: KeyboardEvent) {
   if (e.code === 'Escape') {
     emit('update:modelValue', false);
-    document.documentElement.style.overflow = 'scroll';
+    document.documentElement.style.overflow = 'auto';
   }
 }
 

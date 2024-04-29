@@ -160,7 +160,7 @@ function handlePasswordIcon() {
     />
     <textarea v-else
       ref="input"
-      class="form__input-field"
+      class="form__input-field no-label"
       :placeholder="props.placeholder"
       v-model="inputValue"
       :max-length="props.maxLength"
@@ -196,6 +196,7 @@ function handlePasswordIcon() {
   border-radius: 4px;
   background: var(--white-color);
   min-height: 50px;
+  overflow: hidden;
 }
 
 .form__input-box--active {
@@ -209,6 +210,7 @@ function handlePasswordIcon() {
 }
 
 .form__input-field {
+  min-height: 50px;
   border-radius: 5px;
   font-size: 18px;
   width: 100%;

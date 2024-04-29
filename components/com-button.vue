@@ -8,6 +8,8 @@ type Props = {
   loading?: boolean;
   link?: boolean;
   isRipple?: boolean;
+  bgColor?: string;
+  needInnerOutline?: boolean;
 }
 const emit = defineEmits<{
   click: [event: Event]
@@ -18,7 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   loading: false,
   link: false,
-  isRipple: false
+  isRipple: false,
+  bgColor: 'var(--primary-color)',
+  needInnerOutline: true
 });
 
 const rippleRef = ref();
@@ -71,6 +75,14 @@ function handleClick($event: Event) {
       'plain': props.plain,
       'disabled': props.disabled
     }"
+    :style="{
+      '--btn-box-shadow': `0px 0px 8px 2px rgba(0, 0, 0, 0.2)
+      ${ props.needInnerOutline 
+        ? ', inset 0px 0px 8px 0px rgba(255, 255, 255, 0.9)' 
+        : ';'
+      }`,
+      backgroundColor: props.bgColor
+    }"
     v-bind="$attrs"
     @click="handleClick"
   >
@@ -98,16 +110,20 @@ function handleClick($event: Event) {
 }
 
 .btn.primary {
-  box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2), inset 0px 0px 8px 0px rgba(255, 255, 255, 0.9);
+  box-shadow: var(--btn-box-shadow);
   background: var(--primary-color);
   color: var(--white-color);
   border: solid 5px var(--white-color);
 }
 
+/* .btn.primary:active {
+  box-shadow: none!important;
+} */
+
 
 .btn.plain {
   box-shadow: none;
-  background: var(--white-color);
+  background: var(--white-color)!important;
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
 }

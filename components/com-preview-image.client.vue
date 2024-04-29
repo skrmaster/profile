@@ -32,7 +32,9 @@ const cssEnlarge = computed(() => {
 const styleList = computed(() => {
   return {
     transform: cssEnlarge.value + ' ' + cssRorate.value,
-    transitionDuration: `${duration.value}s`
+    transitionDuration: `${duration.value}s`,
+    maxWidth: '100%',
+    maxHeight: '100%'
   };
 });
 
@@ -139,7 +141,7 @@ defineExpose({
     <div class="image__box wh100 flex__center">
       <generateImage v-if="isLoaded" />
     </div>
-    <div class="prev flex__center" @click="prevPic" title="上一张">
+    <div v-if="imageUrls.length > 1" class="prev flex__center" @click="prevPic" title="上一张">
       <com-icon 
         width="20px" 
         height="20px" 
@@ -147,7 +149,7 @@ defineExpose({
         icon="profilearrow"
       ></com-icon>
     </div>
-    <div class="next flex__center" @click="nextPic" title="下一张">
+    <div v-if="imageUrls.length > 1" class="next flex__center" @click="nextPic" title="下一张">
       <com-icon 
         width="20px" 
         height="20px" 
@@ -156,13 +158,15 @@ defineExpose({
       ></com-icon>
     </div>
     <div class="close flex__center" title="关闭" @click.stop="closeModel">
-      <com-icon 
-        width="15px" 
-        height="15px" 
-        color="var(--white-color)" 
-        class="close__icon" 
-        icon="profileclose"
-      ></com-icon>
+      <div class="flex1 flex__center close__tip">
+        <com-icon 
+          width="15px" 
+          height="15px" 
+          color="var(--white-color)" 
+          class="close__icon" 
+          icon="profileclose"
+        ></com-icon>
+      </div>
     </div>
     <div class="control flex__row">
       <com-icon 
@@ -278,5 +282,19 @@ defineExpose({
   border-radius: 50%;
   background: var(--model-control-bg-color);
   user-select: none;
+}
+
+
+.close__tip {
+  position: relative;
+}
+
+.close__tip::after {
+  content: "ESC";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--white-color);
 }
 </style>
