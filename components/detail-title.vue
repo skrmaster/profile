@@ -15,7 +15,7 @@ const textNumber = computed(() => {
             height="50px" 
             icon="profileleft"
           ></com-icon>
-          <span class="fs24 nowrap">返回</span>
+          <span class="fs24 nowrap display-0-none">返回</span>
         </div>
         <div class="flex__row flex1">
           <com-form-input 
@@ -27,17 +27,17 @@ const textNumber = computed(() => {
           </com-form-input>
           <span 
             v-if="textNumber > 0" 
-            class="nowrap fs18 detail__notice"
+            class="nowrap fs18 detail__notice display-0-none"
           >还需要输入{{ textNumber }}个字</span>
         </div>
-        <div class="ml1">
+        <div class="btn__group flex__row--between">
           <com-button class="btn" 
             :need-inner-outline="false" 
             bg-color="#898989"
           >
             <span class="fs20">当草稿</span>
           </com-button>
-          <com-button class="btn ml1">
+          <com-button class="btn">
             <span class="fs20">发布</span>
           </com-button>
         </div>
@@ -61,12 +61,18 @@ const textNumber = computed(() => {
   border-radius: 10px;
   border: 0;
   outline: 0;
+  min-width: 100px;
 }
 
 .detail__notice {
   max-width: 200px;
   width: 100%;
   text-align: center;
+}
+
+.btn__group {
+  max-width: 210px;
+  width: 100%;
 }
 
 :deep(.detail__input input) {
