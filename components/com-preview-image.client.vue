@@ -45,10 +45,6 @@ function openModel() {
   });
 }
 
-function closeModel() {
-  visiable.value = false;
-}
-
 function nextPic() {
   handleReset();
   if (minmax.value[1] - 1 === currentIndex.value) {
@@ -135,6 +131,7 @@ defineExpose({
     class="wh100 flex1"
     v-model="visiable" 
     to-body
+    show-close-icon
     @wheel="handleEnlarge"
     @click="openModel"
   >
@@ -156,17 +153,6 @@ defineExpose({
         color="var(--white-color)" 
         icon="profilearrow"
       ></com-icon>
-    </div>
-    <div class="close flex__center" title="关闭" @click.stop="closeModel">
-      <div class="flex1 flex__center close__tip">
-        <com-icon 
-          width="15px" 
-          height="15px" 
-          color="var(--white-color)" 
-          class="close__icon" 
-          icon="profileclose"
-        ></com-icon>
-      </div>
     </div>
     <div class="control flex__row">
       <com-icon 
@@ -269,32 +255,5 @@ defineExpose({
   border-radius: 50%;
   background: var(--model-control-bg-color);
   user-select: none;
-}
-
-.close {
-  cursor: pointer;
-  position: absolute;
-  right: 10%;
-  top: 10%;
-  transform: translateY(-50%);
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  background: var(--model-control-bg-color);
-  user-select: none;
-}
-
-
-.close__tip {
-  position: relative;
-}
-
-.close__tip::after {
-  content: "ESC";
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--white-color);
 }
 </style>

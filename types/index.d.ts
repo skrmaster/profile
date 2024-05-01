@@ -3,3 +3,10 @@ declare interface CanvasUtil {
 }
 
 declare module 'uuid';
+
+declare type StackItem = {
+  name: string;
+  icon?: string;
+  officalUrl?: string;
+  isChoose: boolean;
+}

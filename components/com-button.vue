@@ -111,7 +111,7 @@ function handleClick($event: Event) {
 
 .btn.primary {
   box-shadow: var(--btn-box-shadow);
-  background: var(--primary-color);
+  background-color: var(--primary-color);
   color: var(--white-color);
   border: solid 5px var(--white-color);
 }

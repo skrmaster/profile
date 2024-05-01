@@ -5,16 +5,20 @@ $font-size: 1;
     margin: #{calc($i / $font-size)}rem;
   }
   .mx#{$i} {
-    margin: 0 #{calc($i / $font-size)}rem;
+    margin-left: #{calc($i / $font-size)}rem;
+    margin-right: #{calc($i / $font-size)}rem;
   }
   .mx-#{$i} {
-    margin: 0 -#{calc($i / $font-size)}rem;
+    margin-left: -#{calc($i / $font-size)}rem;
+    margin-right: -#{calc($i / $font-size)}rem;
   }
   .my#{$i} {
-    margin: #{calc($i / $font-size)}rem 0;
+    margin-top: #{calc($i / $font-size)}rem;
+    margin-bottom: #{calc($i / $font-size)}rem;
   }
   .my-#{$i} {
-    margin: -#{calc($i / $font-size)}rem 0;
+    margin-top: -#{calc($i / $font-size)}rem;
+    margin-bottom: -#{calc($i / $font-size)}rem;
   }
   .mt#{$i} {
     margin-top: #{calc($i / $font-size)}rem;
@@ -33,10 +37,12 @@ $font-size: 1;
     padding: #{calc($i / $font-size)}rem;
   }
   .px#{$i} {
-    padding: 0 #{calc($i / $font-size)}rem;
+    padding-left: #{calc($i / $font-size)}rem;
+    padding-right: #{calc($i / $font-size)}rem;
   }
   .py#{$i} {
-    padding: #{calc($i / $font-size)}rem 0;
+    padding-top: #{calc($i / $font-size)}rem;
+    padding-bottom: #{calc($i / $font-size)}rem;
   }
   .pt#{$i} {
     padding-top: #{calc($i / $font-size)}rem;
