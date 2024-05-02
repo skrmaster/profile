@@ -8,6 +8,12 @@ type Prop = {
   dataList?: StackItem[];
 }
 
+type ChooseRef = HTMLElement & { 
+  multiple: number[];
+  chooseList: StackItem[];
+  deleteList: StackItem[];
+}
+
 const props = withDefaults(defineProps<Prop>(), {
   mode: 'add',
   dataList: () => [],
@@ -22,17 +28,39 @@ const single = reactive<{
 }>({
   chooseIndex: null,
 });
-const multiple: number[] = [];
-const deleteInfo = ref<number[]>([]);
+const chooseAreaRef = ref<ChooseRef>();
+const deleteAreaRef = ref<ChooseRef>();
 
-const visible = ref(true);
+const multiple: number[] = [];
+const visible = ref(false);
 const list = toRef<StackItem[]>(props.dataList);
 const chooseList = ref<StackItem[]>([]);
 const deleteList = ref<StackItem[]>([]);
-const tagList = ref<StackItem[]>(data.tagList);
+const tagList = ref<StackItem[]>(initData());
 const chooseLen = computed(() => {
   return chooseList.value.length;
 });
+
+function initData(): StackItem[] {
+  const arr = props.dataList;
+  if (Array.isArray(arr) && arr.length > 0) {
+    data.tagList.forEach(e => {
+      if (arr.find(item => item.name === e.name)) {
+        e.isChoose = true;
+        chooseList.value.push({
+          ...e,
+          isChoose: false
+        });
+      }
+    });
+  }
+  
+  return data.tagList;
+}
+
+function handleEdit() {
+  visible.value = true;
+}
 
 function handleChoose(index: number) {
   if (props.mode === 'single-choose') {
@@ -49,8 +77,6 @@ function handleChoose(index: number) {
 
   if (props.mode === 'multiple-choose') {
     const item = list.value[index];
-
-    console.log(JSON.parse(JSON.stringify(list.value)));
     
     if (multiple.length === 0) {
       multiple.push(index);
@@ -63,8 +89,6 @@ function handleChoose(index: number) {
         list.value[e].isChoose = true;
       });
     }
-    console.log(multiple, 'multiple');
-    
     
     if (!chooseList.value.find(e => e.name === item.name)) {
       chooseList.value.push(item);
@@ -78,6 +102,12 @@ function handleChoose(index: number) {
 function handleChooseArea(val: StackItem[]) {
   for (let i = 0; i < val.length; i++) {
     let e = val[i];
+    let idx = deleteList.value.findIndex(item => item.name === e.name);
+    
+    if (idx > -1) {
+      deleteList.value.splice(idx, 1);
+      deleteAreaRef.value!.deleteList.splice(idx, 1);
+    }
     if (chooseList.value.find(item => item.name === e.name)) {
       continue;
     } else {
@@ -87,13 +117,15 @@ function handleChooseArea(val: StackItem[]) {
       });
     }
   }
-  console.log(chooseList.value);
-  
+}
+
+function handleDelete(index: number) {
+  deleteList.value.push(list.value[index]);
+  list.value.splice(index, 1);
+  emit('update', deleteList.value);
 }
 
 function handleDeleteArea(val: StackItem[]) {
-  console.log(val, 'val');
-  
   for (let i = 0; i < val.length; i++) {
     let e = val[i];
     if (deleteList.value.find(item => item.name === e.name)) {
@@ -109,33 +141,35 @@ function handleDeleteArea(val: StackItem[]) {
   tagList.value.forEach((e, i) => {
     if (deleteList.value.find(item => item.name === e.name)) {
       e.isChoose = false;
-      const idx = multiple.findIndex(e => e === i);
-      console.log(multiple, i, idx, 'idx');
+      const idx = chooseAreaRef.value!.multiple.findIndex(e => e === i);
       
+      let s = chooseAreaRef.value!.chooseList
+        .findIndex(item => item.name === e.name);
+      if (s > -1) {
+        chooseAreaRef.value!.chooseList.splice(s, 1);
+      }
+
       if (idx > -1) {
-        multiple.splice(idx, 1);
+        chooseAreaRef.value!.multiple.splice(idx, 1);
       }
     }
   });
 }
 
-function handleDelete(index: number) {
-  if (deleteInfo.value.length > 0) {
-    deleteInfo.value.push(index);
-  } else {
-    if (!deleteInfo.value.includes(index)) {
-      deleteInfo.value.push(index);
-    }
-  }
-  deleteList.value.push(list.value[index]);
-  list.value.splice(index, 1);
-  emit('update', deleteList.value);
-}
-
 function handleClose() {
-  emit('update', chooseList.value);
+  visible.value = false;
 }
 
+function handleConfirm() {
+  emit('update', chooseList.value);
+  visible.value = false;
+}
+
+defineExpose({
+  multiple,
+  chooseList,
+  deleteList
+});
 </script>
 <template>
   <div class="stack flex__row flex-wrap">
@@ -146,7 +180,7 @@ function handleClose() {
       :class="{
         'choosed': item.isChoose
       }"
-      @click="handleChoose(index)"
+      @click.stop="handleChoose(index)"
     >
       <div class="item__image flex__center">
         <img :src="item.icon" :alt="item.name" />
@@ -154,16 +188,21 @@ function handleClose() {
       <span class="flex__center stack__name line1__ellipsis">{{ item.name }}</span>
       <com-icon 
         v-if="props.mode === 'delete'"
-        @click="handleDelete(index)"
+        @click.stop="handleDelete(index)"
         class="icon__close"
         icon="profileclose-circle"
       ></com-icon>
     </div>
-    <div v-if="props.mode === 'add'" class="stack__item flex__center c-p">+</div>
+    <div 
+      v-if="props.mode === 'add'" 
+      class="stack__item flex__center c-p"
+      @click.stop="handleEdit"
+    >+</div>
   </div>
   <com-model-confirm
     v-if="mode === 'add'"
     v-model="visible"
+    @confirm="handleConfirm"
     @cannel="handleClose"
   >
     <div class="stack__choose">
@@ -172,15 +211,17 @@ function handleClose() {
           <p class="common__title">技术栈</p>
           <div class="flex1 mt1">
             <com-tech-stack 
+              ref="chooseAreaRef"
               :data-list="tagList" 
-              @update="handleChooseArea"
               mode="multiple-choose"
+              @update="handleChooseArea"
             ></com-tech-stack>
           </div>
         </div>
         <div class="confirm__area h100">
           <p class="mb1">已选择: {{ chooseLen }}个</p>
           <com-tech-stack 
+            ref="deleteAreaRef"
             mode="delete"
             :data-list="chooseList"
             @update="handleDeleteArea"

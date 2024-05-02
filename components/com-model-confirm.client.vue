@@ -14,7 +14,7 @@ const emit = defineEmits<{
   'cannel': [val?: unknown]
 }>();
 
-const visible = toRef(props.modelValue);
+const visible = toRef(props, 'modelValue');
 
 function handleClose() {
   emit('update:modelValue', false);

@@ -189,6 +189,8 @@ onNuxtReady(() => {
           <div class="input-box mx-auto">
             <div class="register-icon flex__center">
               <com-icon
+                width="56px"
+                height="53px"
                 class="sign-up--icon"
                 icon="profilesign-in"
               ></com-icon>

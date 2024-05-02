@@ -18,9 +18,9 @@ function generateElement() {
   const boolColor = props.bgChangeColor
   const className = {
     'background': !boolColor,
-    'default-size': boolSize
+    'default-size': boolSize,
   }
-  const style = props.bgStyleContent
+  const style = props.bgStyleContent;
 
   return (
     <div class={ className } style={ boolColor ? style : '' }>
@@ -34,8 +34,7 @@ function generateElement() {
 </template>
 <style scoped>
 .background {
-  background-image: radial-gradient(#ffffff 0, #eef1f5 100%);
-  /* background: #FFFFFF; */
+  background-image: radial-gradient(#ffffff 0, var(--background-color) 100%);
   background-blend-mode: screen;
 }
 

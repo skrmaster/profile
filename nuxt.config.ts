@@ -38,7 +38,7 @@ export default defineNuxtConfig({
       "compilerOptions": {
         "noEmit": true,
         "module": "ESNext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "resolveJsonModule": true,
         "jsx": "preserve",
         "jsxImportSource": "vue",
@@ -53,7 +53,10 @@ export default defineNuxtConfig({
         "baseUrl": ".",
       },
       include: [
-        "types/*.d.ts"
+        "types/*.d.ts",
+        "types/**/*.d.ts",
+        "src/**/*.d.ts",
+        "src/*.d.ts",
       ],
     }
   },

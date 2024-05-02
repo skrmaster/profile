@@ -1,15 +1,28 @@
 <script lang="ts" setup>
+type Prop = {
+  placeholder?: string;
+}
+
+const props = withDefaults(defineProps<Prop>(), {
+  placeholder: '项目名称'
+})
+
+const router = useRouter();
 const title = ref('');
 const textNumber = computed(() => {
   const len = title.value.length ? title.value.length : 0;
   return Math.abs(5 - len) >= 0 ? 5 - len : 0;
 });
+
+function goBack() {
+  router.back();
+}
 </script>
 <template>
   <div class="detail__title">
     <div class="container flex__row">
       <div class="flex__row flex1">
-        <div class="flex__row mr1">
+        <div class="flex__row mr1 c-p" @click="goBack">
           <com-icon 
             width="30px" 
             height="50px" 
@@ -22,12 +35,12 @@ const textNumber = computed(() => {
             class="detail__input"
             v-model="title" 
             :is-label="false"
-            placeholder="项目名称"
+            :placeholder="props.placeholder"
           >
           </com-form-input>
           <span 
             v-if="textNumber > 0" 
-            class="nowrap fs18 detail__notice display-0-none"
+            class="nowrap fs18 detail__notice display-0-none ml1"
           >还需要输入{{ textNumber }}个字</span>
         </div>
         <div class="btn__group flex__row--between">

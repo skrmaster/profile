@@ -372,7 +372,7 @@ onNuxtReady(() => {
       </com-form>
     </div>
     <com-footer></com-footer>
-    <div style="height: 120px;"></div>
+    <div style="height: 120px;" class="display-5-none display-4-none display-3-none"></div>
   </NuxtLayout>
 </template>
 <style scoped>
