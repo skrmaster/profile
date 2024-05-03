@@ -43,12 +43,17 @@ const emit = defineEmits<{
 const input = ref();
 const prepend = ref();
 
-const inputValue = ref('');
 const placeholderStatus = ref<Status>(1);
 const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
+const inputValue = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val);
+  }
+});
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -66,8 +71,8 @@ const width = computed((): string | number => {
   }
 });
 
-watch(inputValue, (val: string) => {
-  if (val.length > 0 && props.clearable) {
+watchEffect(() => {
+  if (inputValue.value.length > 0 && props.clearable) {
     canShowClearIcon.value = true;
   } else {
     canShowClearIcon.value = false;
@@ -107,7 +112,6 @@ function handlerBlur() {
 function handlerClear() {
   inputValue.value = '';
   input.value.focus();
-  emit('update:modelValue', inputValue.value);
 }
 
 function handlePasswordIcon() {
@@ -138,7 +142,13 @@ function handlePasswordIcon() {
         'form__placeholder--active': placeholderStatus === 0 || isInputFocus,
         'form__placeholder--textarea': props.type === 'textarea'
       }"
-    >{{ (props.isError && inputValue && props.errorMsg) ? props.errorMsg : props.placeholder }}</label>
+    >
+      {{ 
+        (props.isError && inputValue && props.errorMsg) 
+          ? props.errorMsg 
+          : props.placeholder 
+      }}
+    </label>
     <input
       v-if="props.type !== 'textarea'"
       ref="input"
@@ -176,11 +186,13 @@ function handlePasswordIcon() {
 
     </textarea>
     <com-icon
+      class="mr1"
       v-if="props.type === 'password' && (inputValue && inputValue.length > 0)"
       @click="handlePasswordIcon"
       :icon="showPasswordType !== 'password' ? 'profilesee' : 'profileno-see'"
     ></com-icon>
     <com-icon
+      class="mr1"
       v-if="canShowClearIcon"
       @click.stop="handlerClear"
       icon="profileclose-circle"

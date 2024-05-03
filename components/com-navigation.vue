@@ -158,6 +158,7 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
   background-size: 6px 6px;
   backdrop-filter: saturate(50%) blur(4px);
   -webkit-backdrop-filter: saturate(50%) blur(4px);
+  box-shadow: var(--box-shadow);
 }
 
 .line-wave__up {

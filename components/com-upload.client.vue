@@ -5,6 +5,8 @@ type FileType = {
   multiple?: boolean;
   accept?: string;
   previewType?: 'file-list' | 'image-list';
+  limit?: number;
+  label?: string;
 }
 
 type RenderListType = {
@@ -15,7 +17,8 @@ type RenderListType = {
 const props = withDefaults(defineProps<FileType>(), {
   multiple: true,
   accept: '*',
-  previewType: 'image-list'
+  previewType: 'image-list',
+  limit: 5,
 });
 
 const slotsVue = useSlots();
@@ -26,6 +29,12 @@ const fileInput = ref<HTMLInputElement>();
 const previewList = ref<string[]>([]);
 const isImageList = computed(() => {
   return props.previewType === 'image-list';
+});
+
+const showAddArea = computed(() => {
+  console.log(fileList.value);
+  
+  return fileList.value.length < props.limit;
 });
 
 const renderList = computed<RenderListType[]>(() => {
@@ -221,16 +230,18 @@ function blobToUrl(item: File) {
           </div>
         </div>
       </li>
-      <li v-if="isImageList" 
+      <li v-if="isImageList && showAddArea"
         class="image__add flex__center c-p" 
         @click="handleUpload"
       >
         <com-icon 
+          v-if="!props.label"
           class="add__icon" 
           width="30px" 
           height="30px" 
           icon="profileclose"
         ></com-icon>
+        <label v-else>{{ props.label }}</label>
       </li>
     </ul>
     <input 

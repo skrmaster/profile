@@ -1,0 +1,24 @@
+/* 去除Edge浏览器输入框的默认清除图标 */
+input::-ms-clear {
+  display: none;
+}
+
+/* 去除Chrome浏览器输入框的默认清除图标 */
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button,
+input::-webkit-search-results-button,
+input::-webkit-search-results-decoration {
+  display: none;
+}
+
+/* 去除Firefox浏览器输入框的默认清除图标 */
+input[type="search"]::-moz-search-clear,
+input[type="search"]::-moz-search-results,
+input[type="search"]::-moz-search-results-decoration {
+  display: none;
+}
+
+/* 去除浏览器密码输入框的默认清除图标 */
+input[type="password"]::-ms-reveal {
+  display: none;
+}

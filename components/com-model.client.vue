@@ -101,6 +101,7 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   background: var(--model-control-bg-color);
   user-select: none;
+  z-index: 999;
 }
 
 

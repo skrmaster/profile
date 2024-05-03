@@ -80,7 +80,7 @@ const rank = ref([
     :bg-default-size="false"
   >
     <com-navigation></com-navigation>
-    <div class="search">
+    <!-- <div class="search">
       <div class="w100 flex__center search__box">
         <com-form-input
           class="search__input"
@@ -100,7 +100,8 @@ const rank = ref([
           </template>
         </com-form-input>
       </div>
-    </div>
+    </div> -->
+    <com-search v-model="searchVal"></com-search>
     <section class="pb5">
       <div class="container">
         <div class="flex content">

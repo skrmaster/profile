@@ -10,6 +10,7 @@ type Prop = {
   readonly?: boolean;
   isError?: boolean;
   errorMsg?: string;
+  isLabel?: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -19,7 +20,8 @@ const props = withDefaults(defineProps<Prop>(), {
   clearable: false,
   disable: false,
   readonly: false,
-  isError: false
+  isError: false,
+  isLabel: true
 });
 
 const emit = defineEmits<{
@@ -83,6 +85,7 @@ onMounted(() => {
         type="text" 
         :is-error="props.isError"
         :error-msg="props.errorMsg"
+        :is-label="props.isLabel"
         width="100%"
         placeholder="请填写验证码"
         @change="handleCodeData"
