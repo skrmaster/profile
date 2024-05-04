@@ -147,7 +147,13 @@ function draw(): void {
     return;
   }
 
-  // drawBench(ctx, benchData);
+  ctx.save();
+  const x = parkCanvas.width / 2 - bench.width / 2 ;
+  const y = parkCanvas.height / 2 - bench.height / 2;
+  ctx.translate(x, y);
+  ctx.scale(0.8, 0.8);
+  drawBench(ctx, benchData);
+  ctx.restore();
 
   ctx.save();
   ctx.beginPath();
@@ -231,35 +237,65 @@ function drawBench(ctx: CanvasRenderingContext2D, arr: typeof benchData) {
   for (let i = 0; i < arr.length; i++) {
     arr[i].forEach(e => {
       if (e[1] === 'path') {
+        ctx.save();
+        ctx.beginPath();
         if (Array.isArray(e[0])) {
           e[0].forEach(item => {
             const res = item.split(':');
-            (ctx as any)[styleMap[res[0]]] = res[1];
-          })
+            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
+          });
         }
         const p1 = new Path2D(e[2] as string);
         p.addPath(p1);
-        ctx.stroke();
+        ctx.fill(p);
+        ctx.restore();
       } else if (e[1] === 'polygon') {
+        ctx.save();
         if (Array.isArray(e[0])) {
           e[0].forEach(item => {
             const res = item.split(':');
-            (ctx as any)[styleMap[res[0]]] = res[1];
-          })
+            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
+          });
         }
         const polygonPoint = (e[2] as string).split(' ');
-        drawPolygon(ctx, polygonPoint.map(e => parseInt(e) * 1));
-        ctx.stroke();
+        drawPolygon(ctx, polygonPoint.map(e => parseFloat(e) * 1));
+        ctx.restore();
+      } else if (e[1] === 'rect') {
+        ctx.save();
+        if (Array.isArray(e[0])) {
+          e[0].forEach(item => {
+            const res = item.split(':');
+            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
+          });
+        }
+        if (Array.isArray(e[2])) {
+          let x = parseFloat(e[2][0]);
+          let y = parseFloat(e[2][1]);
+          let w = parseFloat(e[2][2]);
+          let h = parseFloat(e[2][3]);
+          ctx.fillRect(x, y, w, h);
+        }
+        ctx.restore();
       }
-    })
+    });
   }
 }
 
 function drawPolygon(ctx: CanvasRenderingContext2D, arr: number[]) {
   const len = arr.length;
+  
   for (let i = 0; i < len; i++) {
-    ctx.lineTo(arr[i], arr[i + 1]);
+    if (i % 2 !== 0) {
+      continue
+    } else {
+      if (i === 0) {
+        ctx.moveTo(arr[i], arr[i + 1]);
+      } else {
+        ctx.lineTo(arr[i], arr[i + 1]);
+      }
+    }
   }
+  ctx.stroke();
 }
 
 function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
@@ -293,7 +329,7 @@ onNuxtReady(() => {
   scrollBarWidth = getScrollBarWidth();
   
   img = new Image();
-  img.src = '/svg/park-bench.svg';
+  // img.src = '/svg/park-bench.svg';
   lightImg = new Image();
   lightImg.src = '/svg/light-on.svg';
   grassImg = new Image();
