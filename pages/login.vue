@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { apiLogin } from '@/api/user/request';
+import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
@@ -21,6 +23,7 @@ const config: Array<FormConfig> = [
     field: 'email',
     type: 'text',
     rule: 'email',
+    data: "zyskr@qq.com",
     elementConfig: {
       width: '100%',
       placeholder: '请输入邮箱',
@@ -33,6 +36,7 @@ const config: Array<FormConfig> = [
     field: 'password',
     type: 'password',
     rule: 'password',
+    data: "Zhengyang64",
     elementConfig: {
       width: '100%',
       placeholder: '请输入密码',
@@ -41,6 +45,7 @@ const config: Array<FormConfig> = [
     }
   }
 ];
+const rememberPassword = ref(false);
 
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
@@ -135,11 +140,12 @@ function drawClock() {
 
 function getRotateDeg(): number {
   const year = dayDate.yearDayCount();
-  const oneOfDeg = Math.ceil(360 / year);
+  const oneOfDeg = (360 / year);
   const point = DayDate.numberPointNumberOfMonth('3.21', 
     DayDate.monthMap(dayDate.yearDayCount()));
   const currentDay = getTodayNumber();
-  return (currentDay - point) * oneOfDeg;
+  const res = (currentDay - point) * oneOfDeg;
+  return res;
 }
 
 function getTodayNumber(): number {
@@ -153,11 +159,19 @@ function getTodayNumber(): number {
 function handleSubmit() {
   if (form.value) {
     form.value.vaildForm()
-    .then(async (vaild: boolean) => {
-      if (vaild) {
-        await navigateTo({
-          path: '/'
-        })
+    .then(async (val: ReturnVaildForm) => {
+      if (val.vaild) {
+        const params = {
+          email: val.data.email,
+          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password)
+        }
+        await apiLogin(params).then((data) => {
+          const storageStr: storageType = rememberPassword.value ? 'localStorage' : 'sessionStorage';
+          const storage = new StorageSuger(storageStr);
+          storage.setValue('token', data.tokenObject.token);
+          storage.setValue('refresh-token', data.tokenObject.refreshToken);
+          navigateTo('/');
+        });
       }
     });
   }
@@ -197,7 +211,7 @@ onNuxtReady(() => {
             </div>
             <com-form ref="form" :model="config">
               <div class="w100 mb2 flex__row--between">
-                <com-form-checkbox label="记住我"></com-form-checkbox>
+                <com-form-checkbox v-model="rememberPassword" label="记住我"></com-form-checkbox>
                 <NuxtLink to="/signup?type=forget">
                   <span class="fs14 underline">忘记密码?</span>
                 </NuxtLink>

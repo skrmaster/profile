@@ -3,5 +3,7 @@ declare type ResizeType = {
   h: number;
 }
 
+declare type storageType  = 'localStorage' | 'sessionStorage';
+
 declare function resize(el: Element, cb: (arg: ResizeType) => unknown): ResizeObserver;
 declare function debounce(func: (arg: unknown) => unknown, time = 1000): (...args: unknown[]) => void;

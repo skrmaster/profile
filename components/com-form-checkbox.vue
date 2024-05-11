@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 type Prop = {
-  checked?: boolean;
+  modelValue?: boolean;
   label?: string;
 }
 const props = withDefaults(defineProps<Prop>(), {
-  checked: false,
+  modelValue: false,
   label: ''
 })
 const emit = defineEmits<{
@@ -14,7 +14,7 @@ const emit = defineEmits<{
 const id = useId();
 const inputCheckValue = ref(false);
 const checkedValue = computed((): boolean => {
-  return props.checked || inputCheckValue.value
+  return props.modelValue || inputCheckValue.value
 })
 
 function handleChange($event: Event) {

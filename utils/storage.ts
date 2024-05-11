@@ -17,7 +17,7 @@ export class StorageSuger implements StorageType {
   prefix: string;
   timeUnit: number;
   storage: Window['localStorage'] | Window['sessionStorage'];
-  constructor(type: 'localStorage' | 'sessionStorage') {
+  constructor(type: storageType) {
     this.prefix = prefix;
     this.timeUnit = 1000;
     type === 'localStorage'

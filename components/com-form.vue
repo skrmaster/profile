@@ -11,12 +11,12 @@ class FormInstance implements Form {
   data: Record<string, string>;
 
   constructor(config: Array<FormConfig>) {
-    this.vnode = (<div></div>);
+    this.vnode = (<></>);
     this.config = config;
     this.data = {};
     
     for (let i = 0; i < config.length; i++) {
-      this.data[this.config[i].field] = '';
+      this.data[this.config[i].field] = this.config[i].data || '';
     }
   }
 
@@ -99,21 +99,25 @@ class FormInstance implements Form {
 const formElement = new FormInstance(props.model);
 const elementForm = shallowRef(formElement.renderForm());
 
-function vaildForm(): Promise<boolean> {
+function vaildForm(): Promise<ReturnVaildForm> {
   const val = formElement.vaildForm();
   elementForm.value = formElement.renderForm();
+  const res: ReturnVaildForm = {
+    vaild: val,
+    data: formElement.data,
+  }
 
   return new Promise((reslove) => {
-    return reslove(val);
+    return reslove(res);
   });
 }
 
 defineExpose({
   vaildForm
-})
+});
 </script>
 <template>
-  <elementForm class="flex__center flex-wrap" />
+  <elementForm class="flex__center flex-wrap"></elementForm>
 </template>
 <style scoped>
 

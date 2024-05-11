@@ -1,8 +1,9 @@
 declare type FormConfig = {
-  require?: boolean
-  field: string
-  type: string
-  rule?: RegExp | string
+  require?: boolean;
+  field: string;
+  type: string;
+  rule?: RegExp | string;
+  data?: any;
   elementConfig: {
     modelValue?: string;
     placeholder?: string;
@@ -29,4 +30,9 @@ interface Form {
   generateCheckBox(config: FormConfig): VNode;
   generateRadioBox(config: FormConfig): VNode;
   vaildForm(): boolean;
+}
+
+declare type ReturnVaildForm = {
+  vaild: boolean;
+  data: Record<string, string>
 }

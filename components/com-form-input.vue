@@ -48,12 +48,7 @@ const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
-const inputValue = computed({
-  get: () => props.modelValue,
-  set: (val) => {
-    emit('update:modelValue', val);
-  }
-});
+const inputValue = toRef(props.modelValue);
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -82,6 +77,10 @@ watchEffect(() => {
 onMounted(() => {
   if (prepend.value) {
     positionOfPlaceholder.value += prepend.value.offsetWidth
+  }
+
+  if (input.value) {
+    placeholderStatus.value = 0;
   }
 })
 

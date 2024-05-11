@@ -57,6 +57,7 @@ export default defineNuxtConfig({
         "types/**/*.d.ts",
         "src/**/*.d.ts",
         "src/*.d.ts",
+        "@types/**/*.d.ts"
       ],
     }
   },

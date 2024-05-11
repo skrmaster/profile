@@ -3,9 +3,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (to.fullPath === '/infors') {
     return navigateTo('/applyCode')
   }
-  if (to.fullPath === '/login') {
-    return abortNavigation()
-  }
   if (to.fullPath === '/comePay/comePay') {
     return abortNavigation('禁止进入页面')
   }

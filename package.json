@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@types/md5": "^2.3.5",
     "@types/uuid": "^9.0.8",
     "@wangeditor/editor-for-vue": "^5.1.12",
+    "md5": "^2.3.0",
     "nuxt": "^3.11.1",
     "uuid": "^9.0.1",
     "vue": "^3.4.21",
