@@ -22,7 +22,7 @@ declare type FormConfig = {
   }
 }
 
-interface Form {
+interface IForm {
   generateTextInput(config: FormConfig): VNode;
   generateVerificationCode(config: FormConfig): VNode,
   generateNumberInput(config: FormConfig): VNode;

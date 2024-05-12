@@ -79,7 +79,7 @@ onMounted(() => {
     positionOfPlaceholder.value += prepend.value.offsetWidth
   }
 
-  if (input.value) {
+  if (input.value.value) {
     placeholderStatus.value = 0;
   }
 })

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { userModel } from '~/api/user/userModel';
+
 type NavItemType = {
   link?: string;
   name?: string;
@@ -49,6 +51,7 @@ const navList: Array<NavItemType> = [
 ]
 const route = useRoute();
 const currentPath = route.path;
+const userInfo = useState<userModel>('userInfo');
 
 function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   const argCopy = arg;
@@ -130,16 +133,25 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
               line: getLine(navList[index+1], item)
             }"
           >
-            <com-button 
-              v-for="(e, i) in item.button" 
-              :key="i"
-              link
-              :class="{
-                mr1: i < item.button!.length - 1
-              }"
-              class="underline"
-              @click="handleLink(e.link)"
-            >{{ e.name }}</com-button>
+            <div v-if="!userInfo">
+              <com-button 
+                v-for="(e, i) in item.button" 
+                :key="i"
+                link
+                :class="{
+                  mr1: i < item.button!.length - 1
+                }"
+                class="underline"
+                @click="handleLink(e.link)"
+              >{{ e.name }}</com-button>
+            </div>
+            <div v-else>
+              <com-avatar 
+                style="height: 50px;width: 50px;"
+                :avatar-url="userInfo.avatar" 
+                :nickname="userInfo.account || '未知'"
+              ></com-avatar>
+            </div>
           </div>
         </li>
       </nav>

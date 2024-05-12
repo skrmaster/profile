@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import textdata from 'assets/json/constellation.json';
+import md5 from 'md5';
+import { apiRegister } from '~/api/user/request'
+import type { registerType } from '~/api/user/userModel';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
@@ -167,11 +170,18 @@ function getTodayNumber(): number {
 function handleSubmit() {
   if (form.value) {
     form.value.vaildForm()
-    .then(async (vaild: boolean) => {
-      if (vaild) {
-        await navigateTo({
-          path: '/center-notice'
-        })
+    .then(async (val: ReturnVaildForm) => {
+      if (val.vaild) {
+        const params: registerType = {
+          email: '',
+          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
+          code: ''
+        }
+        await apiRegister(params).then(res => {
+          if (res) {
+            navigateTo('/login');
+          }
+        }); 
       }
     });
   }

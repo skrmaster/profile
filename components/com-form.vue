@@ -5,7 +5,7 @@ const props = defineProps<{
 }>()
 const slots = useSlots();
 
-class FormInstance implements Form {
+class FormInstance implements IForm {
   vnode: VNode;
   config: Array<FormConfig>;
   data: Record<string, string>;

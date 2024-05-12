@@ -1,4 +1,4 @@
-declare interface CanvasUtil {
+declare interface ICanvasUtil {
   getCanvasCenterPointPosition(): { x: number; y: number }
 }
 

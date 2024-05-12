@@ -2,6 +2,7 @@
 import { apiLogin } from '@/api/user/request';
 import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
+import type { userModel } from '~/api/user/userModel';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
@@ -170,6 +171,7 @@ function handleSubmit() {
           const storage = new StorageSuger(storageStr);
           storage.setValue('token', data.tokenObject.token);
           storage.setValue('refresh-token', data.tokenObject.refreshToken);
+          useState<userModel>('userInfo', () => data.data);
           navigateTo('/');
         });
       }

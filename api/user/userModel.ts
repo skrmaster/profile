@@ -3,6 +3,12 @@ export type loginType = {
   password: string;
 }
 
+export type registerType = {
+  email: string;
+  password: string;
+  code: string;
+}
+
 export interface userModel {
   account?: string;
   avatar?: string;

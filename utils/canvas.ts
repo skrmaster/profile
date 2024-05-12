@@ -3,7 +3,7 @@ interface CanvasType {
 }
 
 
-export class CanvasUtils implements CanvasUtil {
+export class CanvasUtils implements ICanvasUtil {
   w: number
   h: number
   constructor(w: number, h: number) {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 let dom_canvas: HTMLCanvasElement;
-let toolGetPos: CanvasUtil;
+let toolGetPos: ICanvasUtil;
 const ball = {
   x: 0,
   y: 0,
