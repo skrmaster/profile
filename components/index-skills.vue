@@ -13,7 +13,8 @@ type Skill = {
 
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skillsName = ['Javascript', 'Echarts', 'HTML', 'Vue2/3', '兼容适配', 'Photoshop', 'Websocket', 'CSS', 'Nuxtjs', 'Sass/Less', 'Uni-app', 'Typescript', 'Canvas', 'Illustrator', 'Git'];
+const skillsName: string[] = [];
+['Javascript', 'Echarts', 'HTML', 'Vue2/3', '兼容适配', 'Photoshop', 'Websocket', 'CSS', 'Nuxtjs', 'Sass/Less', 'Uni-app', 'Typescript', 'Canvas', 'Illustrator', 'Git'];
 let widthGap: number, heightGap: number;
 const skills = ref<Array<Skill>>([]);
 
@@ -44,8 +45,11 @@ function inactive() {
   })
 }
 
-onMounted(() => { 
+function handleAddSkill() {
   
+}
+
+onMounted(() => {
   let minWidth = skillCircle.value!.offsetLeft;
   let minHeight = skillCircle.value!.offsetTop;
   let maxWidth = minWidth + 250;
@@ -106,7 +110,6 @@ onMounted(() => {
         let _selfHeight = _self.offsetHeight;
         const _selfHalfWidth = _selfWidth / 2;
         const _selfHalfHeight = _selfHeight / 2;
-        
 
         if (
           e.x + _selfWidth >= minWidth
@@ -150,13 +153,25 @@ onMounted(() => {
       @mouseover="active" 
       @mouseout="inactive"
     >
-      <div class="skills-text" ref="skillCircle">
+      <div 
+        class="skills-text"
+        ref="skillCircle" 
+        :class="{
+          show__add: skillsName.length === 0
+        }"
+      >
         <p class="fs36 font-bold">技能</p>
         <p class="skills-line">
           <span></span>
           <span class="fs36 font-bold mx1">SKILLS</span>
           <span></span>
         </p>
+        <div class="add__skill">
+          <div class="flex__center wh100" @click="handleAddSkill">
+            <com-icon icon="profileclose" style="transform: rotate(45deg);"></com-icon>
+            <span class="ml1">添加新技能</span>
+          </div>
+        </div>
       </div>
       <div 
         v-for="(item, index) in skills" 
@@ -182,7 +197,11 @@ onMounted(() => {
 }
 
 .skills-text {
-  width: 250px;
+  overflow: hidden;
+  position: relative;
+  max-width: 250px;
+  min-width: 100px;
+  width: 100%;
   height: 250px;
   text-align: center;
   border-radius: 50%;
@@ -225,5 +244,23 @@ onMounted(() => {
 
 .skills-animate-3 {
   animation: slowFloatXY 2s ease-in-out infinite;
+}
+
+.show__add:hover .add__skill {
+  opacity: 1;
+  transform: translateY(0);
+  cursor: pointer;
+}
+
+.show__add .add__skill {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--white-color);
+  top: 0;
+  transform: translateY(-100%);
+  transition: all .1s ease;
 }
 </style>

@@ -171,6 +171,7 @@ function handleSubmit() {
           const storage = new StorageSuger(storageStr);
           storage.setValue('token', data.tokenObject.token);
           storage.setValue('refresh-token', data.tokenObject.refreshToken);
+          storage.setValue('userInfo', data.data);
           useState<userModel>('userInfo', () => data.data);
           navigateTo('/');
         });

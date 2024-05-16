@@ -92,6 +92,20 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
   }
 }
 
+onNuxtReady(() => {
+  const localStorage = new StorageSuger("localStorage");
+  const sectionStorage = new StorageSuger("sessionStorage");
+  
+  const userInfo1 = localStorage.getValue("userInfo");
+  const userInfo2 = sectionStorage.getValue("userInfo");
+  
+  if (userInfo1) {
+    userInfo.value = JSON.parse(userInfo1 as string);
+  } else if (userInfo2) {
+    userInfo.value = JSON.parse(userInfo2 as string);
+  }
+});
+
 </script>
 <template>
   <div class="nav-box">
@@ -148,8 +162,8 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
             <div v-else>
               <com-avatar 
                 style="height: 50px;width: 50px;"
-                :avatar-url="userInfo.avatar" 
-                :nickname="userInfo.account || '未知'"
+                :avatar-url="userInfo?.avatar" 
+                :nickname="userInfo?.account || '未知'"
               ></com-avatar>
             </div>
           </div>

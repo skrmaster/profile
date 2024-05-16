@@ -56,7 +56,6 @@ const formConfig: Array<FormConfig> = [
   }
 ];
 
-
 const parkCanvas: Park = {
   ctx: null,
   width: 0,
@@ -340,6 +339,60 @@ onNuxtReady(() => {
   window.addEventListener('resize', resizeHandler);
 });
 
+const tableHeadConfig: TableHead[] = [
+  {
+    name: "名称",
+    field: "name",
+    width: "",
+    class: "",    
+    align: "",
+  },
+  {
+    name: "数量",
+    field: "count",
+    width: "",
+    class: "",
+    align: "",
+  },
+  {
+    name: "类型",
+    field: "category",
+    width: "",
+    class: "",
+    align: "",
+  },
+  {
+    name: "创建日期",
+    field: "createTime",
+    width: "",
+    class: "",
+    align: "",
+  },
+  {
+    name: "操作",
+    field: "",
+    width: "",
+    class: "",
+    align: "",
+    operate: ['edit', 'delete']
+  }
+];
+
+const tableBody = [
+  {
+    name: "测试",
+    count: 1,
+    category: "单色",
+    createTime: "2044-02-12",
+  },
+  {
+    name: "测试2",
+    count: 1,
+    category: "单色",
+    createTime: "2044-02-12",
+  }
+];
+
 </script>
 <template>
   <NuxtLayout 
@@ -350,6 +403,7 @@ onNuxtReady(() => {
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+    <com-table :head="tableHeadConfig" :data="tableBody"></com-table>
     <section class="p-r">
       <canvas id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>

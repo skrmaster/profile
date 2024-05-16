@@ -29,7 +29,7 @@ export class StorageSuger implements StorageType {
     return `${this.prefix}-${key}`;
   }
 
-  getValue(key: string, isLive?: boolean | undefined): string | [string, string] {
+  getValue(key: string, isLive = false): string | [string, string] {
     const val = this.storage.getItem(this.generateKey(key));
     if (isLive) {
       const now = +new Date();

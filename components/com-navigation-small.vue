@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { userModel } from '~/api/user/userModel';
 
 const navList = ref([
   {
@@ -19,15 +20,33 @@ const navList = ref([
   },
 ]);
 const currentIndex = ref(0);
+const userInfo = useState<userModel>('userInfo');
 
 function handleNav(index: number) {
   currentIndex.value = index;
 }
+
+onNuxtReady(() => {
+  const localStorage = new StorageSuger("localStorage");
+  const sectionStorage = new StorageSuger("sessionStorage");
+  
+  const userInfo1 = localStorage.getValue("userInfo");
+  const userInfo2 = sectionStorage.getValue("userInfo");
+  
+  if (userInfo1) {
+    userInfo.value = JSON.parse(userInfo1 as string);
+  } else if (userInfo2) {
+    userInfo.value = JSON.parse(userInfo2 as string);
+  }
+});
 </script>
 <template>
   <div class="navigation--small px1">
     <div class="mr1">
-      <com-avatar avatar-url="/images/pd3.png" nickname="五五开"></com-avatar>
+      <com-avatar 
+        :avatar-url="userInfo?.avatar" 
+        :nickname="userInfo?.account || '未知'">
+      </com-avatar>
     </div>
     <nav class="flex1 flex__row--between">
       <div 
