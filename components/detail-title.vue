@@ -26,7 +26,7 @@ function goBack() {
           <com-icon 
             width="30px" 
             height="50px" 
-            icon="profileleft"
+            icon="profile-left"
           ></com-icon>
           <span class="fs24 nowrap display-0-none">返回</span>
         </div>

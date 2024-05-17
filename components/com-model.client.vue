@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
               height="15px" 
               color="var(--white-color)" 
               class="close__icon" 
-              icon="profileclose"
+              icon="profile-close"
             ></com-icon>
           </div>
         </div>

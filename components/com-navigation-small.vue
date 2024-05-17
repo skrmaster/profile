@@ -4,19 +4,19 @@ import type { userModel } from '~/api/user/userModel';
 const navList = ref([
   {
     name: '首页',
-    icon: 'profilehome1'
+    icon: 'profile-home1'
   },
   {
     name: '项目',
-    icon: 'profileprojects'
+    icon: 'profile-projects'
   },
   {
     name: '记录',
-    icon: 'profileblogs'
+    icon: 'profile-blogs'
   },
   {
     name: '地址',
-    icon: 'profileaddress'
+    icon: 'profile-address'
   },
 ]);
 const currentIndex = ref(0);

@@ -33,7 +33,7 @@ const search = computed({
             width="50px"
             height="50px"
             class="ml2 search__icon" 
-            icon="profilesearch"
+            icon="profile-search"
           > </com-icon>
         </template>
         <template #append>

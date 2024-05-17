@@ -216,7 +216,7 @@ onNuxtReady(() => {
                 width="56px"
                 height="53px"
                 class="sign-up--icon"
-                :icon="isForget ? 'profilemima' : 'profilesign-up'"
+                :icon="isForget ? 'profile-mima' : 'profile-signup'"
               ></com-icon>
             </div>
             <com-form ref="form" :model="config">

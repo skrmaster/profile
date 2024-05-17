@@ -22,6 +22,8 @@ declare type FormConfig = {
   }
 }
 
+type FormEditAddType = 'add' | 'edit';
+
 interface IForm {
   generateTextInput(config: FormConfig): VNode;
   generateVerificationCode(config: FormConfig): VNode,
@@ -34,5 +36,5 @@ interface IForm {
 
 declare type ReturnVaildForm = {
   vaild: boolean;
-  data: Record<string, string>
+  data: Record<string, any>
 }

@@ -37,14 +37,14 @@ function handleConfirm() {
         <div class="flex__row--end btn__box">
           <com-button 
             class="cannel__btn flex__row--between mr1" 
-            prefix-icon="profileclose-circle" 
+            prefix-icon="profile-circle-close" 
             bgColor="var(--cannel-btn-color)"
             @click="handleClose"
           >
             <span class="fs16 color--primary">取消</span>
           </com-button>
           <com-button 
-            prefix-icon="profileconfirm"
+            prefix-icon="profile-circle-confirm"
             class="confirm__btn flex__row--between"
             @click="handleConfirm"
           >

@@ -9,6 +9,13 @@ export type registerType = {
   code: string;
 }
 
+export type updateInfoType = {
+  account: string;
+  email: string;
+  password: string;
+  code: string;
+}
+
 export interface userModel {
   account?: string;
   avatar?: string;

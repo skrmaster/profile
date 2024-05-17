@@ -219,7 +219,7 @@ onNuxtReady(() => {
       <com-icon 
         class="flex__center"
         color="var(--white-color)" 
-        icon="profileleft"
+        icon="profile-left"
         width="20px"
         height="20px"
       ></com-icon>
@@ -232,7 +232,7 @@ onNuxtReady(() => {
       <com-icon 
         color="var(--white-color)" 
         class="icon__right flex__center" 
-        icon="profileleft"
+        icon="profile-left"
         width="20px"
         height="20px"
       ></com-icon>

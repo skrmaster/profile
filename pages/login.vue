@@ -209,7 +209,7 @@ onNuxtReady(() => {
                 width="56px"
                 height="53px"
                 class="sign-up--icon"
-                icon="profilesign-in"
+                icon="profile-signin"
               ></com-icon>
             </div>
             <com-form ref="form" :model="config">

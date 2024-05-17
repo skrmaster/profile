@@ -168,7 +168,7 @@ onMounted(() => {
         </p>
         <div class="add__skill">
           <div class="flex__center wh100" @click="handleAddSkill">
-            <com-icon icon="profileclose" style="transform: rotate(45deg);"></com-icon>
+            <com-icon icon="profile-close" style="transform: rotate(45deg);"></com-icon>
             <span class="ml1">添加新技能</span>
           </div>
         </div>

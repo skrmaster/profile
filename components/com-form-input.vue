@@ -48,7 +48,8 @@ const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
-const inputValue = toRef(props.modelValue);
+const inputValue = toRef(() => props.modelValue);
+const currentInputValue = ref('');
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -67,7 +68,15 @@ const width = computed((): string | number => {
 });
 
 watchEffect(() => {
-  if (inputValue.value.length > 0 && props.clearable) {
+  if (currentInputValue.value) {
+    currentInputValue.value += inputValue.value;
+  } else {
+    currentInputValue.value = inputValue.value;
+  }
+});
+
+watchEffect(() => {
+  if (currentInputValue.value.length > 0 && props.clearable) {
     canShowClearIcon.value = true;
   } else {
     canShowClearIcon.value = false;
@@ -85,7 +94,7 @@ onMounted(() => {
 })
 
 function autoSetStatusOfPlaceholder() {
-  if (inputValue.value && inputValue.value.length > 0) {
+  if (currentInputValue.value && currentInputValue.value.length > 0) {
     placeholderStatus.value = 0;
   } else {
     placeholderStatus.value = 1;
@@ -94,8 +103,8 @@ function autoSetStatusOfPlaceholder() {
 
 function handlerContent() {
   autoSetStatusOfPlaceholder();
-  emit('update:modelValue', inputValue.value);
-  emit('change', inputValue.value);
+  emit('update:modelValue', currentInputValue.value);
+  emit('change', currentInputValue.value);
 }
 
 function handlerFocus() {
@@ -109,7 +118,8 @@ function handlerBlur() {
 }
 
 function handlerClear() {
-  inputValue.value = '';
+  currentInputValue.value = '';
+  emit('update:modelValue', "");
   input.value.focus();
 }
 
@@ -162,7 +172,7 @@ function handlePasswordIcon() {
       :placeholder="props.placeholder"
       :autocomplete="props.autocomplete"
       :type="isTypePassword ? props.type : showPasswordType"
-      v-model="inputValue"
+      v-model="currentInputValue"
       @input="handlerContent"
       @focus="handlerFocus"
       @blur="handlerBlur"
@@ -174,7 +184,7 @@ function handlePasswordIcon() {
         'no-label': !props.isLabel
       }"
       :placeholder="props.placeholder"
-      v-model="inputValue"
+      v-model="currentInputValue"
       :max-length="props.maxLength"
       :min-length="props.minLength"
       :rows="`${props.rows}`"
@@ -186,15 +196,15 @@ function handlePasswordIcon() {
     </textarea>
     <com-icon
       class="mr1"
-      v-if="props.type === 'password' && (inputValue && inputValue.length > 0)"
+      v-if="props.type === 'password' && (currentInputValue && currentInputValue.length > 0)"
       @click="handlePasswordIcon"
-      :icon="showPasswordType !== 'password' ? 'profilesee' : 'profileno-see'"
+      :icon="showPasswordType !== 'password' ? 'profile-see' : 'profile-no-see'"
     ></com-icon>
     <com-icon
       class="mr1"
       v-if="canShowClearIcon"
       @click.stop="handlerClear"
-      icon="profileclose-circle"
+      icon="profile-circle-close"
     ></com-icon>
     <slot name="append"></slot>
   </div>
@@ -223,7 +233,7 @@ function handlePasswordIcon() {
 }
 
 .form__input-field {
-  min-height: 50px;
+  min-height: 48px;
   border-radius: 5px;
   font-size: 18px;
   width: 100%;

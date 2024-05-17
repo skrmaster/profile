@@ -190,7 +190,7 @@ defineExpose({
         v-if="props.mode === 'delete'"
         @click.stop="handleDelete(index)"
         class="icon__close"
-        icon="profileclose-circle"
+        icon="profile-circle-close"
       ></com-icon>
     </div>
     <div 

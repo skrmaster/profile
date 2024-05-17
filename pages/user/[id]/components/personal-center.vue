@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { userModel } from '~/api/user/userModel';
+
 type LinkType = {
   name: string;
   url: string;
@@ -10,11 +12,12 @@ useHead({
 
 const route = useRoute();
 const params = route.params;
+const userInfo = useState<userModel>('userInfo');
 const list = ref<LinkType[][]>([
   [
     {
       name: '账号信息',
-      url: '/user/:id',
+      url: '/user/:id/user-info',
     },
     {
       name: '关注的人',
@@ -30,13 +33,14 @@ const list = ref<LinkType[][]>([
       name: '项目列表',
       url: '/user/:id/project-list'
     }
+  ],
+  [
+    {
+      name: '技能管理',
+      url: '/user/:id/skill-mgt'
+    }
   ]
 ]);
-const formData = reactive({
-  nickName: '123',
-  email: 'zyskr@qq.com',
-  code: ''
-});
 
 function isCurrentRoute(item: string) {
   let fullPath = route.fullPath;
@@ -50,6 +54,19 @@ function handleJump(item: LinkType) {
   navigateTo(item.url, { replace: true });
 }
 
+onNuxtReady(() => {
+  const localStorage = new StorageSuger("localStorage");
+  const sectionStorage = new StorageSuger("sessionStorage");
+  
+  const userInfo1 = localStorage.getValue("userInfo");
+  const userInfo2 = sectionStorage.getValue("userInfo");
+  
+  if (userInfo1) {
+    userInfo.value = JSON.parse(userInfo1 as string);
+  } else if (userInfo2) {
+    userInfo.value = JSON.parse(userInfo2 as string);
+  }
+});
 </script>
 <template>
   <div class="background flex__column">
@@ -60,7 +77,7 @@ function handleJump(item: LinkType) {
         <div class="row flex1">
           <aside class="mr1">
             <div class="flex__column--center">
-              <com-avatar nickname="头像" ></com-avatar>
+              <com-avatar :nickname="userInfo?.account || '未知'" :avatar-url="userInfo?.avatar" ></com-avatar>
               <div class="flex__row--between mt1">
                 <span class="mr1">关注: 0</span>
                 <span>粉丝: 0</span>
@@ -88,48 +105,7 @@ function handleJump(item: LinkType) {
             </div>
           </aside>
           <main class="flex__column">
-            <div class="main__content flex__column">
-              <div class="form__item">
-                <label class="label">头像</label>
-                <com-upload 
-                  label="上传头像"
-                  :limit="1"
-                  class="form__item-avatar"
-                ></com-upload>
-              </div>
-              <div class="form__item">
-                <label class="label">昵称</label>
-                <com-form-input 
-                  class="form__item-content" 
-                  :is-label="false" 
-                  clearable
-                  v-model="formData.nickName"
-                ></com-form-input>
-              </div>
-              <div class="form__item">
-                <label class="label">邮箱</label>
-                <com-form-input 
-                  class="form__item-content" 
-                  :is-label="false" 
-                  clearable
-                  v-model="formData.email"
-                ></com-form-input>
-              </div>
-              <div class="form__item">
-                <label class="label"></label>
-                <com-form-verification-code 
-                  class="form__item-content"
-                  :is-label="false" 
-                  v-model="formData.code"
-                ></com-form-verification-code>
-              </div>
-              <div class="form__item">
-                <label class="label"></label>
-                <com-button style="width: 100px">
-                  <span>保存</span>
-                </com-button>
-              </div>
-            </div>
+            <slot></slot>
           </main>
         </div>
       </div>
@@ -163,13 +139,6 @@ main {
   flex: 1;
 }
 
-.main__content {
-  background: var(--white-color);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  padding: 20px 16px;
-}
-
 .link__name {
   font-size: 18px;
 }
@@ -197,43 +166,5 @@ main {
 .nav__item.is--active {
   border-radius: 10px;
   background-color: var(--nav-link-bg);
-}
-
-.form__item {
-  margin: 0 0 20px 0;
-  display: flex;
-  flex-direction: row;
-}
-
-.form__item-avatar {
-  width: 150px;
-  height: 150px;
-}
-
-.label {
-  max-width: 50px;
-  width: 100%;
-}
-
-.form__item-content {
-  max-width: 400px!important;
-  width: 100%;
-  outline: 0;
-  border-radius: 10px;
-  
-}
-
-.form__item-content:not(.verification) {
-  background: var(--readonly-color);
-}
-
-:deep(.form__item-content .form__input-field) {
-  border-radius: 10px;
-  background: var(--readonly-color);
-}
-
-:deep(.form__item-content .form__input-box) {
-  border-radius: 10px;
-  outline: 0;
 }
 </style>

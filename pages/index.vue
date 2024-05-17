@@ -146,13 +146,13 @@ function draw(): void {
     return;
   }
 
-  ctx.save();
-  const x = parkCanvas.width / 2 - bench.width / 2 ;
-  const y = parkCanvas.height / 2 - bench.height / 2;
-  ctx.translate(x, y);
-  ctx.scale(0.8, 0.8);
-  drawBench(ctx, benchData);
-  ctx.restore();
+  // ctx.save();
+  // const x = parkCanvas.width / 2 - bench.width / 2 ;
+  // const y = parkCanvas.height / 2 - bench.height / 2;
+  // ctx.translate(x, y);
+  // ctx.scale(0.8, 0.8);
+  // drawBench(ctx, benchData);
+  // ctx.restore();
 
   ctx.save();
   ctx.beginPath();
@@ -328,7 +328,7 @@ onNuxtReady(() => {
   scrollBarWidth = getScrollBarWidth();
   
   img = new Image();
-  // img.src = '/svg/park-bench.svg';
+  img.src = '/svg/park-bench.svg';
   lightImg = new Image();
   lightImg.src = '/svg/light-on.svg';
   grassImg = new Image();
@@ -338,60 +338,6 @@ onNuxtReady(() => {
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
 });
-
-const tableHeadConfig: TableHead[] = [
-  {
-    name: "名称",
-    field: "name",
-    width: "",
-    class: "",    
-    align: "",
-  },
-  {
-    name: "数量",
-    field: "count",
-    width: "",
-    class: "",
-    align: "",
-  },
-  {
-    name: "类型",
-    field: "category",
-    width: "",
-    class: "",
-    align: "",
-  },
-  {
-    name: "创建日期",
-    field: "createTime",
-    width: "",
-    class: "",
-    align: "",
-  },
-  {
-    name: "操作",
-    field: "",
-    width: "",
-    class: "",
-    align: "",
-    operate: ['edit', 'delete']
-  }
-];
-
-const tableBody = [
-  {
-    name: "测试",
-    count: 1,
-    category: "单色",
-    createTime: "2044-02-12",
-  },
-  {
-    name: "测试2",
-    count: 1,
-    category: "单色",
-    createTime: "2044-02-12",
-  }
-];
 
 </script>
 <template>
@@ -403,7 +349,6 @@ const tableBody = [
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
-    <com-table :head="tableHeadConfig" :data="tableBody"></com-table>
     <section class="p-r">
       <canvas id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
@@ -442,17 +387,17 @@ const tableBody = [
       </div>
       <div class="contact my5">
         <div class="contact__item flex__column--center">
-          <com-icon width="60px" height="60px" icon="profilephone"></com-icon>
+          <com-icon width="60px" height="60px" icon="profile-phone"></com-icon>
           <p class="contact__item-gap fs24">电话</p>
           <p class="fs30">+8618283170317</p>
         </div>
         <div class="contact__item flex__column--center contact__borderx">
-          <com-icon width="60px" height="60px" icon="profilewechat"></com-icon>
+          <com-icon width="60px" height="60px" icon="profile-wechat"></com-icon>
           <p class="contact__item-gap fs24">微信</p>
           <p class="fs30">skrMogul</p>
         </div>
         <div class="contact__item flex__column--center">
-          <com-icon width="60px" height="60px" icon="profileemail"></com-icon>
+          <com-icon width="60px" height="60px" icon="profile-email"></com-icon>
           <p class="contact__item-gap fs24">邮箱</p>
           <p class="fs30">18283170317zy@gmail.com</p>
         </div>

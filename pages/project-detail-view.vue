@@ -74,7 +74,7 @@ function handleStackListChange(val: StackItem[]) {
               <com-icon 
                 width="20px" 
                 height="40px" 
-                icon="profileleft"
+                icon="profile-left"
               ></com-icon>
               <span class="fs24 nowrap display-0-none c-p">返回</span>
             </div>

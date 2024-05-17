@@ -194,13 +194,13 @@ function blobToUrl(item: File) {
           <div>
             <com-icon 
               class="mr1"
-              icon="profilesee" 
+              icon="profile-see" 
               title="查看"
               @click="handlePreview(item.file)"
             ></com-icon>
             <com-icon 
               title="删除"
-              icon="profileclose-circle" 
+              icon="profile-circle-close" 
               @click="handleRemoveFile(index)"
             ></com-icon>
           </div>
@@ -215,14 +215,14 @@ function blobToUrl(item: File) {
               <com-icon
                 width="20px"
                 height="20px"
-                icon="profileenlarge"
+                icon="profile-enlarge"
                 color="var(--white-color)"
                 @click="handlePreview(item.file)"
               ></com-icon>
               <com-icon
                 width="20px"
                 height="20px"
-                icon="profiledelete"
+                icon="profile-delete"
                 color="var(--white-color)"
                 @click="handleRemoveFile(index)"
               ></com-icon>
@@ -239,7 +239,7 @@ function blobToUrl(item: File) {
           class="add__icon" 
           width="30px" 
           height="30px" 
-          icon="profileclose"
+          icon="profile-close"
         ></com-icon>
         <label v-else>{{ props.label }}</label>
       </li>

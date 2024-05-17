@@ -123,7 +123,7 @@ const rank = ref([
                         <span class="mr1 flex__row">
                           <com-icon 
                             class="icon__gap" 
-                            icon="profilesee">
+                            icon="profile-see">
                           </com-icon>
                           {{ item.view }}
                         </span>
@@ -131,8 +131,8 @@ const rank = ref([
                           <com-icon 
                             class="icon__gap" 
                             :icon="item.isLike 
-                              ? 'profilelike-active' 
-                              : 'profilelike1'
+                              ? 'profile-like-active' 
+                              : 'profile-like1'
                             "
                           ></com-icon>
                           {{ item.like }}
@@ -141,8 +141,8 @@ const rank = ref([
                           <com-icon 
                             class="direction--reversal icon__gap" 
                             :icon="item.isTread 
-                              ? 'profilelike-active' 
-                              : 'profilelike1'"
+                              ? 'profile-like-active' 
+                              : 'profile-like1'"
                           ></com-icon>
                           {{ item.tread }}
                         </span>
@@ -150,8 +150,8 @@ const rank = ref([
                           <com-icon 
                             class="icon__gap" 
                             :icon="item.isCollection 
-                              ? 'profilecollection-active' 
-                              : 'profilecollection'"
+                              ? 'profile-collection-active' 
+                              : 'profile-collection'"
                           ></com-icon>
                           {{ item.collection }}
                         </span>

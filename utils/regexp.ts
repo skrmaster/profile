@@ -28,6 +28,6 @@ export function vaildTest(val: string, rule: string | RegExp | undefined): [bool
 }
 
 export function stringRegexp(str: string, type: keyof typeof dictionary) {
-  const result = str.match(dictionary[type]);
+  const result = str?.match(dictionary[type]);
   return result;
 }

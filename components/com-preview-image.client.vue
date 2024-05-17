@@ -143,7 +143,7 @@ defineExpose({
         width="20px" 
         height="20px" 
         color="var(--white-color)" 
-        icon="profilearrow"
+        icon="profile-arrow"
       ></com-icon>
     </div>
     <div v-if="imageUrls.length > 1" class="next flex__center" @click="nextPic" title="下一张">
@@ -151,7 +151,7 @@ defineExpose({
         width="20px" 
         height="20px" 
         color="var(--white-color)" 
-        icon="profilearrow"
+        icon="profile-arrow"
       ></com-icon>
     </div>
     <div class="control flex__row">
@@ -160,7 +160,7 @@ defineExpose({
         height="20px" 
         color="var(--white-color)" 
         class="mx1" 
-        icon="profileenlarge"
+        icon="profile-enlarge"
         title="放大"
         @click="scaleImage(1)"
       ></com-icon>
@@ -169,7 +169,7 @@ defineExpose({
         height="20px" 
         color="var(--white-color)" 
         class="mx1" 
-        icon="profileshrink" 
+        icon="profile-shrink" 
         title="缩小"
         @click="scaleImage(-1)"
       ></com-icon>
@@ -178,7 +178,7 @@ defineExpose({
         height="20px" 
         color="var(--white-color)" 
         class="mx2" 
-        icon="profilereset" 
+        icon="profile-reset" 
         title="还原"
         @click="handleReset"
       ></com-icon>
@@ -187,7 +187,7 @@ defineExpose({
         height="20px" 
         color="var(--white-color)" 
         class="mx1" 
-        icon="profilerorate-left" 
+        icon="profile-rorate-left" 
         title="向左旋转"
         @click="handleRotate(-1)"
       ></com-icon>
@@ -196,7 +196,7 @@ defineExpose({
         height="20px" 
         color="var(--white-color)" 
         class="mx1" 
-        icon="profilerorate-right" 
+        icon="profile-rorate-right" 
         title="向右旋转"
         @click="handleRotate(1)"
       ></com-icon>

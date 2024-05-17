@@ -31,8 +31,7 @@ const placement = toRef(() => props.placement);
 }
 
 .tip__box .tip {
-  display: inline-block;
-  opacity: 0;
+  display: none;
   background-color: var(--model-control-bg-color);
   color: var(--white-color);
   font-size: 12px;
@@ -40,7 +39,7 @@ const placement = toRef(() => props.placement);
 }
 
 .tip__box:hover .tip {
-  opacity: 1;
+  display: inline-block;
 }
 
 .tip.top {

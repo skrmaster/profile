@@ -27,8 +27,8 @@ function handleStart() {
         'transition': start
       }"
     >
-      <com-icon v-show="theme === 0" icon="profilesun"></com-icon>
-      <com-icon v-show="theme === 1" icon="profilemoon"></com-icon>
+      <com-icon v-show="theme === 0" icon="profile-sun"></com-icon>
+      <com-icon v-show="theme === 1" icon="profile-moon"></com-icon>
     </div>
   </button>
 </template>

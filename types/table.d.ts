@@ -1,4 +1,5 @@
 type Operate = "edit" | "delete";
+type CellType = 'edit' | 'delete' | 'cell';
 
 type TableHead = {
   name: string;
@@ -6,5 +7,6 @@ type TableHead = {
   width?: string;
   class?: string;
   align?: string;
+  colWidth?: string;
   operate?: Operate[];
 }

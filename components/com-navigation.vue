@@ -92,6 +92,21 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
   }
 }
 
+async function loginout() {
+  const localStorage = new StorageSuger("localStorage");
+  const sectionStorage = new StorageSuger("sessionStorage");
+  localStorage.clearAll();
+  sectionStorage.clearAll();
+
+  await navigateTo('/');
+  location.reload();
+}
+
+function personalCenter() {
+  const userId = userInfo.value.id;
+  navigateTo(`/user/${userId}/user-info`);
+}
+
 onNuxtReady(() => {
   const localStorage = new StorageSuger("localStorage");
   const sectionStorage = new StorageSuger("sessionStorage");
@@ -123,7 +138,7 @@ onNuxtReady(() => {
         >
           <div 
             v-if="item.type === 'link'"
-            class="item__box flex__center"
+            class="item__box c-p flex__center"
             @click="handleLink(item.link)"
             :class="{
               line: getLine(navList[index+1], item)
@@ -159,12 +174,29 @@ onNuxtReady(() => {
                 @click="handleLink(e.link)"
               >{{ e.name }}</com-button>
             </div>
-            <div v-else>
-              <com-avatar 
+            <div class="p-r menu__trigger" v-else>
+              <com-avatar
+                class="c-p"
                 style="height: 50px;width: 50px;"
                 :avatar-url="userInfo?.avatar" 
                 :nickname="userInfo?.account || '未知'"
               ></com-avatar>
+              <div class="user__menu">
+                <div class="p-r">
+                  <div class="menu__box">
+                    <ul>
+                      <li class="menu__item c-p" @click="personalCenter">
+                        <com-icon icon="profile-signin"></com-icon>
+                        个人中心
+                      </li>
+                      <li class="menu__item c-p" @click="loginout">
+                        <com-icon icon="profile-login-out"></com-icon>
+                        登出
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </li>
@@ -220,7 +252,6 @@ nav {
   width: 100%;
   height: 100%;
   list-style: none;
-  cursor: pointer;
   border-radius: 0 0 10px 10px;
 }
 
@@ -240,5 +271,55 @@ nav {
 
 .line {
   border-right: 1px solid var(--primary-border-color);
+}
+
+.menu__trigger:hover .user__menu {
+  opacity: 1;
+  pointer-events: fill;
+}
+
+.user__menu {
+  opacity: 0;
+  pointer-events: none;
+  transition: all .2s ease .2s;
+  cursor: auto;
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  z-index: 999;
+  box-shadow: var(--box-shadow-small);
+  transform: translate(-50%, 0);
+}
+
+.menu__box {
+  background-color: var(--white-color);
+  border-radius: 4px;
+}
+
+.menu__box::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--white-color) transparent;
+  transform: translate(-50%, -50%);
+}
+
+.menu__box ul {
+  list-style-type: none;
+  padding: 15px 0;
+}
+
+.menu__item {
+  width: 120px;
+  line-height: 30px;
+  height: 30px;
+  padding: 0 15px;
+}
+
+.menu__item:hover {
+  background-color: var(--nav-item-bg-active);
 }
 </style>
