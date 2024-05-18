@@ -98,7 +98,7 @@ onNuxtReady(() => {
                     @click="handleJump(e)"
                   >
                     <span class="link__name">{{ e.name }}</span>
-                    <com-icon class="link__icon" icon="profileleft"></com-icon>
+                    <com-icon class="link__icon" icon="profile-left"></com-icon>
                   </div>
                 </div>
               </div>

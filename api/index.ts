@@ -1,5 +1,20 @@
 const baseURL: string = import.meta.env.VITE_PROJECT_API + '/api';
 
+function getToken(): string {
+  const localStorage = new StorageSuger("localStorage");
+  const sectionStorage = new StorageSuger("sessionStorage");
+  
+  const token1 = localStorage.getValue("token") as string;
+  const token2 = sectionStorage.getValue("token") as string;
+  const res = token1 
+  ? 'Bearer ' + token1 
+  : token2 
+    ? 'Bearer ' + token2 
+    : 'Bearer';
+
+  return res.replaceAll("\"", "");
+}
+
 export async function http(url: string, options: Record<string, any>) {
   const { data, pending, error, refresh } = await useFetch(
     url, 
@@ -31,7 +46,7 @@ export async function http(url: string, options: Record<string, any>) {
 }
 
 export async function httpClient<T>(url: string, options: Record<string, any>): Promise<responseModel<T>> {
-  let tokenString: tokenType;
+  const tokenString: string = getToken();
 
   return await $fetch(
     url, 
@@ -41,20 +56,20 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
       params: options.params,
       body: options.body,
       onRequest({ request, options }) {
-        // Set the request headers
-        options.headers = options.headers || {}
+        options.headers = {
+          Authorization: tokenString
+        }
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
       },
       onResponse({ request, response, options }) {
-        response._data.tokenObject = {
-          token: response.headers.get('Access-Token'),
-          refreshToken: response.headers.get('X-Access-Token')
+        if (response.headers.get('Access-Token')) {
+          response._data.tokenObject = {
+            token: response.headers.get('Access-Token'),
+            refreshToken: response.headers.get('X-Access-Token')
+          }
         }
-        
-        // Process the response data
-        // localStorage.setItem('token', response._data.token)
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors

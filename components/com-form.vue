@@ -1,11 +1,10 @@
 <script lang="tsx" setup>
-
 const props = defineProps<{
   model: Array<FormConfig>
 }>()
 const slots = useSlots();
 
-class FormInstance implements IForm {
+class FormInstance implements Form {
   vnode: VNode;
   config: Array<FormConfig>;
   data: Record<string, string>;
@@ -96,6 +95,7 @@ class FormInstance implements IForm {
     return true;
   }
 }
+
 const formElement = new FormInstance(props.model);
 const elementForm = shallowRef(formElement.renderForm());
 
@@ -112,8 +112,13 @@ function vaildForm(): Promise<ReturnVaildForm> {
   });
 }
 
+function refreshDom() {
+  elementForm.value = formElement.renderForm();
+}
+
 defineExpose({
-  vaildForm
+  vaildForm,
+  refreshDom
 });
 </script>
 <template>

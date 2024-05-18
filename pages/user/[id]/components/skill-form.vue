@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import type { AddModel, EditModel } from '~/api/skill/skillModel';
+import { apiSkillAdd, apiSkillUpdate } from '~/api/skill/request';
 
 const formRef = ref();
 
-const visible = ref(true);
+const visible = ref(false);
 const formRenderType = ref<FormEditAddType>('add');
+const editId = ref();
 const title = computed(() => {
   return formRenderType.value === 'add' ? '添加技能' : '编辑技能';
 });
 
-const formConfig: Array<FormConfig> = [
+const formConfig = ref<Array<FormConfig>>([
   {
     require: true,
     field: 'name',
@@ -47,18 +49,23 @@ const formConfig: Array<FormConfig> = [
       rows: 8,
     }
   }
-];
+]);
 
 function setFormData(data: EditModel) {
-  formConfig.forEach(e => {
+  formConfig.value.forEach(e => {
     if (Object.hasOwn(data, e.field)) {
       e.data = data[e.field];
     }
   });
+  console.log(1);
+  
+  nextTick(() => {
+    formRef.value.refreshDom();
+  });
 }
 
 function clearFormData() {
-  formConfig.forEach(e => {
+  formConfig.value.forEach(e => {
     e.data = '';
   });
 }
@@ -66,18 +73,40 @@ function clearFormData() {
 function submitData() {
   formRef.value.vaildForm().then((val: ReturnVaildForm) => {
     if (val.vaild) {
-      console.log(val.data);
+      if (formRenderType.value === 'add') {
+        const params: AddModel = {
+          name: val.data.name,
+          proficiency: val.data.proficiency,
+          sort: val.data.sort
+        }
+        apiSkillAdd(params).then(res => {
+          console.log(res);
+        });
+      } else {
+        const params: EditModel = {
+          id: editId.value,
+          name: val.data.name,
+          proficiency: val.data.proficiency,
+          sort: val.data.sort
+        }
+        apiSkillUpdate(params).then(res => {
+          console.log(res);
+        });
+      }
     }
   });
 }
 
 function open(formData?: EditModel) {
   visible.value = true;
+
   if (formData?.id) {
     formRenderType.value = 'edit';
+    editId.value = formData.id;
     setFormData(formData);
   } else {
     formRenderType.value = 'add';
+    editId.value = undefined;
     clearFormData();
   }
 }

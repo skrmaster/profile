@@ -12,3 +12,13 @@ export type AddModel = {
   proficiency: number;
 }
 
+export type SkillListType = Array<{
+  id: number;
+  createTime: string;
+  updateTime: string;
+  name: string;
+  userId: number;
+  proficiency: number;
+  sort: number;
+}>
+

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import type { EditModel, SkillListType } from '~/api/skill/skillModel';
 import PersonalCenter from './components/personal-center.vue';
 import SkillForm from './components/skill-form.vue';
+import { apiSkillGetList } from '~/api/skill/request';
 
 const formRef = ref();
 const tableHead = ref<TableHead[]>([
@@ -30,31 +32,38 @@ const tableHead = ref<TableHead[]>([
     operate: ['edit', 'delete']
   }
 ]);
-const tableData = ref([
-  {
-    name: "测试",
-    proficiency: 10,
-    sort: 0,
-    createTime: "2025",
-    updateTime: "2025",
-  },
-  {
-    name: "测试2",
-    proficiency: 20,
-    sort: 0,
-    createTime: "2025",
-    updateTime: "2025",
-  }
-]);
+const tableData = ref<SkillListType>([]);
 
 function handleAddSkill() {
   formRef.value.open();
 }
 
-function handleTableClick(type: CellType, data: Record<string, any>) {
-
+function handleEditSkill(skill: Record<string, any>) {
+  formRef.value.open(skill);
 }
 
+function getTableData() {
+  apiSkillGetList().then(res => {
+    tableData.value = res.data;
+  });
+}
+
+function handleTableClick(type: CellType, data: Record<string, any>) {
+  switch (type) {
+    case 'edit':
+      handleEditSkill(data);
+      break;
+    case 'delete':
+
+      break;
+    case 'cell':
+      break;
+    default:
+      break;
+  }
+}
+
+getTableData();
 </script>
 <template>
   <personal-center>

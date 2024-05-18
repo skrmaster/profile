@@ -372,7 +372,7 @@ onNuxtReady(() => {
                 开发、组件二次封装、<span class="font-bold">SSR</span>网站
                 前端开发等等...
               </p>
-              <com-button suffix-icon="profilearrow" link><span class="fs18">了解更多</span></com-button>
+              <com-button suffix-icon="profile-arrow" link><span class="fs18">了解更多</span></com-button>
             </div>
           </div>
         </div>

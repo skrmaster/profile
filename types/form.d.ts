@@ -24,7 +24,7 @@ declare type FormConfig = {
 
 type FormEditAddType = 'add' | 'edit';
 
-interface IForm {
+interface Form {
   generateTextInput(config: FormConfig): VNode;
   generateVerificationCode(config: FormConfig): VNode,
   generateNumberInput(config: FormConfig): VNode;

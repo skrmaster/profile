@@ -1,3 +1,5 @@
+import vueJsx from '@vitejs/plugin-vue-jsx';
+
 const mode = process.env.NODE_ENV;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -51,14 +53,21 @@ export default defineNuxtConfig({
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "baseUrl": ".",
+        "types": ["@types/node"]
       },
-      include: [
+      "include": [
         "types/*.d.ts",
         "types/**/*.d.ts",
         "src/**/*.d.ts",
         "src/*.d.ts",
-        "@types/**/*.d.ts"
+        "@types/**/*.d.ts",
+        "./**/*.tsx", 
+        "./nuxt.config.ts"
       ],
+      "exclude": ["node_modules"]
     }
   },
+  vite: {
+    plugins: [vueJsx()]
+  }
 })

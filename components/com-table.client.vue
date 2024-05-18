@@ -16,8 +16,8 @@ const props = withDefaults(defineProps<Prop>(), {
 const tableRef = ref<HTMLElement>();
 
 const tableWidth = ref(0);
-const theadList = toRef(props.head);
-const tableData = toRef(props.data);
+const theadList = toRef(() => props.head);
+const tableData = toRef(() => props.data);
 const resize = new ResizeObserver(callback);
 const tableGap = 0;
 
