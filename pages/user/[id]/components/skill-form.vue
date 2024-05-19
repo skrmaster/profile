@@ -2,10 +2,14 @@
 import type { AddModel, EditModel } from '~/api/skill/skillModel';
 import { apiSkillAdd, apiSkillUpdate } from '~/api/skill/request';
 
+const { $message }: any = useNuxtApp();
 const formRef = ref();
 
+const emit = defineEmits<{
+  'refreshData': []
+}>()
 const visible = ref(false);
-const formRenderType = ref<FormEditAddType>('add');
+const formRenderType = ref<FormEditAdd>('add');
 const editId = ref();
 const title = computed(() => {
   return formRenderType.value === 'add' ? '添加技能' : '编辑技能';
@@ -54,7 +58,7 @@ const formConfig = ref<Array<FormConfig>>([
 function setFormData(data: EditModel) {
   formConfig.value = formConfig.value.map(e => {
     if (Object.hasOwn(data, e.field)) {
-      e.data = data[e.field];
+      e.data = data[e.field].toString();
     }
 
     return e
@@ -80,6 +84,12 @@ function submitData() {
         }
         apiSkillAdd(params).then(res => {
           console.log(res);
+          $message.show({
+            message: '添加成功',
+            type: 'success'
+          });
+          close();
+          emit('refreshData');
         });
       } else {
         const params: EditModel = {
@@ -90,6 +100,12 @@ function submitData() {
         }
         apiSkillUpdate(params).then(res => {
           console.log(res);
+          $message.show({
+            message: '更新成功',
+            type: 'success'
+          });
+          close();
+          emit('refreshData');
         });
       }
     }

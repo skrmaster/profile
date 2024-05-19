@@ -16,10 +16,10 @@ export function throttle() {
 
 }
 
-export function resize(el: Element, cb: (arg: ResizeType) => unknown): ResizeObserver {
+export function resize(el: Element, cb: (arg: Resize) => unknown): ResizeObserver {
   const resizeObserver = new ResizeObserver((entries) => {
     for (const entry of entries) {
-      const obj: ResizeType = {
+      const obj: Resize = {
         w: entry.borderBoxSize[0].inlineSize,
         h: entry.borderBoxSize[0].blockSize
       }

@@ -29,7 +29,7 @@ function handleClick($event: Event) {
 }
 </script>
 <template>
-  <div class="icon__box">
+  <span class="icon__box">
     <svg
       v-if="props.icon"  
       class="icon"
@@ -43,11 +43,10 @@ function handleClick($event: Event) {
     >
       <use :xlink:href="icon"></use>
     </svg>
-  </div>
+  </span>
 </template>
 <style scoped>
 .icon__box {
-  display: inline-block;
   text-align: center;
 }
 

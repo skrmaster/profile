@@ -1,9 +1,9 @@
-declare type ResizeType = {
+type Resize = {
   w: number;
   h: number;
 }
 
-declare type storageType  = 'localStorage' | 'sessionStorage';
+type StorageFrom = 'localStorage' | 'sessionStorage';
 
-declare function resize(el: Element, cb: (arg: ResizeType) => unknown): ResizeObserver;
-declare function debounce(func: (arg: unknown) => unknown, time = 1000): (...args: unknown[]) => void;
+function resize(el: Element, cb: (arg: Resize) => unknown): ResizeObserver;
+function debounce(func: (arg: unknown) => unknown, time = 1000): (...args: unknown[]) => void;

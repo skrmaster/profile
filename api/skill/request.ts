@@ -8,9 +8,10 @@ const {
   skillDeletePath: skillDelete,
 } = routerMap;
 
-export async function apiSkillGetList() {
-  const res = await httpClient<Type.SkillListType>(skillList, {
-    method: 'get'
+export async function apiSkillGetList(params: Omit<Pagination, 'total'>) {
+  const res = await httpClient<ResponsePagination<Type.SkillListType>>(skillList, {
+    method: 'get',
+    params
   });
   return res
 }

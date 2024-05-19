@@ -18,7 +18,7 @@ const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
 const currentTimeRotateDeg = getRotateDeg();
-const config: Array<FormConfig> = [
+const config = ref<Array<FormConfig>>([
   {
     require: true,
     field: 'email',
@@ -45,7 +45,7 @@ const config: Array<FormConfig> = [
       errorMsg: '请输入8~16位包含数字,大小写字母的密码'
     }
   }
-];
+]);
 const rememberPassword = ref(false);
 
 function drawClock() {
@@ -167,7 +167,7 @@ function handleSubmit() {
           password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password)
         }
         await apiLogin(params).then((data) => {
-          const storageStr: storageType = rememberPassword.value ? 'localStorage' : 'sessionStorage';
+          const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
           const storage = new StorageSuger(storageStr);
           storage.setValue('token', data.tokenObject.token);
           storage.setValue('refresh-token', data.tokenObject.refreshToken);

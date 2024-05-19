@@ -2,6 +2,7 @@
 type Prop = {
   background?: boolean;
   pageSize?: number;
+  pageSizes?: Array<number>;
   total?: number;
   currentPage?: number;
   pagerCount?: number;
@@ -18,27 +19,43 @@ type PageItem = {
 const emit = defineEmits<{
   'update:currentPage': [val: number];
   'update:pageSize': [val: number];
+  'pageSizeChange': [],
+  'currentPageChange': []
 }>();
 
 const props = withDefaults(defineProps<Prop>(), {
   background: true,
-  pageSize: 2,
-  total: 20,
+  pageSize: 20,
+  total: 0,
   currentPage: 1,
   pagerCount: 1,
   groupCount: 1,
   eachPageCount: 5,
-  unit: '条'
+  unit: '条',
+  pageSizes: () => [20, 40, 60, 80, 100]
 });
-const _currentPage = toRef(props.currentPage);
+const currentPage = toRef(props.currentPage);
 const groupCount = toRef(props.groupCount);
 const prevDisable = ref(true);
-const nextDisable = ref(false);
+const nextDisable = ref(true);
 const jumpPage = ref<string>('');
+const currentPageSize = ref(props.pageSize);
+const pageSizeList = toRef(() => props.pageSizes);
+
+const currentPageValue = computed(() => {
+  return props.currentPage
+});
+
+watch(currentPageValue, (val) => {
+  if (val === 1) {
+    groupCount.value = 1;
+  }
+});
 
 const maxPage = computed(() => {
-  return Math.ceil(props.total / props.pageSize);
-})
+  const page = Math.ceil(props.total / props.pageSize);
+  return page;
+});
 
 const group = computed(() => {
   const pageCount = Math.ceil(props.total / props.pageSize);
@@ -73,7 +90,7 @@ const pageItems = computed((): PageItem[] => {
 });
 
 watch(jumpPage, (newVal: string) => {
-  if (!isNaN(parseInt(newVal))) {
+  if (!isNaN(parseInt(newVal)) && parseInt(newVal) >= 1) {
     const val = parseInt(newVal);
     if (val > maxPage.value) {
       return;
@@ -83,7 +100,35 @@ watch(jumpPage, (newVal: string) => {
         groupCount.value = i + 1;
       }
     })
-    _currentPage.value = val;
+    currentPage.value = val;
+    emit('currentPageChange');
+  }
+});
+
+watch(maxPage, (page) => {
+  if (page === 1) {
+    prevDisable.value = true;
+    nextDisable.value = true;
+  } else {
+    if (props.currentPage === page) {
+      prevDisable.value = false;
+      nextDisable.value = true;
+    }
+  }
+
+  if (page > 1) {
+    prevDisable.value = true;
+    nextDisable.value = false;
+  }
+});
+
+watch(currentPageSize, (val) => {  
+  if (val) {
+    emit('update:pageSize', val);
+    emit('pageSizeChange');
+  } else {
+    emit('update:pageSize', pageSizeList.value[0]);
+    emit('pageSizeChange');
   }
 });
 
@@ -100,8 +145,9 @@ function handleChangePage(page: number) {
     nextDisable.value = false;
   }
 
-  _currentPage.value = page;
+  currentPage.value = page;
   emit('update:currentPage', page);
+  emit('currentPageChange');
 }
 
 function handlePrevPage() {
@@ -110,11 +156,11 @@ function handlePrevPage() {
   }
   nextDisable.value = false;
 
-  if (_currentPage.value !== (props.eachPageCount - 1) * (groupCount.value - 1) + 1) {
-    handleChangePage(--_currentPage.value);
+  if (currentPage.value !== (props.eachPageCount - 1) * (groupCount.value - 1) + 1) {
+    handleChangePage(--currentPage.value);
   } else {
     groupCount.value -= 1;
-    handleChangePage(--_currentPage.value);
+    handleChangePage(--currentPage.value);
   }
 }
 
@@ -125,21 +171,20 @@ function handleNextPage() {
   prevDisable.value = false;
   
   if (Math.ceil(props.total / props.pageSize) !== 1) {
-    if (_currentPage.value !== 
+    if (currentPage.value !== 
       (props.eachPageCount - (groupCount.value % props.eachPageCount - 1)) +
       props.eachPageCount * (groupCount.value - 1)
     ) {
-      handleChangePage(++_currentPage.value);
+      handleChangePage(++currentPage.value);
     } else {
       groupCount.value += 1;
-      handleChangePage(++_currentPage.value);
+      handleChangePage(++currentPage.value);
     }
   }
 }
-
 </script>
 <template>
-  <div class="pagination flex__center">
+  <div class="pagination flex__center" v-if="props.total > 0">
     <div class="pagination-box" :class="{
       background: props.background
     }">
@@ -149,14 +194,19 @@ function handleNextPage() {
         }"
         @click="handlePrevPage"
       >
-        {{ '<' }}
+        <com-icon 
+          icon="profile-left" 
+          class="pagination__control"
+          :color="prevDisable ? 'var(--disabled-color)' : 'currentcolor'"
+        ></com-icon>
       </div>
       <div 
         v-for="(item, index) in pageItems" 
         :key="index"
         class="pagination__item flex__center"
+        :id="`${item.name}`"
         :class="{
-          'is-active': _currentPage === item.name
+          'is-active': currentPageValue === item.name
         }"
         @click="handleChangePage(item.name)"
       >
@@ -168,7 +218,11 @@ function handleNextPage() {
           disabled: nextDisable
         }"
       >
-        {{ '>' }}
+        <com-icon 
+          icon="profile-left" 
+          class="pagination__control icon__right"
+          :color="nextDisable ? 'var(--disabled-color)' : 'currentcolor'"
+        ></com-icon>
       </div>
     </div>
     <div class="flex__center mx1">
@@ -179,14 +233,23 @@ function handleNextPage() {
         :text-align="'center'"
         :width="60"
         v-model="jumpPage"
+        type="number"
+        :min-value="1"
         placeholder="页码"
       ></com-form-input>
     </div>
-    <div class="flex__center">
-      <p class="fs14">共：
+    <div class="flex__center mr1">
+      <p class="fs14">共:
         <span>{{ props.total }}</span>
         {{ props.unit }}
       </p>
+    </div>
+    <div class="flex__center">
+      <com-select 
+        v-model="currentPageSize"
+        :option-list="pageSizeList"
+        :placeholder="`${pageSizeList[0]}/页`"
+      ></com-select>
     </div>
   </div>
 </template>
@@ -236,5 +299,13 @@ function handleNextPage() {
 .pagination-input {
   height: 30px;
   text-align: start;
+}
+
+.icon__right {
+  transform: rotate(180deg);
+}
+
+.pagination__control {
+  pointer-events: none;
 }
 </style>

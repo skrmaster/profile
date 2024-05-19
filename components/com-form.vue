@@ -4,7 +4,7 @@ const props = defineProps<{
 }>();
 const slots = useSlots();
 const model = computed(() => {
-  return props.model
+  return props.model;
 });
 
 class FormInstance implements Form {
@@ -106,7 +106,7 @@ const elementForm = shallowRef(formElement.value.renderForm());
 
 watch(formElement, () => {
   refreshDom();
-})
+});
 
 function vaildForm(): Promise<ReturnVaildForm> {
   const val = formElement.value.vaildForm();

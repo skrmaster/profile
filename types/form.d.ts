@@ -1,4 +1,4 @@
-declare type FormConfig = {
+type FormConfig = {
   require?: boolean;
   field: string;
   type: string;
@@ -22,7 +22,7 @@ declare type FormConfig = {
   }
 }
 
-type FormEditAddType = 'add' | 'edit';
+type FormEditAdd = 'add' | 'edit';
 
 interface Form {
   generateTextInput(config: FormConfig): VNode;
@@ -34,7 +34,7 @@ interface Form {
   vaildForm(): boolean;
 }
 
-declare type ReturnVaildForm = {
+type ReturnVaildForm = {
   vaild: boolean;
   data: Record<string, any>
 }

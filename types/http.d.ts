@@ -1,14 +1,25 @@
-declare type responseModel<T> = {
+type ResponseModel<T> = {
   statusCode: number;
   data: T;
   succeeded: true;
   errors: string;
   extras: string;
   timestamp: number;
-  tokenObject: tokenType
+  tokenObject: Token
 }
 
-declare type tokenType = {
+type Token = {
   token: string | null;
   refreshToken: string | null;
+}
+
+type Pagination = {
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
+type ResponsePagination<T> = {
+  list: T;
+  pagination: Pagination;
 }

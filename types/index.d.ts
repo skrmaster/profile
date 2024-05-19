@@ -1,15 +1,15 @@
-declare interface ICanvasUtil {
+interface CanvasUtil {
   getCanvasCenterPointPosition(): { x: number; y: number }
 }
 
-declare type StackItem = {
+type StackItem = {
   name: string;
   icon?: string;
   officalUrl?: string;
   isChoose: boolean;
 }
 
-declare type LabelValue = {
+type LabelValue = {
   value: string;
   label: string;
 }

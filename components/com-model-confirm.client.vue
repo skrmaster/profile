@@ -3,12 +3,14 @@ type Prop = {
   toBody?: boolean;
   modelValue: boolean;
   afterClose?: () => void;
+  showCloseIcon?: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   toBody: false,
   modelValue: false,
-  afterClose: () => {}
+  afterClose: () => {},
+  showCloseIcon: true,
 });
 const emit = defineEmits<{
   'update:modelValue': [val: boolean],
@@ -16,7 +18,12 @@ const emit = defineEmits<{
   'cannel': [val?: unknown]
 }>();
 
-const visible = toRef(props, 'modelValue');
+const visibleChild = toRef(() => props.modelValue);
+const visible = ref(props.modelValue);
+
+watch(visibleChild, (val) => {
+  visible.value = val;
+});
 
 function handleClose() {
   emit('update:modelValue', false);
@@ -33,6 +40,7 @@ function handleConfirm() {
     :to-body="props.toBody"
     v-model="visible"
     class="wh100 flex__column--center"
+    :showCloseIcon="props.showCloseIcon"
   >
     <div v-bind="$attrs" class="confirm">
       <slot />

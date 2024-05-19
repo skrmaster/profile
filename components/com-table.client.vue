@@ -5,7 +5,7 @@ type Prop = {
 }
 
 const emit = defineEmits<{
-  'click': [type: CellType, data: Record<string, any>]
+  'click': [type: TableCell, data: Record<string, any>]
 }>();
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -70,7 +70,7 @@ function getTurlyByKey(key: string, val: any) {
   }
 }
 
-function handleOperate(type: CellType, data: Record<string, any>) {
+function handleOperate(type: TableCell, data: Record<string, any>) {
   emit('click', type, data);
 }
 

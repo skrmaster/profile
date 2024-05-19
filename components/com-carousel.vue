@@ -157,7 +157,7 @@ function next(index: number) {
 }
 
 onNuxtReady(() => {
-  const observer = resize(carouselRef.value , (arg: ResizeType) => {
+  const observer = resize(carouselRef.value , (arg: Resize) => {
     const numArr = stringRegexp(boxRef.value.style.transform, 'number');
     
     if (carousel.boxWidth > arg.w) {

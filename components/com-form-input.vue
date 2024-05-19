@@ -12,6 +12,8 @@ interface Props {
   errorMsg?: string;
   maxLength?: number;
   minLength?: number;
+  minValue?: number;
+  maxValue?: number;
   rows?: number;
   isLabel?: boolean;
   textAlign?: 'start' | 'center' | 'end';
@@ -32,7 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   disable: false,
   readonly: false,
   isError: false,
-  rows: 2,
+  minValue: 0,
+  rowsValue: 2,
   textAlign: 'start'
 });
 const emit = defineEmits<{
@@ -48,7 +51,7 @@ const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
-const inputValue = computed(() => props.modelValue);
+const inputValue = toRef(() => props.modelValue);
 const currentInputValue = ref<string | number>('');
 
 const isTypePassword = computed((): boolean => {
@@ -91,6 +94,11 @@ onMounted(() => {
   }
 
   if (input.value.value.toString()) {
+    placeholderStatus.value = 0;
+  }
+
+  if (inputValue.value) {
+    currentInputValue.value = inputValue.value;  
     placeholderStatus.value = 0;
   }
 });
@@ -172,6 +180,8 @@ function handlePasswordIcon() {
         textIndent: props.textAlign === 'start' ? '0.5em' : 'auto'
       }"
       :placeholder="props.placeholder"
+      :max="props.maxValue"
+      :min="props.minValue"
       :autocomplete="props.autocomplete"
       :type="isTypePassword ? props.type : showPasswordType"
       v-model="currentInputValue"
