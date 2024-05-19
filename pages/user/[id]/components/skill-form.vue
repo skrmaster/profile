@@ -52,21 +52,20 @@ const formConfig = ref<Array<FormConfig>>([
 ]);
 
 function setFormData(data: EditModel) {
-  formConfig.value.forEach(e => {
+  formConfig.value = formConfig.value.map(e => {
     if (Object.hasOwn(data, e.field)) {
       e.data = data[e.field];
     }
-  });
-  console.log(1);
-  
-  nextTick(() => {
-    formRef.value.refreshDom();
+
+    return e
   });
 }
 
 function clearFormData() {
-  formConfig.value.forEach(e => {
+  formConfig.value = formConfig.value.map(e => {
     e.data = '';
+
+    return e
   });
 }
 
@@ -125,6 +124,7 @@ defineExpose({
   <com-model-confirm
     v-model="visible"
     @confirm="submitData"
+    :after-close="clearFormData"
   >
     <div class="form__body">
       <div class="mb1">

@@ -1,8 +1,11 @@
 <script lang="tsx" setup>
 const props = defineProps<{
   model: Array<FormConfig>
-}>()
+}>();
 const slots = useSlots();
+const model = computed(() => {
+  return props.model
+});
 
 class FormInstance implements Form {
   vnode: VNode;
@@ -14,7 +17,7 @@ class FormInstance implements Form {
     this.config = config;
     this.data = {};
     
-    for (let i = 0; i < config.length; i++) {
+    for (let i = 0; i < this.config.length; i++) {
       this.data[this.config[i].field] = this.config[i].data || '';
     }
   }
@@ -96,15 +99,21 @@ class FormInstance implements Form {
   }
 }
 
-const formElement = new FormInstance(props.model);
-const elementForm = shallowRef(formElement.renderForm());
+const formElement = computed(() => {
+  return new FormInstance(model.value)
+});
+const elementForm = shallowRef(formElement.value.renderForm());
+
+watch(formElement, () => {
+  refreshDom();
+})
 
 function vaildForm(): Promise<ReturnVaildForm> {
-  const val = formElement.vaildForm();
-  elementForm.value = formElement.renderForm();
+  const val = formElement.value.vaildForm();
+  refreshDom();
   const res: ReturnVaildForm = {
     vaild: val,
-    data: formElement.data,
+    data: formElement.value.data,
   }
 
   return new Promise((reslove) => {
@@ -113,12 +122,11 @@ function vaildForm(): Promise<ReturnVaildForm> {
 }
 
 function refreshDom() {
-  elementForm.value = formElement.renderForm();
+  elementForm.value = formElement.value.renderForm();
 }
 
 defineExpose({
-  vaildForm,
-  refreshDom
+  vaildForm
 });
 </script>
 <template>

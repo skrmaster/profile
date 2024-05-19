@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 interface Props {
-  modelValue: string;
+  modelValue: string | number;
   placeholder?: string;
   autocomplete?: string;
   type?: string;
@@ -36,8 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
   textAlign: 'start'
 });
 const emit = defineEmits<{
-  'update:modelValue': [value: string],
-  'change': [value: string]
+  'update:modelValue': [value: string | number],
+  'change': [value: string | number]
 }>();
 
 const input = ref();
@@ -48,8 +48,8 @@ const isInputFocus = ref(false);
 const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
-const inputValue = toRef(() => props.modelValue);
-const currentInputValue = ref('');
+const inputValue = computed(() => props.modelValue);
+const currentInputValue = ref<string | number>('');
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -67,16 +67,18 @@ const width = computed((): string | number => {
   }
 });
 
-watchEffect(() => {
-  if (currentInputValue.value) {
-    currentInputValue.value += inputValue.value;
+watch(inputValue, (val) => {
+  currentInputValue.value = val;  
+  
+  if (currentInputValue.value.toString()) {
+    placeholderStatus.value = 0;
   } else {
-    currentInputValue.value = inputValue.value;
+    placeholderStatus.value = 1;
   }
 });
 
 watchEffect(() => {
-  if (currentInputValue.value.length > 0 && props.clearable) {
+  if (currentInputValue.value && props.clearable) {
     canShowClearIcon.value = true;
   } else {
     canShowClearIcon.value = false;
@@ -88,13 +90,13 @@ onMounted(() => {
     positionOfPlaceholder.value += prepend.value.offsetWidth
   }
 
-  if (input.value.value) {
+  if (input.value.value.toString()) {
     placeholderStatus.value = 0;
   }
-})
+});
 
 function autoSetStatusOfPlaceholder() {
-  if (currentInputValue.value && currentInputValue.value.length > 0) {
+  if (currentInputValue.value.toString()) {
     placeholderStatus.value = 0;
   } else {
     placeholderStatus.value = 1;
@@ -118,8 +120,8 @@ function handlerBlur() {
 }
 
 function handlerClear() {
-  currentInputValue.value = '';
-  emit('update:modelValue', "");
+  emit('update:modelValue', '');
+  currentInputValue.value = '';  
   input.value.focus();
 }
 
@@ -153,7 +155,7 @@ function handlePasswordIcon() {
       }"
     >
       {{ 
-        (props.isError && inputValue && props.errorMsg) 
+        (props.isError && currentInputValue && props.errorMsg) 
           ? props.errorMsg 
           : props.placeholder 
       }}
@@ -196,12 +198,12 @@ function handlePasswordIcon() {
     </textarea>
     <com-icon
       class="mr1"
-      v-if="props.type === 'password' && (currentInputValue && currentInputValue.length > 0)"
+      v-if="props.type === 'password' && (currentInputValue && currentInputValue.toString().length > 0)"
       @click="handlePasswordIcon"
       :icon="showPasswordType !== 'password' ? 'profile-see' : 'profile-no-see'"
     ></com-icon>
     <com-icon
-      class="mr1"
+      class="clear__icon mr1"
       v-if="canShowClearIcon"
       @click.stop="handlerClear"
       icon="profile-circle-close"
@@ -285,5 +287,13 @@ textarea.form__input-field {
 
 .error--shake {
   animation: shake .5s linear 0.1s 1 normal none running;
+}
+
+.clear__icon {
+  display: none;
+}
+
+.form__input-box:hover .clear__icon{
+  display: block;
 }
 </style>

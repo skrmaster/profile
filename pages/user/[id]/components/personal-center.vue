@@ -17,27 +17,27 @@ const list = ref<LinkType[][]>([
   [
     {
       name: '账号信息',
-      url: '/user/:id/user-info',
+      url: routerMap.userInfoPath,
     },
     {
       name: '关注的人',
-      url: '/user/:id/follow'
+      url: routerMap.followPath
     }
   ],
   [
     {
       name: '博客列表',
-      url: '/user/:id/record-list'
+      url: routerMap.recordListPath
     },
     {
       name: '项目列表',
-      url: '/user/:id/project-list'
+      url: routerMap.projectListPath
     }
   ],
   [
     {
       name: '技能管理',
-      url: '/user/:id/skill-mgt'
+      url: routerMap.skillMgtPath
     }
   ]
 ]);

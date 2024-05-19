@@ -2,11 +2,13 @@
 type Prop = {
   toBody?: boolean;
   modelValue: boolean;
+  afterClose?: () => void;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   toBody: false,
   modelValue: false,
+  afterClose: () => {}
 });
 const emit = defineEmits<{
   'update:modelValue': [val: boolean],
@@ -18,6 +20,7 @@ const visible = toRef(props, 'modelValue');
 
 function handleClose() {
   emit('update:modelValue', false);
+  props.afterClose();
   emit('cannel');
 }
 

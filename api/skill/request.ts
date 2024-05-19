@@ -2,10 +2,10 @@ import type * as Type from "./skillModel";
 import { httpClient } from "../index";
 
 const { 
-  skillList,
-  skillAdd,
-  skillEdit,
-  skillDelete,
+  skillListPath: skillList,
+  skillAddPath: skillAdd,
+  skillEditPath: skillEdit,
+  skillDeletePath: skillDelete,
 } = routerMap;
 
 export async function apiSkillGetList() {
