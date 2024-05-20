@@ -1,4 +1,8 @@
-let modelZIndex = 999;
+export let modelZIndex = 999;
+
+export function getZIndex() {
+  return modelZIndex++;
+}
 
 export default defineNuxtPlugin(() => {
   return {

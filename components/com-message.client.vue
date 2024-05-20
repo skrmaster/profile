@@ -1,16 +1,27 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-
-const props = defineProps<{
+type MessageOptions = {
   message: string;
-  type: 'success' | 'warning' | 'info' | 'error';
-  duration: number;
+  type?: 'success' | 'warning' | 'info' | 'error';
+  duration?: number;
+  id: string;
+  topOffset: string;
+}
+
+const props = withDefaults(defineProps<MessageOptions>(), {
+  type: 'info',
+  duration: 2000,
+  topOffset: '1vh'
+});
+
+const emit = defineEmits<{
+  'update:modelValue': [val: boolean];
 }>();
 
-const visible = ref(true);
-let timer: ReturnType<typeof setTimeout> | null = null;
+const visible = ref(false);
+const id = toRef(() => props.id);
 
-const typeClass = computed(() => `message-${props.type}`);
+let timer: ReturnType<typeof setTimeout> | null = null;
+const typeClass = computed(() => `message-${props.type ? props.type : ''}`);
 const iconClass = computed(() => {
   switch (props.type) {
     case 'success':
@@ -26,36 +37,57 @@ const iconClass = computed(() => {
   }
 });
 
-const startTimer = () => {
+function startTimer() {
   if (props.duration > 0) {
     timer = setTimeout(() => {
-      visible.value = false;
+      removeElement();
     }, props.duration);
   }
-};
+}
 
-const clearTimer = () => {
+function clearTimer() {
   if (timer) {
     clearTimeout(timer);
     timer = null;
   }
-};
+}
 
 function close() {
   visible.value = false;
+  removeElement();
+}
+
+function removeElement() {
+  visible.value = false;
+  setTimeout(() => {
+    const element = document.getElementById(id.value);
+    element?.remove();
+  }, 200)
 }
 
 onMounted(() => {
   startTimer();
+  nextTick(() => {
+    visible.value = true;
+  })
 });
 
 onBeforeUnmount(() => {
   clearTimer();
+  removeElement();
 });
 </script>
 <template>
-  <transition name="el-fade-in-linear">
-    <div v-if="visible" :class="['message', typeClass]" @mouseenter="clearTimer" @mouseleave="startTimer">
+  <transition name="slide__fade">
+    <div
+      :style="{
+        '--current-top-offset': topOffset
+      }"
+      v-if="visible"
+      :class="['message', typeClass]"
+      @mouseenter="clearTimer" 
+      @mouseleave="startTimer"
+    >
       <com-icon :icon="iconClass"></com-icon>
       <span class="message-content px1">{{ message }}</span>
       <com-icon class="flex__center" width="10px" height="10px" icon="profile-close" @click="close"></com-icon>
@@ -65,10 +97,10 @@ onBeforeUnmount(() => {
 <style scoped>
 .message {
   position: fixed;
-  top: 1vh;
+  top: var(--current-top-offset);
   left: 50%;
   transform: translate(-50%, 0);
-  z-index: 9999999;
+  z-index: 999;
 
   display: flex;
   align-items: center;
@@ -81,13 +113,13 @@ onBeforeUnmount(() => {
   box-shadow: var(--box-shadow-small);
 }
 
-.message-success {}
+/* .message-success {}
 
 .message-warning {}
 
 .message-info {}
 
-.message-error {}
+.message-error {} */
 
 .icon-success,
 .icon-warning,
@@ -101,13 +133,28 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
-.el-fade-in-linear-enter-active,
-.el-fade-in-linear-leave-active {
-  transition: opacity 0.3s;
+.slide__fade-enter-active, 
+.slide__fade-leave-active {
+  transition: all .2s ease .1s;
 }
 
-.el-fade-in-linear-enter-from,
-.el-fade-in-linear-leave-to {
+.slide__fade-enter-from {
+  transform: translate(-50%, 0) translateY(-100%);
+  opacity: 0;
+}
+
+.slide__fade-enter-to {
+  transform: translate(-50%, 0) translateY(0);
+  opacity: 1;
+}
+
+.slide__fade-leave-from {
+  transform: translate(-50%, 0) translateY(0);
+  opacity: 1;
+}
+
+.slide__fade-leave-to {
+  transform: translate(-50%, 0) translateY(-100%);
   opacity: 0;
 }
 </style>

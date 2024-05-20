@@ -38,6 +38,7 @@ export default defineNuxtConfig({
     strict: true,
     tsConfig: {
       "compilerOptions": {
+        "allowJs": true,
         "noEmit": true,
         "module": "ESNext",
         "moduleResolution": "node",

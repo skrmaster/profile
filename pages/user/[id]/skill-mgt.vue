@@ -4,7 +4,7 @@ import PersonalCenter from './components/personal-center.vue';
 import SkillForm from './components/skill-form.vue';
 import { apiSkillGetList } from '~/api/skill/request';
 
-const { $dayjs } = useNuxtApp();
+const { $dayjs, $confirm, $message }: any = useNuxtApp();
 const formRef = ref();
 const paginationRef = ref();
 const tableHead = ref<TableHead[]>([
@@ -45,7 +45,8 @@ const pagination = reactive({
 });
 
 function handleAddSkill() {
-  formRef.value.open();
+  $confirm.show({message: '123'});
+  // formRef.value.open();
 }
 
 function handleEditSkill(skill: Record<string, any>) {
@@ -115,7 +116,6 @@ getTableData();
       </div>
     </div>
     <skill-form ref="formRef" @refresh-data="getTableData"></skill-form>
-    <com-confirm :message="'123'"></com-confirm>
   </personal-center>
 </template>
 <style scoped>

@@ -1,24 +1,34 @@
 import { createVNode, render } from 'vue';
 import Message from '~/components/com-message.client.vue';
 
-interface MessageOptions {
+type MessageOptions = {
   message: string;
-  type: 'success' | 'warning' | 'info' | 'error';
+  type?: 'success' | 'warning' | 'info' | 'error';
   duration?: number;
+  id: string;
+  topOffset: string;
 }
 
-const defaultOptions = {
-  duration: 2000
-};
+let id = 1;
+let offset = -3;
 
-const container = document.createElement('div');
-document.body.appendChild(container);
+function getId(): string {
+  return `message-${id++}`;
+}
+
+function getOffset(): string {
+  offset += 4;
+  return `1vh`;
+}
 
 class MessageManager {
   static show(options: MessageOptions) {
-    const opts = { ...defaultOptions, ...options };
+    const id = getId();
+    options.topOffset = getOffset();
+    const opts = { ...options, id };
     const vnode = createVNode(Message, opts);
-    render(vnode, container);
+    vnode.key = opts.id;
+    render(vnode, document.body);
   }
 }
 
