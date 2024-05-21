@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { userModel } from '~/api/user/userModel';
+import type { userModel } from '~/api/user/model';
 
 type LinkType = {
   name: string;
@@ -46,6 +46,18 @@ const list = ref<LinkType[][]>([
   [
     {
       name: '技能管理',
+      url: routerMap.skillMgtPath
+    },
+    {
+      name: '标签管理',
+      url: routerMap.skillMgtPath
+    },
+    {
+      name: '项目管理',
+      url: routerMap.skillMgtPath
+    },
+    {
+      name: '博客管理',
       url: routerMap.skillMgtPath
     }
   ]

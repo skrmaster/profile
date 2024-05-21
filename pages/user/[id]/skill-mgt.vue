@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SkillListType } from '~/api/skill/skillModel';
+import type { ListType } from '~/api/skill/model';
 import PersonalCenter from './components/personal-center.vue';
 import SkillForm from './components/skill-form.vue';
 import { apiSkillGetList, apiSkillDelete } from '~/api/skill/request';
@@ -37,7 +37,7 @@ const tableHead = ref<TableHead[]>([
     operate: ['edit', 'delete']
   }
 ]);
-const tableData = ref<SkillListType>([]);
+const tableData = ref<ListType>([]);
 const pagination = reactive({
   total: 0,
   page: 1,

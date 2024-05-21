@@ -2,7 +2,7 @@
 import { apiLogin } from '@/api/user/request';
 import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
-import type { userModel } from '~/api/user/userModel';
+import type { userModel } from '~/api/user/model';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();

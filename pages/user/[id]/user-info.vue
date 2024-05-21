@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import PersonalCenter from './components/personal-center.vue';
-import type { userModel, updateInfoType } from '~/api/user/userModel';
+import type { userModel, updateInfoType } from '~/api/user/model';
 
 const userInfo = useState<userModel>("userInfo");
 const formData = reactive<updateInfoType>({

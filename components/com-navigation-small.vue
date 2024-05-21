@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { userModel } from '~/api/user/userModel';
+import type { userModel } from '~/api/user/model';
 
 const navList = ref([
   {

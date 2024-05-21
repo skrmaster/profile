@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { AddModel, EditModel } from '~/api/skill/skillModel';
+import type { AddModel, EditModel } from '~/api/skill/model';
 import { apiSkillAdd, apiSkillUpdate } from '~/api/skill/request';
 
 const { $message }: any = useNuxtApp();

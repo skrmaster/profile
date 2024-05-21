@@ -1,7 +1,7 @@
-import type { userModel, loginType, registerType } from "./userModel";
+import type { userModel, loginType, registerType } from "./model";
 import { httpClient } from "../index";
 
-const { loginPath, registerPath } = routerMap;
+const { loginPath, registerPath } = apiMap;
 
 export async function apiLogin(params: loginType) {
   const res = await httpClient<userModel>(loginPath, {

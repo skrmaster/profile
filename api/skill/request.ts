@@ -1,15 +1,15 @@
-import type * as Type from "./skillModel";
+import type * as Type from "./model";
 import { httpClient } from "../index";
 
 const { 
-  skillListPath: skillList,
-  skillAddPath: skillAdd,
-  skillEditPath: skillEdit,
-  skillDeletePath: skillDelete,
-} = routerMap;
+  skillListPath,
+  skillAddPath,
+  skillEditPath,
+  skillDeletePath,
+} = apiMap;
 
 export async function apiSkillGetList(params: Omit<Pagination, 'total'>) {
-  const res = await httpClient<ResponsePagination<Type.SkillListType>>(skillList, {
+  const res = await httpClient<ResponsePagination<Type.ListType>>(skillListPath, {
     method: 'get',
     params
   });
@@ -17,7 +17,7 @@ export async function apiSkillGetList(params: Omit<Pagination, 'total'>) {
 }
 
 export async function apiSkillAdd(params: Type.AddModel) {
-  const res = await httpClient<boolean>(skillAdd, {
+  const res = await httpClient<boolean>(skillAddPath, {
     method: 'post',
     body: params
   });
@@ -25,7 +25,7 @@ export async function apiSkillAdd(params: Type.AddModel) {
 }
 
 export async function apiSkillUpdate(params: Type.EditModel) {
-  const updateUrl = skillEdit + `/${params.id}`
+  const updateUrl = skillEditPath + `/${params.id}`
   const res = await httpClient<boolean>(updateUrl, {
     method: 'put',
     body: params
@@ -34,7 +34,7 @@ export async function apiSkillUpdate(params: Type.EditModel) {
 }
 
 export async function apiSkillDelete(id: number) {
-  const deleteUrl = skillDelete + `/${id}`
+  const deleteUrl = skillDeletePath + `/${id}`
   const res = await httpClient<boolean>(deleteUrl, {
     method: 'delete'
   });

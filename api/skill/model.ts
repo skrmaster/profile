@@ -12,7 +12,7 @@ export type AddModel = {
   proficiency: number;
 }
 
-export type SkillListType = Array<{
+export type ListType = Array<{
   id: number;
   createTime: string;
   updateTime: string;
