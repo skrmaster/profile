@@ -1,16 +1,9 @@
 import { createVNode, render } from 'vue';
 import MessageConfirm from '~/components/com-confirm.client.vue';
 import { getZIndex } from './zIndex';
+import EventBus from '~/utils/eventBus';
 
-interface Option {
-  message: string;
-  buttonConfirmText?: string;
-  buttonCannelText?: string;
-  title?: string;
-  zIndex: string;
-  id: string;
-}
-
+export const bus = new EventBus();
 let id = 1;
 
 function getId(): string {
@@ -22,22 +15,41 @@ const defaultOption: Omit<Option, 'message'> = {
   buttonConfirmText: '确认',
   buttonCannelText: '取消',
   id: '',
-  zIndex: ''
+  zIndex: '',
+  onlyShowConfirm: false
 }
 
 class MessageConfirmManager {
   static show(options: Option) {
     defaultOption.id = getId();
+    defaultOption.zIndex = getZIndex().toString();
+    defaultOption.onlyShowConfirm = true;
+    const mergeOption = { ...defaultOption, ...options };
+    const vnode = createVNode(MessageConfirm, mergeOption);
+    vnode.key = mergeOption.id as string;
+    render(vnode, document.body);
+
+    return new Promise<void>((resolve) => {
+      bus.on('confirm', () => {
+        resolve();
+      });
+    });
+  }
+  static confirm(options: Option) {
+    defaultOption.id = getId();
     defaultOption.zIndex = getZIndex().toString();    
     const mergeOption = { ...defaultOption, ...options };
     const vnode = createVNode(MessageConfirm, mergeOption);
-    vnode.key = mergeOption.id;
+    vnode.key = mergeOption.id as string;
     render(vnode, document.body);
-  }
-  static confirm(options: Option) {
-    const mergeOption = { ...defaultOption, ...options };
-    const vnode = createVNode(MessageConfirm, mergeOption);
-    render(vnode, document.body);
+    return new Promise<void>((resolve, reject) => {
+      bus.on('confirm', () => {
+        resolve();
+      });
+      bus.on('cannel', () => {
+        reject();
+      });
+    });
   }
 }
 

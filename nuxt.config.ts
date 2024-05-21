@@ -57,15 +57,14 @@ export default defineNuxtConfig({
         "types": ["@types/node"]
       },
       "include": [
+        "lib/*.d.ts",
+        "lib/**/*.d.ts",
         "types/*.d.ts",
         "types/**/*.d.ts",
-        "src/**/*.d.ts",
         "src/*.d.ts",
-        "@types/**/*.d.ts",
-        "./**/*.tsx", 
-        "./nuxt.config.ts"
+        "src/**/*.d.ts"
       ],
-      "exclude": ["node_modules"]
+      "exclude": ["node_modules"],
     }
   },
   vite: {

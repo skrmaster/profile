@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { bus } from '~/plugins/confirm.client';
+
 type Prop = {
   message: string;
   buttonConfirmText?: string;
@@ -6,6 +8,7 @@ type Prop = {
   title?: string;
   zIndex: string;
   id: string;
+  onlyShowConfirm: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -37,10 +40,12 @@ function closeModel() {
 }
 
 function handleConfirm() {
-
+  bus.emit('confirm');
+  handleClose();
 }
 
 function handleClose() {
+  bus.emit('cannel');
   removeElementById(props.id);
   closeModel();
 }
@@ -86,7 +91,8 @@ onBeforeUnmount(() => {
         <div class="confirm">
           <div class="confirm__box">
             <div class="flex__row--end btn__box">
-              <com-button 
+              <com-button
+                v-if="!props.onlyShowConfirm"
                 class="cannel__btn flex__row--between mr1" 
                 prefix-icon="profile-circle-close" 
                 bgColor="var(--cannel-btn-color)"

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { EditModel, SkillListType } from '~/api/skill/skillModel';
+import type { SkillListType } from '~/api/skill/skillModel';
 import PersonalCenter from './components/personal-center.vue';
 import SkillForm from './components/skill-form.vue';
-import { apiSkillGetList } from '~/api/skill/request';
+import { apiSkillGetList, apiSkillDelete } from '~/api/skill/request';
 
-const { $dayjs, $confirm, $message }: any = useNuxtApp();
+const { $dayjs, $confirm, $message } = useNuxtApp();
 const formRef = ref();
 const paginationRef = ref();
 const tableHead = ref<TableHead[]>([
@@ -45,16 +45,24 @@ const pagination = reactive({
 });
 
 function handleAddSkill() {
-  $confirm.show({message: '123'});
-  // formRef.value.open();
+  formRef.value.open();
 }
 
 function handleEditSkill(skill: Record<string, any>) {
   formRef.value.open(skill);
 }
 
-function handleDeleteSkill(id: Record<string, any>) {
-
+function handleDeleteSkill(skill: Record<string, any>) {
+  $confirm.confirm({
+    message: '请确认，这将会删除该条数据'
+  }).then(() => {
+    apiSkillDelete(skill.id).then(_ => {
+      $message.show({
+        message: '操作成功'
+      });
+      getTableData();
+    });
+  }).catch(() => {});
 }
 
 function getTableData() {

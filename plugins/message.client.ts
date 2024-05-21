@@ -1,14 +1,6 @@
 import { createVNode, render } from 'vue';
 import Message from '~/components/com-message.client.vue';
 
-type MessageOptions = {
-  message: string;
-  type?: 'success' | 'warning' | 'info' | 'error';
-  duration?: number;
-  id: string;
-  topOffset: string;
-}
-
 let id = 1;
 let offset = -3;
 
