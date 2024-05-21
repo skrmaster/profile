@@ -50,15 +50,15 @@ const list = ref<LinkType[][]>([
     },
     {
       name: '标签管理',
-      url: routerMap.skillMgtPath
+      url: routerMap.tagMgtPath
     },
     {
       name: '项目管理',
-      url: routerMap.skillMgtPath
+      url: routerMap.projectMgtPath
     },
     {
       name: '博客管理',
-      url: routerMap.skillMgtPath
+      url: routerMap.recordMgtPath
     }
   ]
 ]);

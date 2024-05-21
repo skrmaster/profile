@@ -17,10 +17,10 @@ export const routerMap: Record<KeyOfRouter, string> = {
   followPath: '/user/:id/follow',
   recordListPath: '/user/:id/record-list',
   projectListPath: '/user/:id/project-list',
-  skillMgtPath: '/user/:id/skill-mgt',
-  tagMgtPath: '/user/:id/tag-mgt',
-  projectMgtPath: '/user/:id/project-mgt',
-  recordMgtPath: '/user/:id/record-mgt',
+  skillMgtPath: '/user/:id/management-skill',
+  tagMgtPath: '/user/:id/management-tag',
+  projectMgtPath: '/user/:id/management-project',
+  recordMgtPath: '/user/:id/management-record',
 }
 
 type KeyOfApi = 'loginPath'

@@ -11,6 +11,7 @@ type Skill = {
   id: string;
 }
 
+const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
 const skillsName: string[] = [];
@@ -46,7 +47,7 @@ function inactive() {
 }
 
 function handleAddSkill() {
-  
+  navigateTo(skillMgtPath);
 }
 
 onMounted(() => {

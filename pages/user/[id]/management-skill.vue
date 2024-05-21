@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ListType } from '~/api/skill/model';
 import PersonalCenter from './components/personal-center.vue';
-import SkillForm from './components/skill-form.vue';
+import SkillForm from './components/form-skill.vue';
 import { apiSkillGetList, apiSkillDelete } from '~/api/skill/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
