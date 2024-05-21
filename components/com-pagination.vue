@@ -45,6 +45,7 @@ const jumpPage = ref<string>('');
 const currentPageSize = ref(props.pageSize);
 const pageSizeList = toRef(() => props.pageSizes);
 const isCenterLayout = ref(true);
+let elementResize: ResizeObserver | null = null;
 
 const currentPageValue = computed(() => {
   return props.currentPage
@@ -195,10 +196,14 @@ function handleLayout() {
 
 watch(paginationRef, (val) => {
   if (val) {
-    resize(paginationRef.value, (wh) => {
+    elementResize = resize(paginationRef.value, (wh) => {
       debounceFunction();
     });
   }
+});
+
+onBeforeUnmount(() => {
+  elementResize?.unobserve(paginationRef.value);
 });
 </script>
 <template>

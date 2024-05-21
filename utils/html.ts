@@ -29,9 +29,15 @@ export function removeElementById(id: string): boolean {
 }
 
 export function hasVerticalScrollbar(element: HTMLElement): boolean {
+  if (!element) {
+    return false;
+  }
   return element.scrollHeight > element.clientHeight;
 }
 
 export function hasHorizontalScrollbar(element: HTMLElement): boolean {
+  if (!element) {
+    return false;
+  }
   return element.scrollWidth > element.clientWidth;
 }
