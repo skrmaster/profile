@@ -115,7 +115,8 @@ defineExpose({});
       <div class="table__body">
         <table cellspacing="0" cellpadding="0" border="0"
           :style="{
-            width: `${tableWidth - tableGap}px`
+            width: `${tableWidth - tableGap}px`,
+            'table-layout': 'fixed'
           }"
         >
           <colgroup>
@@ -137,7 +138,7 @@ defineExpose({});
             >
               <div v-if="!e.operate" class="table__cell" @click.stop="handleOperate('cell', item)">{{ item[e.field] }}</div>
               <div v-else>
-                <div class="table__cell">
+                <div class="table__cell has--tip">
                   <com-tip v-if="getTurlyByKey('edit', e.operate)" class="mr1" content="编辑">
                     <!-- <span class="c-p">编辑</span>   -->
                     <span class="operate__icon c-p" @click.stop="handleOperate('edit', item)">
@@ -164,11 +165,14 @@ defineExpose({});
   width: 100%;
   max-width: 100%;
   background-color: var(--table-bg-color);
+  position: relative;
+  overflow: hidden;
   /* border-radius: 10px; */
 }
 
 .table__scroll {
   overflow: auto;
+  position: relative;
 }
 
 table {
@@ -196,9 +200,11 @@ table .table-data__tr:not(:last-child) .table__td {
   border-bottom: 1px solid var(--table-tr-border-color);
 }
 
-.table__cell {
+.table__cell:not(.has--tip) {
   padding: 5px 8px;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .operate__icon {

@@ -41,29 +41,31 @@ onNuxtReady(() => {
 });
 </script>
 <template>
-  <div class="navigation--small px1">
-    <div class="mr1">
-      <com-avatar 
-        :avatar-url="userInfo?.avatar" 
-        :nickname="userInfo?.account || '未知'">
-      </com-avatar>
-    </div>
-    <nav class="flex1 flex__row--between">
-      <div 
-        v-for="(item, index) in navList" 
-        :key="index"
-        class="navigation__item"
-        :class="{
-          'active': currentIndex === index
-        }"
-        @click="handleNav(index)"
-      >
-        <com-icon class="nav__icon" :icon="item.icon"></com-icon>
-        <span v-show="currentIndex === index" class="fs18">{{ item.name }}</span>
+  <div>
+    <div class="navigation--small px1">
+      <div class="mr1">
+        <com-avatar 
+          :avatar-url="userInfo?.avatar" 
+          :nickname="userInfo?.account || '未知'">
+        </com-avatar>
       </div>
-    </nav>
-    <div class="theme__control flex__row--end">
-      <com-theme-button></com-theme-button>
+      <nav class="flex1 flex__row--between">
+        <div 
+          v-for="(item, index) in navList" 
+          :key="index"
+          class="navigation__item"
+          :class="{
+            'active': currentIndex === index
+          }"
+          @click="handleNav(index)"
+        >
+          <com-icon class="nav__icon" :icon="item.icon"></com-icon>
+          <span v-show="currentIndex === index" class="fs18">{{ item.name }}</span>
+        </div>
+      </nav>
+      <div class="theme__control flex__row--end">
+        <com-theme-button></com-theme-button>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +84,7 @@ onNuxtReady(() => {
   backdrop-filter: saturate(50%) blur(4px);
   -webkit-backdrop-filter: saturate(50%) blur(4px); */
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
-  z-index: 99;
+  z-index: 999;
   border-radius: 45px;
   display: flex;
   align-items: center;

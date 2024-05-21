@@ -285,7 +285,7 @@ nav {
   cursor: auto;
   position: absolute;
   top: 120%;
-  left: 50%;
+  left: -20%;
   z-index: 999;
   box-shadow: var(--box-shadow-small);
   transform: translate(-50%, 0);
@@ -300,7 +300,7 @@ nav {
   content: "";
   position: absolute;
   top: -6px;
-  left: 50%;
+  left: 80%;
   border-width: 6px;
   border-style: solid;
   border-color: transparent transparent var(--white-color) transparent;

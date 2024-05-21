@@ -16,7 +16,7 @@ export function throttle() {
 
 }
 
-export function resize(el: Element, cb: (arg: Resize) => unknown): ResizeObserver {
+export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObserver {
   const resizeObserver = new ResizeObserver((entries) => {
     for (const entry of entries) {
       const obj: Resize = {

@@ -105,7 +105,7 @@ getTableData();
 </script>
 <template>
   <personal-center>
-    <div class="main__content flex__column">
+    <div class="main__content flex__column nowrap">
       <div class="mb1">
         <com-button icon="profileadd" @click="handleAddSkill">新增技能</com-button>
       </div>
@@ -130,7 +130,6 @@ getTableData();
 .main__content {
   flex: 1;
   background: var(--white-color);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   padding: 20px 16px;
 }

@@ -138,6 +138,7 @@ defineExpose({
 </script>
 <template>
   <com-model-confirm
+    to-body
     v-model="visible"
     @confirm="submitData"
     :after-close="clearFormData"

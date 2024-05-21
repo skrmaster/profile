@@ -34,6 +34,9 @@ const props = withDefaults(defineProps<Prop>(), {
   unit: '条',
   pageSizes: () => [20, 40, 60, 80, 100]
 });
+
+const paginationRef = ref();
+
 const currentPage = toRef(props.currentPage);
 const groupCount = toRef(props.groupCount);
 const prevDisable = ref(true);
@@ -41,6 +44,7 @@ const nextDisable = ref(true);
 const jumpPage = ref<string>('');
 const currentPageSize = ref(props.pageSize);
 const pageSizeList = toRef(() => props.pageSizes);
+const isCenterLayout = ref(true);
 
 const currentPageValue = computed(() => {
   return props.currentPage
@@ -182,9 +186,30 @@ function handleNextPage() {
     }
   }
 }
+
+const debounceFunction = debounce(handleLayout, 500);
+function handleLayout() {
+  const res = hasHorizontalScrollbar(paginationRef.value);
+  isCenterLayout.value = !res;
+}
+
+watch(paginationRef, (val) => {
+  if (val) {
+    resize(paginationRef.value, (wh) => {
+      debounceFunction();
+    });
+  }
+});
 </script>
 <template>
-  <div class="pagination flex__center" v-if="props.total > 0">
+  <div ref="paginationRef" 
+    class="pagination" 
+    :class="{
+      'flex__center': isCenterLayout,
+      'flex__row--start': !isCenterLayout
+    }"
+    v-if="props.total > 0"
+  >
     <div class="pagination-box" :class="{
       background: props.background
     }">
@@ -257,12 +282,13 @@ function handleNextPage() {
 .pagination {
   height: 80px;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
+  overflow: auto;
 }
 
 .pagination-box {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   align-items: center;
   padding: 0 -10px;
 }
@@ -297,6 +323,7 @@ function handleNextPage() {
 }
 
 .pagination-input {
+  min-width: 50px;
   height: 30px;
   text-align: start;
 }

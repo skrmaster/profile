@@ -25,6 +25,12 @@ watch(visibleChild, (val) => {
   visible.value = val;
 });
 
+watch(visible, (val) => {
+  if (!val) {
+    handleClose();
+  }
+});
+
 function handleClose() {
   emit('update:modelValue', false);
   props.afterClose();

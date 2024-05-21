@@ -3,12 +3,14 @@ type Prop = {
   toBody?: boolean;
   modelValue: boolean;
   showCloseIcon?: boolean;
+  modelClose?: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   toBody: false,
   modelValue: false,
   showCloseIcon: false,
+  modelClose: false
 });
 const emit = defineEmits<{
   'update:modelValue': [val: boolean]
@@ -30,13 +32,19 @@ watch(visible, (newVal: boolean) => {
 
 function escapeKeyUp(e: KeyboardEvent) {
   if (e.code === 'Escape') {
-    emit('update:modelValue', false);
+    closeModel();
     document.documentElement.style.overflow = 'auto';
   }
 }
 
 function closeModel() {
   emit('update:modelValue', false);
+}
+
+function handleModelClick() {
+  if (props.modelClose) {
+    emit('update:modelValue', false);
+  }
 }
 
 onMounted(() => {
@@ -73,7 +81,7 @@ onBeforeUnmount(() => {
             ></com-icon>
           </div>
         </div>
-        <div v-bind="$attrs">
+        <div v-bind="$attrs" @click.self="handleModelClick">
           <slot />
         </div>
       </div>
