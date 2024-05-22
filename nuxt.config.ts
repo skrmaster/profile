@@ -1,5 +1,9 @@
+import fs from 'fs'
+import path from 'path'
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
+const cssDir = path.resolve(__dirname, 'assets/css')
+const cssFiles = fs.readdirSync(cssDir).filter(file => file.endsWith('.css'))
 const mode = process.env.NODE_ENV;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -15,6 +19,7 @@ export default defineNuxtConfig({
     ],
     'dayjs-nuxt'
   ],
+  css: cssFiles.map(file => `~/assets/css/${file}`),
   alias: {},
   devtools: { enabled: mode === 'development' },
   app: {

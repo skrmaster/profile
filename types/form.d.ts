@@ -1,7 +1,7 @@
 type FormConfig = {
   require?: boolean;
   field: string;
-  type: string;
+  type: 'select' | 'verification-code' | 'checkbox' | 'text' | 'textarea' | 'password' | 'number';
   rule?: RegExp | string;
   data?: any;
   elementConfig: {
@@ -19,6 +19,7 @@ type FormConfig = {
     maxLength?: number;
     minLength?: number;
     rows?: number;
+    optionList?: Array<LabelValue>;
   }
 }
 
@@ -31,6 +32,7 @@ interface Form {
   generateRateInput(config: FormConfig): VNode;
   generateCheckBox(config: FormConfig): VNode;
   generateRadioBox(config: FormConfig): VNode;
+  generateSelect(config: FormConfig): VNode;
   vaildForm(): boolean;
 }
 

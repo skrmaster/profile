@@ -1,3 +1,5 @@
+import { MessageManager } from "~/plugins/message.client";
+
 const baseURL: string = import.meta.env.VITE_PROJECT_API + '/api';
 
 function getToken(): string {
@@ -60,8 +62,13 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
           Authorization: tokenString
         }
       },
-      onRequestError({ request, options, error }) {
-        // Handle the request errors
+      onRequestError({ request, options, error, response }) {
+        if (response === undefined && error) {
+          MessageManager.show({
+            type: 'error',
+            message: '请求超时'
+          });
+        }
       },
       onResponse({ request, response, options }) {
         if (response.headers.get('Access-Token')) {

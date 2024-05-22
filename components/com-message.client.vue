@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
   top: var(--current-top-offset);
   left: 50%;
   transform: translate(-50%, 0);
-  z-index: 999;
+  z-index: 99999;
 
   display: flex;
   align-items: center;
@@ -111,15 +111,32 @@ onBeforeUnmount(() => {
   /* border: 1px solid var(--primary-border-color); */
   background-color: var(--white-color);
   box-shadow: var(--box-shadow-small);
+  border-style: solid;
+  border-color: transparent;
+  outline-width: 2px;
+  outline-style: solid;
+  /* border-width: 2px; */
 }
 
-/* .message-success {}
+.message-success {
+  border-color: var(--message-success-color);
+  outline-color: var(--message-success-color);
+}
 
-.message-warning {}
+.message-warning {
+  border-color: var(--message-warning-color);
+  outline-color: var(--message-warning-color);
+}
 
-.message-info {}
+.message-info {
+  border-color: var(--message-info-color);
+  outline-color: var(--message-info-color);
+}
 
-.message-error {} */
+.message-error {
+  border-color: var(--message-error-color);
+  outline-color: var(--message-error-color);
+}
 
 .icon-success,
 .icon-warning,

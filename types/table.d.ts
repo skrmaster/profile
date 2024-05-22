@@ -9,4 +9,6 @@ type TableHead = {
   align?: string;
   colWidth?: string;
   operate?: Operate[];
+  type?: 'cell' | 'div';
+  slotName?: string;
 }

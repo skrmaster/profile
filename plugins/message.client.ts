@@ -13,7 +13,7 @@ function getOffset(): string {
   return `1vh`;
 }
 
-class MessageManager {
+export class MessageManager {
   static show(options: MessageOptions) {
     const id = getId();
     options.topOffset = getOffset();

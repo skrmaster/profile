@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 type Prop = {
   head?: TableHead[] | Record<string, any>[];
-  data?: Record<string, any>[]
+  data?: Record<string, any>[],
+  height?: string;
 }
 
 const emit = defineEmits<{
@@ -10,7 +11,8 @@ const emit = defineEmits<{
 
 const props = withDefaults(defineProps<Prop>(), {
   head: () => [],
-  data: () => []
+  data: () => [],
+  height: '250px'
 });
 
 const tableRef = ref<HTMLElement>();
@@ -20,6 +22,10 @@ const theadList = toRef(() => props.head);
 const tableData = toRef(() => props.data);
 const resize = new ResizeObserver(callback);
 const tableGap = 0;
+
+const tabelLen = computed(() => {
+  return tableData.value.length;
+});
 
 watch(tableWidth, () => {
   assignmentWidth();
@@ -34,14 +40,15 @@ watch(tableRef, () => {
 function getTableColumnMinWidth(maxlength: number, arr: Record<string, any>[]): [number, boolean] {
   let hasWidthCount = 0;
   let len = arr.length;
-  let res = maxlength / len;
+  let res = Math.ceil(maxlength / len);
   arr.forEach(e => {
     let w = stringRegexp(e.width, 'number');
     
     let width = w !== null ? w : 0;
     if (width) {
       hasWidthCount++;
-      res += Math.abs(res - (width as number)) / (len - hasWidthCount);
+      res += Math.abs(res - (width as number)) / (len - 1);
+      res = Math.ceil(res);
     }
   });
 
@@ -84,8 +91,12 @@ function callback(entries: ResizeObserverEntry[]) {
 defineExpose({});
 </script>
 <template>
-  <div ref="tableRef" class="table__container">
-    <div class="table__scroll">
+  <div 
+    ref="tableRef" 
+    class="table__container flex__column"
+    :style="`--table-minheight: ${props.height}`"
+  >
+    <div class="table__scroll flex1 flex__column">
       <div class="table__header">
         <table cellspacing="0" cellpadding="0" border="0"
           :style="{
@@ -112,8 +123,16 @@ defineExpose({});
           </thead>
         </table>
       </div>
-      <div class="table__body">
-        <table cellspacing="0" cellpadding="0" border="0"
+      <div class="table__body"
+        :class="{
+          'flex1 flex__center': tabelLen === 0
+        }"
+      >
+        <table 
+          v-if="tabelLen > 0"
+          cellspacing="0" 
+          cellpadding="0" 
+          border="0"
           :style="{
             width: `${tableWidth - tableGap}px`,
             'table-layout': 'fixed'
@@ -136,8 +155,10 @@ defineExpose({});
               v-for="(e, idx) in theadList" 
               :key="idx"
             >
-              <div v-if="!e.operate" class="table__cell" @click.stop="handleOperate('cell', item)">{{ item[e.field] }}</div>
-              <div v-else>
+              <div v-if="e.type === 'div'">
+                <slot :name="e.slotName" :data="item"></slot>
+              </div>
+              <div v-else-if="e.operate">
                 <div class="table__cell has--tip">
                   <com-tip v-if="getTurlyByKey('edit', e.operate)" class="mr1" content="编辑">
                     <!-- <span class="c-p">编辑</span>   -->
@@ -153,9 +174,11 @@ defineExpose({});
                   </com-tip>
                 </div>
               </div>
+              <div v-else class="table__cell" @click.stop="handleOperate('cell', item)">{{ item[e.field] }}</div>
             </td>
           </tr>
         </table>
+        <com-empty v-else></com-empty>
       </div>
     </div>
   </div>
@@ -167,7 +190,6 @@ defineExpose({});
   background-color: var(--table-bg-color);
   position: relative;
   overflow: hidden;
-  /* border-radius: 10px; */
 }
 
 .table__scroll {

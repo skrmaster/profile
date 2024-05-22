@@ -19,7 +19,7 @@ const defaultOption: Omit<Option, 'message'> = {
   onlyShowConfirm: false
 }
 
-class MessageConfirmManager {
+export class MessageConfirmManager {
   static show(options: Option) {
     defaultOption.id = getId();
     defaultOption.zIndex = getZIndex().toString();

@@ -1,4 +1,6 @@
 <script lang="tsx" setup>
+import type { RendererNode, RendererElement } from 'vue';
+
 const props = defineProps<{
   model: Array<FormConfig>
 }>();
@@ -21,7 +23,15 @@ class FormInstance implements Form {
       this.data[this.config[i].field] = this.config[i].data || '';
     }
   }
-
+  generateSelect(config: FormConfig): VNode {
+    return (
+      <com-select
+        v-model={ this.data[config.field] }
+        { ...config.elementConfig }
+      >
+      </com-select>
+    )
+  }
   generateTextInput(config: FormConfig): VNode {    
     return (
       <com-form-input
@@ -71,6 +81,8 @@ class FormInstance implements Form {
               return this.generateVerificationCode(e);
             } else if (e.type === 'checkbox') {
               return this.generateCheckBox(e);
+            } else if (e.type === 'select') {
+              return this.generateSelect(e);
             } else {
               return this.generateTextInput(e);
             }
@@ -130,7 +142,7 @@ defineExpose({
 });
 </script>
 <template>
-  <elementForm class="flex__center flex-wrap"></elementForm>
+  <elementForm class="flex-wrap"></elementForm>
 </template>
 <style scoped>
 

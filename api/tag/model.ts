@@ -9,11 +9,11 @@ export type EditModel = AddModel & {
   [key: string]: any;
 }
 
-export type TagListType = Array<{
+export type ListType = Array<{
   id: number;
   createTime: string;
   updateTime: string;
   name: string;
   icon: string;
-  category: number;
+  category: string;
 }>
