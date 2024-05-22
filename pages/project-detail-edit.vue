@@ -1,10 +1,43 @@
 <script lang="ts" setup>
+const list = ref<StackItem[]>([
+  {
+    name: 'vuejs',
+    icon: 'https://vuejs.org/images/logo.png',
+    officalUrl: 'https://vuejs.org',
+    isChoose: false
+  },
+  {
+    name: 'reactjs',
+    icon: 'https://react.dev/images/og-home.png',
+    officalUrl: 'https://react.dev',
+    isChoose: false
+  }
+]);
+
 const formData = reactive({
   demoAddress: '',
   summary: '',
   introduction: '',
   responsiblePart: ''
 });
+
+function handleStackListChange(val: StackItem[]) {
+  let remainArr = [];
+  let addArr = [];
+  
+  for (let i = 0; i < val.length; i++) {
+    let e = val[i];
+    let idx = list.value.findIndex(item => item.name === e.name);
+
+    if (idx > -1) {
+      remainArr.push(e);
+    } else {
+      addArr.push(e);
+    }
+  }
+
+  list.value.splice(0, list.value.length, ...remainArr, ...addArr);
+}
 </script>
 <template>
   <NuxtLayout 
@@ -17,7 +50,7 @@ const formData = reactive({
     <section>
       <div class="container flex__column">
         <div>
-          <div class="flex__row mt5">
+          <div class="flex__row mt5 flex-wrap">
             <label class="demo__label text-center">
               演示地址
             </label>
@@ -33,15 +66,20 @@ const formData = reactive({
           </div>
           <div class="flex__row my2">
             <label class="stack__label flex__center">技术栈</label>
-            <div class="stack flex__center">+</div>
+            <!-- <div class="stack flex__center">+</div> -->
+            <com-tech-stack 
+              :data-list="list"
+              mode="add"
+              @update="handleStackListChange"
+            ></com-tech-stack>
           </div>
-          <div class="flex__row--start">
+          <div class="flex__row--start flex-wrap">
             <label>项目图片</label>
             <div>
               <com-upload></com-upload>
             </div>
           </div>
-          <div class="flex__row--start my3">
+          <div class="flex__row--start my3 flex-wrap">
             <label>概述</label>
             <div class="flex1">
               <com-form-input 
@@ -53,7 +91,7 @@ const formData = reactive({
               ></com-form-input>
             </div>
           </div>
-          <div class="flex__row--start my3">
+          <div class="flex__row--start my3 flex-wrap">
             <label>介绍</label>
             <div class="flex1">
               <com-form-input 
@@ -108,18 +146,18 @@ const formData = reactive({
 }
 
 :deep(.demo__input input) {
-  height: 78px;
+  height: 70px;
   background-color: var(--white-color);
   border-radius: 10px;
   text-indent: 1.5em!important;
 }
 
 label {
-  display: inline-block;
+  display: block;
   text-align: center;
   max-width: 100px;
   width: 100px;
-  min-width: 60px;
+  min-width: 50px;
 }
 
 .stack {

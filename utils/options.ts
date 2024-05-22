@@ -9,6 +9,28 @@ export const options = {
       value: '2'
     }
   ],
+  addressNavigationList: [
+    {
+      label: '动漫',
+      value: '0'
+    },
+    {
+      label: '漫画',
+      value: '1'
+    },
+    {
+      label: '影视',
+      value: '2'
+    },
+    {
+      label: '小说',
+      value: '3'
+    },
+    {
+      label: '游戏',
+      value: '4'
+    }
+  ]
 }
 
 export function getListLabel(value: string, list: Array<LabelValue>): string | undefined {

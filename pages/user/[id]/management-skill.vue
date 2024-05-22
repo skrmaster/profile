@@ -43,6 +43,7 @@ const pagination = reactive({
   page: 1,
   pageSize: 20
 });
+const loading = ref(false);
 
 function handleAddSkill() {
   formRef.value.open();
@@ -66,6 +67,7 @@ function handleDeleteSkill(skill: Record<string, any>) {
 }
 
 function getTableData() {
+  loading.value = true;
   const params: Omit<Pagination, 'total'> = {
     page: pagination.page,
     pageSize: pagination.pageSize
@@ -78,6 +80,9 @@ function getTableData() {
       e.updateTime = $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss');
       return e;
     });
+    loading.value = false;
+  }).catch(() => {
+    loading.value = false;
   });
 }
 
@@ -109,7 +114,7 @@ getTableData();
       <div class="mb1">
         <com-button icon="profileadd" @click="handleAddSkill">新增技能</com-button>
       </div>
-      <div class="flex1">
+      <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick"></com-table>
       </div>
       <div>

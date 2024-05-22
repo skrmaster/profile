@@ -1,31 +1,34 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/tag/model';
+import type { ListType } from '~/api/address/model';
 import PersonalCenter from './components/personal-center.vue';
-import Form from './components/form-tag.vue';
-import { apiGetList, apiDelete } from '~/api/tag/request';
+import Form from './components/form-address.vue';
+import { apiGetList, apiDelete } from '~/api/address/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
-const { tagList } = options;
+const { addressNavigationList } = options;
 const formRef = ref();
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
   {
-    name: '标签名称',
+    name: '名称',
     field: 'name',
     width: '180px'
   },
   {
-    name: '标签图标',
-    width: '200px',
-    field: 'icon',
-    type: 'div',
-    slotName: 'image'
+    name: '链接',
+    width: '300px',
+    field: 'link',
   },
   {
-    name: '标签分类',
+    name: '分类',
     width: '100px',
     field: 'category',
+  },
+  {
+    name: '图标icon',
+    width: '150px',
+    field: 'iconUrl',
   },
   {
     name: '创建时间',
@@ -82,7 +85,7 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
-      e.category = getListLabel(e.category, tagList) || '';
+      e.category = getListLabel(e.category, addressNavigationList) || '';
       return e;
     });
     loading.value = false;
@@ -117,7 +120,7 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAdd">新增标签</com-button>
+        <com-button icon="profileadd" @click="handleAdd">新增导航地址</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">

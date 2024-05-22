@@ -59,6 +59,10 @@ const list = ref<LinkType[][]>([
     {
       name: '博客管理',
       url: routerMap.recordMgtPath
+    },
+    {
+      name: '地址导航管理',
+      url: routerMap.navigationPath
     }
   ]
 ]);

@@ -40,25 +40,24 @@ watch(tableRef, () => {
 function getTableColumnMinWidth(maxlength: number, arr: Record<string, any>[]): [number, boolean] {
   let hasWidthCount = 0;
   let len = arr.length;
-  let res = Math.ceil(maxlength / len);
+  let res = Math.floor(maxlength / len);
+  
   arr.forEach(e => {
     let w = stringRegexp(e.width, 'number');
     
     let width = w !== null ? w : 0;
     if (width) {
       hasWidthCount++;
-      res += Math.abs(res - (width as number)) / (len - 1);
-      res = Math.ceil(res);
+      res += Math.floor((res - (width as number)) / (len - 1));   
     }
   });
-
   return [res, !!hasWidthCount];
 }
 
 function assignmentWidth() {
   const len = theadList.value.length;
   let minW = getTableColumnMinWidth(tableWidth.value, theadList.value);
-
+  
   for (let i = 0; i < len; i++) {
     let e = theadList.value[i];
     let w = stringRegexp(e.width, 'number');

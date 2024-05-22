@@ -1,13 +1,14 @@
 type KeyOfRouter = 'loginPath' 
 | 'registerPath' 
 | 'userInfoPath' 
-|'followPath' 
-|'recordListPath' 
-|'projectListPath' 
-|'skillMgtPath' 
-|'tagMgtPath' 
-|'projectMgtPath' 
-|'recordMgtPath'
+| 'followPath' 
+| 'recordListPath' 
+| 'projectListPath' 
+| 'skillMgtPath' 
+| 'tagMgtPath' 
+| 'projectMgtPath' 
+| 'recordMgtPath'
+| 'navigationPath'
 ;
 
 export const routerMap: Record<KeyOfRouter, string> = {
@@ -21,6 +22,7 @@ export const routerMap: Record<KeyOfRouter, string> = {
   tagMgtPath: '/user/:id/management-tag',
   projectMgtPath: '/user/:id/management-project',
   recordMgtPath: '/user/:id/management-record',
+  navigationPath: '/user/:id/management-navigation'
 }
 
 type KeyOfApi = 'loginPath'
@@ -41,9 +43,11 @@ type KeyOfApi = 'loginPath'
 | 'recordAddPath'
 | 'recordEditPath'
 | 'recordDeletePath'
+| 'navgationListPath'
 | 'navgationAddPath'
 | 'navgationEditPath'
 | 'navgationDeletePath'
+| 'navgationListCategoryPath'
 ;
 
 export const apiMap: Record<KeyOfApi, string> = {
@@ -65,7 +69,9 @@ export const apiMap: Record<KeyOfApi, string> = {
   recordAddPath: "/record/add",
   recordEditPath: "/record/update",
   recordDeletePath: "/record/delete",
+  navgationListPath: "/navgation/getlist",
   navgationAddPath: "/navgation/add",
-  navgationEditPath: "/navgation/add",
-  navgationDeletePath: "/navgation/delete"
+  navgationEditPath: "/navgation/update",
+  navgationDeletePath: "/navgation/delete",
+  navgationListCategoryPath: '/navgation/getallcategorylist'
 }

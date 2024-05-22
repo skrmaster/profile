@@ -71,6 +71,13 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
         }
       },
       onResponse({ request, response, options }) {
+        if (response.status === 401) {
+          MessageManager.show({
+            type: 'error',
+            message: '请先登录'
+          });
+        }
+        
         if (response.headers.get('Access-Token')) {
           response._data.tokenObject = {
             token: response.headers.get('Access-Token'),

@@ -36,14 +36,15 @@ function goBack() {
             v-model="title" 
             :is-label="false"
             :placeholder="props.placeholder"
+            clearable
           >
           </com-form-input>
           <span 
             v-if="textNumber > 0" 
-            class="nowrap fs18 detail__notice display-0-none ml1"
+            class="nowrap fs18 detail__notice ml1"
           >还需要输入{{ textNumber }}个字</span>
         </div>
-        <div class="btn__group flex__row--between">
+        <div class="ml1 btn__group flex__row--between display-2-none display-1-none display-0-none">
           <com-button class="btn" 
             :need-inner-outline="false" 
             bg-color="#898989"
@@ -92,5 +93,9 @@ function goBack() {
   background-color: var(--readonly-color);
   border-radius: 10px;
   text-indent: 1.5em!important;
+}
+
+:deep(.detail__input) {
+  background-color: var(--readonly-color);
 }
 </style>
