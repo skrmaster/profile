@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import data from '@/mocks/data.json';
+// import data from '@/mocks/data.json';
+import { apiSkillStackGetList } from '~/api/skill/request';
 
 type Mode = 'add' | 'view' | 'delete' | 'single-choose' | 'multiple-choose';
 
@@ -33,18 +34,30 @@ const deleteAreaRef = ref<ChooseRef>();
 
 const multiple: number[] = [];
 const visible = ref(false);
-const list = toRef<StackItem[]>(props.dataList);
+const list = toRef(() => props.dataList);
+const listCopy = toRef(props.dataList);
 const chooseList = ref<StackItem[]>([]);
 const deleteList = ref<StackItem[]>([]);
-const tagList = ref<StackItem[]>(initData());
+const tagList = ref<StackItem[]>([]);
 const chooseLen = computed(() => {
   return chooseList.value.length;
 });
 
-function initData(): StackItem[] {
+watch(list, (val) => {
+  listCopy.value = val;
+});
+
+if (props.mode === 'add') {
+  fetchStackList();
+}
+
+
+function initData(dataList?: StackItem[]) {
   const arr = props.dataList;
+  const list = dataList || [];
+
   if (Array.isArray(arr) && arr.length > 0) {
-    data.tagList.forEach(e => {
+    list?.forEach(e => {
       if (arr.find(item => item.name === e.name)) {
         e.isChoose = true;
         chooseList.value.push({
@@ -55,14 +68,31 @@ function initData(): StackItem[] {
     });
   }
   
-  return data.tagList;
+  tagList.value = list;
+}
+
+function fetchStackList() {
+  apiSkillStackGetList()
+  .then(res => {
+    const list: StackItem[] = res.data.map(e => {
+      return {
+        ...e,
+        name: e.name,
+        icon: '',
+        officalUrl: '',
+        isChoose: false
+      }
+    });
+
+    initData(list);
+  }).then(() => {});
 }
 
 function handleEdit() {
   visible.value = true;
 }
 
-function handleChoose(index: number) {
+function handleChoose(index: number) {  
   if (props.mode === 'single-choose') {
     if (single.chooseIndex === null) {
       single.chooseIndex = index;
@@ -76,7 +106,7 @@ function handleChoose(index: number) {
   }
 
   if (props.mode === 'multiple-choose') {
-    const item = list.value[index];
+    const item = listCopy.value[index];
     
     if (multiple.length === 0) {
       multiple.push(index);
@@ -86,13 +116,13 @@ function handleChoose(index: number) {
       }
 
       multiple.forEach((e) => {
-        list.value[e].isChoose = true;
+        listCopy.value[e].isChoose = true;
       });
     }
     
     if (!chooseList.value.find(e => e.name === item.name)) {
       chooseList.value.push(item);
-      list.value[index].isChoose = true;
+      listCopy.value[index].isChoose = true;
     }
     emit('update', chooseList.value);
     return;
@@ -175,14 +205,14 @@ defineExpose({
   <div class="stack flex__row flex-wrap">
     <div 
       class="stack__item c-p flex__center"
-      v-for="(item, index) in list"
+      v-for="(item, index) in listCopy"
       :key="index"
       :class="{
         'choosed': item.isChoose
       }"
       @click.stop="handleChoose(index)"
     >
-      <div class="item__image flex__center">
+      <div v-if="item.icon" class="item__image flex__center">
         <img :src="item.icon" :alt="item.name" />
       </div>
       <span class="flex__center stack__name line1__ellipsis">{{ item.name }}</span>
@@ -221,11 +251,11 @@ defineExpose({
         <div class="confirm__area h100">
           <p class="mb1">已选择: {{ chooseLen }}个</p>
           <com-tech-stack 
-            ref="deleteAreaRef"
-            mode="delete"
-            :data-list="chooseList"
-            @update="handleDeleteArea"
-          ></com-tech-stack>
+              ref="deleteAreaRef"
+              mode="delete"
+              :data-list="chooseList"
+              @update="handleDeleteArea"
+            ></com-tech-stack>
         </div>
       </div>
     </div>
@@ -293,7 +323,7 @@ defineExpose({
 }
 
 .confirm__area {
-  width: 146px;
+  width: 170px;
   border-left: 2px solid var(--tag-border-color);
   padding: 0 18px;
   overflow-y: auto;

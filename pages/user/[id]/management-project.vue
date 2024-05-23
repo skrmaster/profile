@@ -81,7 +81,7 @@ const pagination = reactive({
 });
 
 function handleAdd() {
-  navigateTo(addEditProjectPath)
+  navigateTo(addEditProjectPath);
 }
 
 function handleEdit(item: Record<string, any>) {
@@ -90,7 +90,7 @@ function handleEdit(item: Record<string, any>) {
     query: {
       id: item.id
     }
-  })
+  });
 }
 
 function handleView(item: Record<string, any>) {
@@ -99,7 +99,7 @@ function handleView(item: Record<string, any>) {
     query: {
       id: item.id
     }
-  })
+  });
 }
 
 function handleDelete(item: Record<string, any>) {

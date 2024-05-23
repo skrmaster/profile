@@ -1,5 +1,5 @@
-type Operate = "edit" | "delete";
-type TableCell = 'edit' | 'delete' | 'cell';
+type Operate = 'view' | 'edit' | 'delete';
+type TableCell = 'view' | 'edit' | 'delete' | 'cell';
 
 type TableHead = {
   name: string;

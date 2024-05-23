@@ -160,6 +160,12 @@ defineExpose({});
               </div>
               <div v-else-if="e.operate">
                 <div class="table__cell has--tip">
+                  <com-tip v-if="getTurlyByKey('view', e.operate)" class="mr1" content="编辑">
+                    <!-- <span class="c-p">编辑</span>   -->
+                    <span class="operate__icon c-p" @click.stop="handleOperate('view', item)">
+                      <com-icon icon="profile-see"></com-icon>
+                    </span>
+                  </com-tip>
                   <com-tip v-if="getTurlyByKey('edit', e.operate)" class="mr1" content="编辑">
                     <!-- <span class="c-p">编辑</span>   -->
                     <span class="operate__icon c-p" @click.stop="handleOperate('edit', item)">

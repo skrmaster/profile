@@ -6,6 +6,7 @@ const {
   skillAddPath,
   skillEditPath,
   skillDeletePath,
+  skillStackListPath
 } = apiMap;
 
 export async function apiSkillGetList(params?: Omit<Pagination, 'total'>) {
@@ -13,7 +14,14 @@ export async function apiSkillGetList(params?: Omit<Pagination, 'total'>) {
     method: 'get',
     params
   });
-  return res
+  return res;
+}
+
+export async function apiSkillStackGetList() {
+  const res = await httpClient<Type.ListType>(skillStackListPath, {
+    method: 'get'
+  });
+  return res;
 }
 
 export async function apiSkillAdd(params: Type.AddModel) {
@@ -21,7 +29,7 @@ export async function apiSkillAdd(params: Type.AddModel) {
     method: 'post',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiSkillUpdate(params: Type.EditModel) {
@@ -30,7 +38,7 @@ export async function apiSkillUpdate(params: Type.EditModel) {
     method: 'put',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiSkillDelete(id: number) {
@@ -38,5 +46,5 @@ export async function apiSkillDelete(id: number) {
   const res = await httpClient<boolean>(deleteUrl, {
     method: 'delete'
   });
-  return res
+  return res;
 }

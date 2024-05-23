@@ -54,10 +54,11 @@ type KeyOfApi = 'loginPath'
 | 'navgationEditPath'
 | 'navgationDeletePath'
 | 'navgationListCategoryPath'
-| "aphorismsListPath"
-| "aphorismsAddPath"
-| "aphorismsEditPath"
-| "aphorismsDeletePath"
+| 'aphorismsListPath'
+| 'aphorismsAddPath'
+| 'aphorismsEditPath'
+| 'aphorismsDeletePath'
+| 'skillStackListPath'
 ;
 
 export const apiMap: Record<KeyOfApi, string> = {
@@ -67,25 +68,26 @@ export const apiMap: Record<KeyOfApi, string> = {
   skillAddPath: '/skill/add',
   skillEditPath: '/skill/update',
   skillDeletePath: '/skill/delete',
-  tagListPath: "/tag/getlist",
-  tagAddPath: "/tag/add",
-  tagEditPath: "/tag/update",
-  tagDeletePath: "/tag/delete",
-  projectListPath: "/project/getlist",
-  projectAddPath: "/project/add",
-  projectEditPath: "/project/update",
-  projectDeletePath: "/project/delete",
-  recordListPath: "/record/getlist",
-  recordAddPath: "/record/add",
-  recordEditPath: "/record/update",
-  recordDeletePath: "/record/delete",
-  navgationListPath: "/navgation/getlist",
-  navgationAddPath: "/navgation/add",
-  navgationEditPath: "/navgation/update",
-  navgationDeletePath: "/navgation/delete",
+  skillStackListPath: '/skill/getstacklist',
+  tagListPath: '/tag/getlist',
+  tagAddPath: '/tag/add',
+  tagEditPath: '/tag/update',
+  tagDeletePath: '/tag/delete',
+  projectListPath: '/project/getlist',
+  projectAddPath: '/project/add',
+  projectEditPath: '/project/update',
+  projectDeletePath: '/project/delete',
+  recordListPath: '/record/getlist',
+  recordAddPath: '/record/add',
+  recordEditPath: '/record/update',
+  recordDeletePath: '/record/delete',
+  navgationListPath: '/navgation/getlist',
+  navgationAddPath: '/navgation/add',
+  navgationEditPath: '/navgation/update',
+  navgationDeletePath: '/navgation/delete',
   navgationListCategoryPath: '/navgation/getallcategorylist',
-  aphorismsListPath: "/aphorisms/getlist",
-  aphorismsAddPath: "/aphorisms/add",
-  aphorismsEditPath: "/aphorisms/update",
-  aphorismsDeletePath: "/aphorisms/delete",
+  aphorismsListPath: '/aphorisms/getlist',
+  aphorismsAddPath: '/aphorisms/add',
+  aphorismsEditPath: '/aphorisms/update',
+  aphorismsDeletePath: '/aphorisms/delete',
 }
