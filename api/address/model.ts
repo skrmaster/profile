@@ -1,5 +1,5 @@
 export type AddModel = {
-  name: string;
+  name?: string;
   iconUrl?: string;
   category: string;
   link: string;
@@ -12,5 +12,13 @@ export type EditModel = AddModel & {
 
 export type ListType = Array<EditModel & {
   createTime: string;
-  updateTime: string;
+  updateTime?: string;
 }>
+
+export type ListByCategory = {
+  category: {
+    name: string;
+    id: number;
+  }
+  list: ListType;
+}[];

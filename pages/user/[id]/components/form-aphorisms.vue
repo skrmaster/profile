@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { AddModel, EditModel } from '~/api/address/model';
-import { apiAdd, apiUpdate } from '~/api/address/request';
+import type { AddModel, EditModel } from '~/api/aphorisms/model';
+import { apiAdd, apiUpdate } from '~/api/aphorisms/request';
 
-const { addressNavigationList } = options;
+const { tagList } = options;
 const { $message } = useNuxtApp();
 const formRef = ref();
 
@@ -13,46 +13,32 @@ const visible = ref(false);
 const formRenderType = ref<FormEditAdd>('add');
 const editId = ref();
 const title = computed(() => {
-  return formRenderType.value === 'add' ? '添加导航地址' : '编辑导航地址';
+  return formRenderType.value === 'add' ? '添加标签' : '编辑标签';
 });
 
-let deleteFormConfigItem: FormConfig | null = null;
 const formConfig = ref<Array<FormConfig>>([
   {
     require: true,
-    field: 'name',
+    field: 'content',
     type: 'text',
     rule: '',
     data: '',
     elementConfig: {
       width: '100%',
-      placeholder: '请输入导航地址名称',
+      placeholder: '请输入名言内容',
       clearable: true,
     }
   },
   {
     require: false,
-    field: 'link',
+    field: 'from',
     type: 'text',
     rule: '',
     data: '',
     elementConfig: {
       width: '100%',
-      placeholder: '请输入导航地址',
+      placeholder: '请输入出处',
       clearable: true,
-    }
-  },
-  {
-    require: true,
-    field: 'category',
-    type: 'select',
-    rule: '',
-    data: '',
-    elementConfig: {
-      width: '100%',
-      placeholder: '导航地址分类',
-      clearable: false,
-      optionList: addressNavigationList
     }
   }
 ]);
@@ -62,7 +48,7 @@ function setFormData(data: EditModel) {
     if (Object.hasOwn(data, e.field)) {
       e.data = data[e.field].toString();
       if (e.type === 'select') {
-        e.data = getListValue(e.data, addressNavigationList);
+        e.data = getListValue(e.data, tagList);
       }
     }
     return e;
@@ -82,8 +68,8 @@ function submitData() {
     if (val.vaild) {
       if (formRenderType.value === 'add') {
         const params: AddModel = {
-          link: val.data.link,
-          category: val.data.category
+          content: val.data.content,
+          from: val.data.from,
         }
         apiAdd(params).then(res => {
           $message.show({
@@ -98,9 +84,8 @@ function submitData() {
       } else {
         const params: EditModel = {
           id: editId.value,
-          name: val.data.name,
-          link: val.data.link,
-          category: val.data.category
+          content: val.data.content,
+          from: val.data.from,
         }
         apiUpdate(params).then(res => {
           $message.show({
@@ -119,25 +104,15 @@ function submitData() {
 
 function open(formData?: EditModel) {
   visible.value = true;
-  const deleteItem = formConfig.value.find(item => item.field === 'name');
-  if (deleteItem) {
-    deleteFormConfigItem = deleteItem;
-  }
 
   if (formData?.id) {
     formRenderType.value = 'edit';
     editId.value = formData.id;
-    if (!deleteItem) {
-      formConfig.value.splice(0, 0, deleteFormConfigItem as FormConfig);
-    }
     setFormData(formData);
   } else {
     formRenderType.value = 'add';
     editId.value = undefined;
     clearFormData();
-    if (deleteItem) {
-      formConfig.value.splice(0, 1);
-    }
   }
 }
 

@@ -1,11 +1,6 @@
 export type AddModel = {
-  name: string;
-  icon: number;
-  title: string;
-  content?: string;
-  tags?: string;
-  status: number;
-  category: number;
+  content: string;
+  from?: string;
 }
 
 export type EditModel = AddModel & {

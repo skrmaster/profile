@@ -8,7 +8,7 @@ const {
   skillDeletePath,
 } = apiMap;
 
-export async function apiSkillGetList(params: Omit<Pagination, 'total'>) {
+export async function apiSkillGetList(params?: Omit<Pagination, 'total'>) {
   const res = await httpClient<ResponsePagination<Type.ListType>>(skillListPath, {
     method: 'get',
     params

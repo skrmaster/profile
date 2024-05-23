@@ -403,7 +403,9 @@ onNuxtReady(() => {
         </div>
       </div>
       <com-form class="index__form mx-auto mb4" :model="formConfig">
-        <com-button class="submit-btn mt1 fs24">提交</com-button>
+        <div class="flex__center">
+          <com-button class="submit-btn mt1 fs24">提交</com-button>
+        </div>
       </com-form>
     </div>
     <com-footer></com-footer>

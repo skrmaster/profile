@@ -44,6 +44,5 @@ section {
 main {
   flex: 1;
   overflow: hidden;
-  margin-right: -0.5rem;
 }
 </style>

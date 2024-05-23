@@ -14,15 +14,14 @@ export async function apiGetList(params: Omit<Pagination, 'total'>) {
     method: 'get',
     params
   });
-  return res
+  return res;
 }
 
-export async function apiGetListByCategory(params: Omit<Pagination, 'total'>) {
-  const res = await httpClient<ResponsePagination<Type.ListType>>(navgationListCategoryPath, {
-    method: 'get',
-    params
+export async function apiGetListByCategory() {
+  const res = await httpClient<Type.ListByCategory>(navgationListCategoryPath, {
+    method: 'get'
   });
-  return res
+  return res;
 }
 
 export async function apiAdd(params: Type.AddModel) {
@@ -30,7 +29,7 @@ export async function apiAdd(params: Type.AddModel) {
     method: 'post',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiUpdate(params: Type.EditModel) {
@@ -39,7 +38,7 @@ export async function apiUpdate(params: Type.EditModel) {
     method: 'put',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiDelete(id: number) {

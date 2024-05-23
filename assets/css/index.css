@@ -124,6 +124,14 @@ a {
   overflow: hidden;
 }
 
+.line2__ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .color--primary {
   color: var(--primary-color);
 }
@@ -170,4 +178,12 @@ a {
   bottom: 0;
   right: 0;
   background-color: var(--model-bg-color);
+}
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.overflow-auto {
+  overflow: auto;
 }

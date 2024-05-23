@@ -1,71 +1,33 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/project/model';
+import type { ListType } from '~/api/aphorisms/model';
 import PersonalCenter from './components/personal-center.vue';
-import { apiGetList, apiDelete } from '~/api/project/request';
+import Form from './components/form-aphorisms.vue';
+import { apiGetList, apiDelete } from '~/api/aphorisms/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
 const { tagList } = options;
-const { addEditProjectPath, viewProjectPath } = routerMap
+const formRef = ref();
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
   {
-    name: '项目名称',
-    field: 'name',
-    width: '180px'
+    name: '名言内容',
+    field: 'content',
+    width: '400px'
   },
   {
-    name: '项目开始时间',
-    width: '200px',
-    field: 'startTime'
-  },
-  {
-    name: '项目结束时间',
-    width: '200px',
-    field: 'endTime',
-  },
-  {
-    name: '项目概述',
-    width: '200px',
-    field: 'summary',
-  },
-  {
-    name: '项目描述',
-    width: '200px',
-    field: 'description',
-  },
-  {
-    name: '负责部分',
-    width: '200px',
-    field: 'department',
-  },
-  {
-    name: '演示地址',
-    width: '200px',
-    field: 'playLink',
-  },
-  {
-    name: '技术栈',
-    width: '200px',
-    field: 'stackIds',
-  },
-  {
-    name: '项目图片',
-    width: '200px',
-    field: 'imageIds',
-  },
-  {
-    name: '项目排序',
-    width: '100px',
-    field: 'imageIds',
+    name: '来自',
+    field: 'from'
   },
   {
     name: '创建时间',
     field: 'createTime',
+    width: '200px'
   },
   {
     name: '更新时间',
     field: 'updateTime',
+    width: '200px'
   },
   {
     name: '操作',
@@ -81,25 +43,11 @@ const pagination = reactive({
 });
 
 function handleAdd() {
-  navigateTo(addEditProjectPath)
+  formRef.value.open();
 }
 
 function handleEdit(item: Record<string, any>) {
-  navigateTo({
-    path: addEditProjectPath,
-    query: {
-      id: item.id
-    }
-  })
-}
-
-function handleView(item: Record<string, any>) {
-  navigateTo({
-    path: viewProjectPath,
-    query: {
-      id: item.id
-    }
-  })
+  formRef.value.open(item);
 }
 
 function handleDelete(item: Record<string, any>) {
@@ -165,7 +113,7 @@ getTableData();
       <div class="mb1">
         <com-button icon="profileadd" @click="handleAdd">新增标签</com-button>
       </div>
-      <div class="flex1" v-loading="loading">
+      <div class="flex1 overflow-auto" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">
           <template #image="{ data }">
             <div class="table__cell">
@@ -185,6 +133,7 @@ getTableData();
         ></com-pagination>
       </div>
     </div>
+    <Form ref="formRef" @refresh-data="getTableData"></Form>
   </personal-center>
 </template>
 <style scoped>

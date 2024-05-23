@@ -274,14 +274,12 @@ nav {
 }
 
 .menu__trigger:hover .user__menu {
-  opacity: 1;
-  pointer-events: fill;
-  transition: all .2s ease;
+  visibility: visible;
+  transition: all .2s ease 0s;
 }
 
 .user__menu {
-  opacity: 0;
-  pointer-events: none;
+  visibility: hidden;
   transition: all .2s ease .3s;
   cursor: auto;
   position: absolute;

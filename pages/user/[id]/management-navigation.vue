@@ -17,7 +17,7 @@ const tableHead = ref<TableHead[]>([
   },
   {
     name: '链接',
-    width: '300px',
+    width: '250px',
     field: 'link',
   },
   {

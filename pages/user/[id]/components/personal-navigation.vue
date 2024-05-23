@@ -61,6 +61,10 @@ const list = ref<LinkType[][]>([
       url: routerMap.recordMgtPath
     },
     {
+      name: '名言警句管理',
+      url: routerMap.aphorismsPath
+    },
+    {
       name: '地址导航管理',
       url: routerMap.navigationPath
     }

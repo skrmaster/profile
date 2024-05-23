@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { apiSkillGetList } from '~/api/skill/request'
+ 
 type Skill = {
   name: string;
-  mastery: number;
+  mastery: string;
   x: number;
   y: number;
   moveVector: number;
@@ -11,13 +13,38 @@ type Skill = {
   id: string;
 }
 
+type SkillName = {
+  name: string;
+  proficiency: number;
+  id: number;
+}
+
+const proficiencyMap: Record<number, string> = {
+  100: '38',
+  90: '30',
+  80: '24',
+  70: '18',
+}
+
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skillsName: string[] = [];
-['Javascript', 'Echarts', 'HTML', 'Vue2/3', '兼容适配', 'Photoshop', 'Websocket', 'CSS', 'Nuxtjs', 'Sass/Less', 'Uni-app', 'Typescript', 'Canvas', 'Illustrator', 'Git'];
-let widthGap: number, heightGap: number;
+const skillsName = ref<SkillName[]>([]);
 const skills = ref<Array<Skill>>([]);
+let elementResize: null | ResizeObserver = null;
+  
+let widthGap = 0;
+let heightGap = 0;
+let minWidth = 0;
+let minHeight = 0;
+let maxWidth = 0;
+let maxHeight = 0;
+
+function callback(entries: ResizeObserverEntry[]) {
+  for (const entry of entries) {
+    const w = entry.contentRect.width;
+  }
+}
 
 function active($event: MouseEvent) {
   const mouseX = $event.offsetX;
@@ -31,8 +58,8 @@ function active($event: MouseEvent) {
     const moveX = e.moveVector * dx / distance;
     const moveY = e.moveVector * dy / distance;
     
-    e.x = e.originX + moveX;
-    e.y = e.originY + moveY;
+    e.x = Math.ceil(e.originX + moveX);
+    e.y = Math.ceil(e.originY + moveY);
 
     return e;
   })  
@@ -43,22 +70,36 @@ function inactive() {
     e.x = e.originX;
     e.y = e.originY;
     return e;
-  })
+  });
 }
 
 function handleAddSkill() {
   navigateTo(skillMgtPath);
 }
 
-onMounted(() => {
-  let minWidth = skillCircle.value!.offsetLeft;
-  let minHeight = skillCircle.value!.offsetTop;
-  let maxWidth = minWidth + 250;
-  let maxHeight = minHeight + 250;
+function fetchData() {
+  const params: Omit<Pagination, 'total'> = {
+    page: 1,
+    pageSize: 15
+  }
 
-  heightGap = skillBox.value!.clientHeight / 5;
+  apiSkillGetList(params).then(res => {
+    skillsName.value = res.data.list.map(e => {
+      return {
+        name: e.name,
+        proficiency: e.proficiency,
+        id: e.id
+      }
+    });
+    mountedSkills();
+  }).catch(() => {
+    skillsName.value = [];
+  });
+}
 
-  skills.value = skillsName.map((e: string, i: number) => {
+const debounceMoutedskills = debounce(mountedSkills, 500);
+function mountedSkills() {
+  skills.value = skillsName.value.map((e, i: number) => {
     let xCount = 0;
     let yCount = 0;
 
@@ -83,11 +124,11 @@ onMounted(() => {
       xCount = i % 2 === 0 ? 1 : i % 2 + 1;
       yCount = 4;
     }
-
+    
     return {
-      id: useId(),
-      name: e,
-      mastery: Math.floor(Math.random() * 30) + 20,
+      id: `skill-${e.id}`,
+      name: e.name,
+      mastery: proficiencyMap[e.proficiency],
       x: xCount * widthGap,
       y: yCount * heightGap,
       moveVector: 20,
@@ -98,7 +139,7 @@ onMounted(() => {
   });
 
   nextTick(() => {
-    const gap = 30;
+    const gap = 15;
     minWidth -= gap;
     maxWidth += gap;
     minHeight -= gap;
@@ -143,6 +184,28 @@ onMounted(() => {
       }
     });
   });
+}
+
+fetchData();
+
+onMounted(() => {
+  if (skillBox.value) {
+    elementResize = resize(skillBox.value, (wh) => {
+      minWidth = skillCircle.value!.offsetLeft;
+      minHeight = skillCircle.value!.offsetTop;
+      maxWidth = minWidth + 250;
+      maxHeight = minHeight + 250;
+          
+      heightGap = skillBox.value!.clientHeight / 5;
+      debounceMoutedskills();
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (skillBox.value) {
+    elementResize?.unobserve(skillBox.value);
+  }
 });
 
 </script>
@@ -167,7 +230,7 @@ onMounted(() => {
           <span class="fs36 font-bold mx1">SKILLS</span>
           <span></span>
         </p>
-        <div class="add__skill">
+        <div v-if="skills.length === 0" class="add__skill">
           <div class="flex__center wh100" @click="handleAddSkill">
             <com-icon icon="profile-close" style="transform: rotate(45deg);"></com-icon>
             <span class="ml1">添加新技能</span>
@@ -195,6 +258,7 @@ onMounted(() => {
 .skills-box {
   height: 800px;
   padding: 20px;
+  position: relative;
 }
 
 .skills-text {

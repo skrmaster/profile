@@ -9,6 +9,9 @@ type KeyOfRouter = 'loginPath'
 | 'projectMgtPath' 
 | 'recordMgtPath'
 | 'navigationPath'
+| 'aphorismsPath'
+| 'addEditProjectPath'
+| 'viewProjectPath'
 ;
 
 export const routerMap: Record<KeyOfRouter, string> = {
@@ -22,7 +25,10 @@ export const routerMap: Record<KeyOfRouter, string> = {
   tagMgtPath: '/user/:id/management-tag',
   projectMgtPath: '/user/:id/management-project',
   recordMgtPath: '/user/:id/management-record',
-  navigationPath: '/user/:id/management-navigation'
+  navigationPath: '/user/:id/management-navigation',
+  aphorismsPath: '/user/:id/management-aphorisms',
+  addEditProjectPath: '/project-detail-edit',
+  viewProjectPath: '/project-detail-view',
 }
 
 type KeyOfApi = 'loginPath'
@@ -48,6 +54,10 @@ type KeyOfApi = 'loginPath'
 | 'navgationEditPath'
 | 'navgationDeletePath'
 | 'navgationListCategoryPath'
+| "aphorismsListPath"
+| "aphorismsAddPath"
+| "aphorismsEditPath"
+| "aphorismsDeletePath"
 ;
 
 export const apiMap: Record<KeyOfApi, string> = {
@@ -73,5 +83,9 @@ export const apiMap: Record<KeyOfApi, string> = {
   navgationAddPath: "/navgation/add",
   navgationEditPath: "/navgation/update",
   navgationDeletePath: "/navgation/delete",
-  navgationListCategoryPath: '/navgation/getallcategorylist'
+  navgationListCategoryPath: '/navgation/getallcategorylist',
+  aphorismsListPath: "/aphorisms/getlist",
+  aphorismsAddPath: "/aphorisms/add",
+  aphorismsEditPath: "/aphorisms/update",
+  aphorismsDeletePath: "/aphorisms/delete",
 }

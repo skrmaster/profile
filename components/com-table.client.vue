@@ -22,6 +22,7 @@ const theadList = toRef(() => props.head);
 const tableData = toRef(() => props.data);
 const resize = new ResizeObserver(callback);
 const tableGap = 0;
+const tableColumnMinWidth = 150;
 
 const tabelLen = computed(() => {
   return tableData.value.length;
@@ -62,7 +63,7 @@ function assignmentWidth() {
     let e = theadList.value[i];
     let w = stringRegexp(e.width, 'number');
     if (!e.width) {
-      e.colWidth = minW[0];
+      e.colWidth = minW[0] < tableColumnMinWidth ? tableColumnMinWidth : minW[0];
     } else {
       let width = w !== null ? w[0] : 0;
       width !== 0 ? e.colWidth = width : 0;
