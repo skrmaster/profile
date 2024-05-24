@@ -1,17 +1,10 @@
 <script lang="ts" setup>
-import { v4 as uuidv4 } from 'uuid';
-
 type FileType = {
   multiple?: boolean;
   accept?: string;
   previewType?: 'file-list' | 'image-list';
   limit?: number;
   label?: string;
-}
-
-type RenderListType = {
-  id: string;
-  file: File;
 }
 
 const props = withDefaults(defineProps<FileType>(), {
@@ -32,20 +25,7 @@ const isImageList = computed(() => {
 });
 
 const showAddArea = computed(() => {
-  console.log(fileList.value);
-  
   return fileList.value.length < props.limit;
-});
-
-const renderList = computed<RenderListType[]>(() => {
-  const res = fileList.value.map(e => {
-    return {
-      id: uuidv4(),
-      file: e
-    }
-  });
-
-  return res;
 });
 
 function handleUpload() {
@@ -62,7 +42,7 @@ function handleFileChange(e: Event) {
         if (fileList.value.find((e) => e.name === item.name)) {
           continue;
         } else {
-          fileList.value.push(item);
+          fileList.value.splice(fileList.value.length, 0, item);
         }
       }
     }
@@ -102,101 +82,34 @@ function blobToUrl(item: File) {
       >上传文件</com-button>
       <slot name="trigger" />
     </div>
-    <!-- <transition-group 
-      :class="{
-        'file__list flex__center': isImageList
-      }"
-      v-if="fileList.length > 0 || isImageList" 
-      name="list__fade" 
-      tag="ul"
-    >
-      <li 
-        v-for="(item, index) in renderList" 
-        :key="item.id"
-        :class="{
-          'image__item flex__center': isImageList
-        }"
-      >
-        <div 
-          v-if="props.previewType === 'file-list'" 
-          class="file__item flex__row--between"
-        >
-          <span class="fs18">{{ item.file.name }}</span>
-          <div>
-            <com-icon 
-              class="mr1"
-              icon="profilesee" 
-              title="查看"
-              @click="handlePreview(item.file)"
-            ></com-icon>
-            <com-icon 
-              title="删除"
-              icon="profileclose-circle" 
-              @click="handleRemoveFile(index)"
-            ></com-icon>
-          </div>
-        </div>
-        <div 
-          v-else-if="props.previewType === 'image-list'"
-          class="flex1 flex__center"
-        >
-          <img :src="blobToUrl(item.file)" :alt="item.file.name" />
-          <div class="overmark flex__center">
-            <div class="overmark__icon flex__row--between">
-              <com-icon
-                width="20px"
-                height="20px"
-                icon="profileenlarge"
-                color="var(--white-color)"
-                @click="handlePreview(item.file)"
-              ></com-icon>
-              <com-icon
-                width="20px"
-                height="20px"
-                icon="profiledelete"
-                color="var(--white-color)"
-                @click="handleRemoveFile(index)"
-              ></com-icon>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li v-if="isImageList" 
-        class="image__add flex__center c-p" 
-        @click="handleUpload"
-      >
-        <com-icon 
-          class="add__icon" 
-          width="30px" 
-          height="30px" 
-          icon="profileclose"
-        ></com-icon>
-      </li>
-    </transition-group> -->
-    <ul
+    <transition-group 
       :class="{
         'file__list': isImageList
       }"
       v-if="fileList.length > 0 || isImageList" 
+      class="p-r"
+      name="list__fade" 
+      tag="ul"
     >
       <li 
-        v-for="(item, index) in renderList" 
-        :key="item.id"
+        tabindex="0"
+        v-for="(item, index) in fileList" 
+        :key="item.name"
         :class="{
-          'image__item flex__center': isImageList
+          'image__item': isImageList
         }"
       >
-        <div 
+      <div 
           v-if="props.previewType === 'file-list'" 
           class="file__item flex__row--between"
         >
-          <span class="fs18">{{ item.file.name }}</span>
+          <span class="fs18">{{ item.name }}</span>
           <div>
             <com-icon 
               class="mr1"
               icon="profile-see" 
               title="查看"
-              @click="handlePreview(item.file)"
+              @click="handlePreview(item)"
             ></com-icon>
             <com-icon 
               title="删除"
@@ -209,7 +122,7 @@ function blobToUrl(item: File) {
           v-else-if="props.previewType === 'image-list'"
           class="flex1 flex__center"
         >
-          <img :src="blobToUrl(item.file)" :alt="item.file.name" />
+          <img :src="blobToUrl(item)" :alt="item.name" />
           <div class="overmark flex__center">
             <div class="overmark__icon flex__row--between">
               <com-icon
@@ -217,7 +130,7 @@ function blobToUrl(item: File) {
                 height="20px"
                 icon="profile-enlarge"
                 color="var(--white-color)"
-                @click="handlePreview(item.file)"
+                @click="handlePreview(item)"
               ></com-icon>
               <com-icon
                 width="20px"
@@ -230,7 +143,9 @@ function blobToUrl(item: File) {
           </div>
         </div>
       </li>
-      <li v-if="isImageList && showAddArea"
+      
+    </transition-group>
+    <div v-if="isImageList && showAddArea"
         class="image__add flex__center c-p" 
         @click="handleUpload"
       >
@@ -242,8 +157,7 @@ function blobToUrl(item: File) {
           icon="profile-close"
         ></com-icon>
         <label v-else>{{ props.label }}</label>
-      </li>
-    </ul>
+      </div>
     <input 
       ref="fileInput" 
       class="file__input" 
@@ -280,7 +194,7 @@ function blobToUrl(item: File) {
 }
 
 .file__list {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   margin: 0 -8px;
   list-style-type: none;
@@ -290,11 +204,14 @@ function blobToUrl(item: File) {
 .image__item {
   width: 126px;
   height: 126px;
+  overflow: hidden;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--primary-border-color);
   margin: 8px;
+  display: inline-flex;
+  transition: all .5s cubic-bezier(0.55, 0, 0.1, 1) 0s;
 }
 
 .image__item img {
