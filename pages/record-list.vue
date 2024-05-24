@@ -73,8 +73,7 @@ const rank = ref([
 ]);
 </script>
 <template>
-  <NuxtLayout 
-    name="background-setting"
+  <com-background
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="false"
@@ -194,7 +193,7 @@ const rank = ref([
       </div>
     </section>
     <com-footer></com-footer>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 .search {

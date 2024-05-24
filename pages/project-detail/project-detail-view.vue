@@ -1,32 +1,27 @@
 <script lang="ts" setup>
+import { apiGetInfo } from '~/api/project/request';
+
+type Prop = {
+  projectId: string;
+}
+
+const props = withDefaults(defineProps<Prop>(), {});
 const router = useRouter();
-const title = ref('数字天研系统项目');
-const list = ref<StackItem[]>([
-  {
-    name: 'vuejs',
-    icon: 'https://vuejs.org/images/logo.png',
-    officalUrl: 'https://vuejs.org',
-    isChoose: false
-  },
-  {
-    name: 'reactjs',
-    icon: 'https://react.dev/images/og-home.png',
-    officalUrl: 'https://react.dev',
-    isChoose: false
-  }
-]);
+const title = ref('');
+const list = ref<StackItem[]>([]);
+const imageList = ref<Carousel.ImageList[]>([]);
 const detailList = ref([
   {
     label: '概述',
-    content: '该产品属于企业服务，服务是对请假审批流程、月计划资金审批流程等一系列流程的统一管理包括发起，领导审批，通过，实施，生成报告。该项目属于国企外包项目，推动相关部门的无纸化办公进程。'
+    content: ''
   },
   {
     label: '介绍',
-    content: '人员由3名前端和3名后端组成。前端使用vuejs框架后端使用java语言构建。前后端使用swagger对接数据。前端使用公司二次封装的elementUI的组件库。'
+    content: ''
   },
   {
     label: '负责部分',
-    content: '负责工作需求对接涉及发起工作流程与办理工作流程，提供设计建议，将用户提供或者是需要的execl表格模板文件在系统中复现。'
+    content: ''
   }
 ]);
 
@@ -34,31 +29,50 @@ useHead({
   title
 });
 
+init();
+function init() {
+  apiGetInfo(props.projectId)
+  .then(res => {
+    title.value = res.data.name;
+
+    detailList.value = ['summary', 'description', 'department'].map((e, i) => {
+      const item = {
+        label: ['概述', '介绍', '负责部分'][i],
+        content: res.data[e]
+      }
+      return item;
+    });
+
+    const stackIds: string[] = res.data.stackIds ? JSON.parse(JSON.parse(res.data.stackIds)) : [];
+    
+    list.value = stackIds?.map(e => {
+      return {
+        name: e,
+        icon: '',
+        officalUrl: '',
+        isChoose: false
+      }
+    });
+
+    const imageIds: string[] = res.data.imageIds ? JSON.parse(JSON.parse(res.data.imageIds)) : [];
+    imageList.value = imageIds.map((e, i) => {
+      return {
+        id: i.toString(),
+        image: e.replaceAll('\\', '/')
+      }
+    });
+
+  }).catch((e) => {
+    console.log(e);
+  });
+}
+
 function goBack() {
   router.back();
 }
-
-function handleStackListChange(val: StackItem[]) {
-  let remainArr = [];
-  let addArr = [];
-  
-  for (let i = 0; i < val.length; i++) {
-    let e = val[i];
-    let idx = list.value.findIndex(item => item.name === e.name);
-
-    if (idx > -1) {
-      remainArr.push(e);
-    } else {
-      addArr.push(e);
-    }
-  }
-
-  list.value.splice(0, list.value.length, ...remainArr, ...addArr);
-}
-
 </script>
 <template>
-  <NuxtLayout 
+  <com-background 
     name="background-setting"
     :bg-change-color="false"
     :bg-style-content="''"
@@ -85,14 +99,15 @@ function handleStackListChange(val: StackItem[]) {
             </div>
           </div>
         </div>
-        <com-carousel></com-carousel>
+        <com-carousel
+          :list="imageList"
+        ></com-carousel>
         <div class="stack__box">
           <p><label>技术栈</label></p>
           <div class="my1">
             <com-tech-stack 
               :data-list="list"
               mode="view"
-              @update="handleStackListChange"
             ></com-tech-stack>
           </div>
         </div>
@@ -113,7 +128,7 @@ function handleStackListChange(val: StackItem[]) {
       </div>
     </section>
     <com-footer></com-footer>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 .title {

@@ -32,8 +32,7 @@ const data = [
 
 </script>
 <template>
-  <NuxtLayout 
-    name="background-setting"
+  <com-background
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="true"
@@ -58,7 +57,7 @@ const data = [
         <com-pagination></com-pagination>
       </div>
     </section>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 .project-gird {

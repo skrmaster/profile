@@ -83,7 +83,6 @@ function submitData() {
           sort: val.data.sort
         }
         apiSkillAdd(params).then(res => {
-          console.log(res);
           $message.show({
             message: '添加成功',
             type: 'success'
@@ -99,7 +98,6 @@ function submitData() {
           sort: val.data.sort
         }
         apiSkillUpdate(params).then(res => {
-          console.log(res);
           $message.show({
             message: '更新成功',
             type: 'success'

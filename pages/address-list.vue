@@ -30,8 +30,7 @@ function fetchData() {
 fetchData();
 </script>
 <template>
-  <NuxtLayout 
-    name="background-setting"
+  <com-background
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="true"
@@ -68,7 +67,7 @@ fetchData();
         </div>
       </div>
     </section>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 .address__gird {

@@ -17,7 +17,7 @@ function toggleMenu() {
         </div>
       </div>
     </div>
-    <Transition name="left-to-rigth">
+    <Transition name="left-to-right">
       <div v-if="show" class="aside">
         <com-model
           model-close

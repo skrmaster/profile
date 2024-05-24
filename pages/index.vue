@@ -341,14 +341,7 @@ onNuxtReady(() => {
 
 </script>
 <template>
-  <NuxtLayout 
-    name="background-setting"
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="false"
-  >
-    <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
-    <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+  <NuxtLayout name="header-section-footer">
     <section class="p-r">
       <canvas id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
@@ -402,14 +395,14 @@ onNuxtReady(() => {
           <p class="fs30">18283170317zy@gmail.com</p>
         </div>
       </div>
-      <com-form class="index__form mx-auto mb4" :model="formConfig">
-        <div class="flex__center">
-          <com-button class="submit-btn mt1 fs24">提交</com-button>
-        </div>
-      </com-form>
+      <ClientOnly>
+        <com-form class="index__form mx-auto mb4" :model="formConfig">
+          <div class="flex__center">
+            <com-button class="submit-btn mt1 fs24">提交</com-button>
+          </div>
+        </com-form>
+      </ClientOnly>
     </div>
-    <com-footer></com-footer>
-    <div style="height: 120px;" class="display-5-none display-4-none display-3-none"></div>
   </NuxtLayout>
 </template>
 <style scoped>

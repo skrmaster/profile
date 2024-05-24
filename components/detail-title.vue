@@ -1,22 +1,55 @@
 <script lang="ts" setup>
 type Prop = {
   placeholder?: string;
+  titleValue?: string;
 }
 
+const emit = defineEmits<{
+  'button-action': [val: DetailTitle.Action, name: string]
+}>();
 const props = withDefaults(defineProps<Prop>(), {
-  placeholder: '项目名称'
-})
+  placeholder: '项目名称',
+  titleValue: ''
+});
 
 const router = useRouter();
+const titleVal = toRef(() => props.titleValue);
+
 const title = ref('');
+const titleError = ref(false);
 const textNumber = computed(() => {
   const len = title.value.length ? title.value.length : 0;
   return Math.abs(5 - len) >= 0 ? 5 - len : 0;
 });
 
+watch(titleVal, (val) => {
+  console.log(val, 'val');
+  
+  if (val) {
+    title.value = val;
+  }
+});
+
+watch(textNumber, (val) => {
+  if (val === 0) {
+    titleError.value = false;
+  }
+});
+
 function goBack() {
   router.back();
 }
+
+function handleSubmit(val: DetailTitle.Action) {
+  if (unref(title).length < 5) {
+    titleError.value = true;
+    return;
+  } else {
+    titleError.value = false;
+  }
+  emit('button-action', val, unref(title));
+}
+
 </script>
 <template>
   <div class="detail__title">
@@ -36,6 +69,7 @@ function goBack() {
             v-model="title" 
             :is-label="false"
             :placeholder="props.placeholder"
+            :is-error="titleError"
             clearable
           >
           </com-form-input>
@@ -44,16 +78,22 @@ function goBack() {
             class="nowrap fs18 detail__notice ml1"
           >还需要输入{{ textNumber }}个字</span>
         </div>
-        <div class="ml1 btn__group flex__row--between display-2-none display-1-none display-0-none">
-          <com-button class="btn" 
-            :need-inner-outline="false" 
-            bg-color="#898989"
-          >
-            <span class="fs20">当草稿</span>
-          </com-button>
-          <com-button class="btn">
-            <span class="fs20">发布</span>
-          </com-button>
+        <div class="display-2-none display-1-none display-0-none">
+          <div class="ml1 btn__group flex__row--between">
+            <com-button class="btn" 
+              :need-inner-outline="false" 
+              bg-color="#898989"
+              @click.stop="handleSubmit('submit-tmp')"
+            >
+              <span class="fs20">当草稿</span>
+            </com-button>
+            <span style="width: 10px"></span>
+            <com-button class="btn"
+              @click.stop="handleSubmit('submit')"
+            >
+              <span class="fs20">发布</span>
+            </com-button>
+          </div>
         </div>
       </div>
     </div>
@@ -73,7 +113,7 @@ function goBack() {
 
 .detail__input {
   border-radius: 10px;
-  border: 0;
+  border-color: transparent;
   outline: 0;
   min-width: 100px;
 }
@@ -85,7 +125,7 @@ function goBack() {
 }
 
 .btn__group {
-  max-width: 210px;
+  max-width: 220px;
   width: 100%;
 }
 

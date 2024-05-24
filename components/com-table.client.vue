@@ -5,6 +5,8 @@ type Prop = {
   height?: string;
 }
 
+type Position = 'right' | 'center' | 'left';
+
 const emit = defineEmits<{
   'click': [type: TableCell, data: Record<string, any>]
 }>();
@@ -16,13 +18,16 @@ const props = withDefaults(defineProps<Prop>(), {
 });
 
 const tableRef = ref<HTMLElement>();
+const scrollContainer = ref<HTMLElement | null>(null);
 
 const tableWidth = ref(0);
 const theadList = toRef(() => props.head);
 const tableData = toRef(() => props.data);
 const resize = new ResizeObserver(callback);
+const boxShadow = ref('var(--box-shadow-small)');
 const tableGap = 0;
 const tableColumnMinWidth = 150;
+const layout: Set<Position> = new Set();
 
 const tabelLen = computed(() => {
   return tableData.value.length;
@@ -88,15 +93,60 @@ function callback(entries: ResizeObserverEntry[]) {
   }
 }
 
-defineExpose({});
+function handleTHeadFixed(type: Fixed): string {
+  if (!type) {
+    return '';
+  }
+  const res: string = `column__thead-${type}`;
+  return res;
+}
+
+function handleTbodyFixed(type: Fixed): string {
+  if (!type) {
+    return '';
+  }
+  const res: string = `column__tbody-${type}`;
+  return res;
+}
+
+function handleScroll() {
+  if (scrollContainer.value) {
+    const scrollLeft = scrollContainer.value.scrollLeft;
+    const maxScrollLeft = scrollContainer.value.scrollWidth - scrollContainer.value.clientWidth;
+    const arr = Array.from(layout);
+    const left = arr.find(e => e === 'left');
+    const right = arr.find(e => e === 'right');
+
+    //Todo: 左右fixed阴影
+    if (scrollLeft === 0) {
+      boxShadow.value = 'var(--box-shadow-small)';
+    } else if (scrollLeft === maxScrollLeft) {
+      boxShadow.value = '';
+    } else {
+      boxShadow.value = 'var(--box-shadow-small)';
+    }
+  }
+}
+
+onNuxtReady(() => {
+  for (const item of theadList.value) {
+    if (item.fixed) {
+      layout.add(item.fixed);
+    }
+  }
+
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', handleScroll);
+  }
+});
 </script>
 <template>
   <div 
     ref="tableRef" 
     class="table__container flex__column"
-    :style="`--table-minheight: ${props.height}`"
+    :style="`--table-minheight: ${props.height}; --fixed-layout-boxshadow: ${boxShadow};`"
   >
-    <div class="table__scroll flex1 flex__column">
+    <div ref="scrollContainer" class="table__scroll flex1 flex__column">
       <div class="table__header">
         <table cellspacing="0" cellpadding="0" border="0"
           :style="{
@@ -115,7 +165,7 @@ defineExpose({});
               <th 
                 v-for="(item, index) in theadList" 
                 :key="index"
-                :class="`${item.align ? item.align : ''} ${item.class ? item.class : ''}`"
+                :class="`${item.align ? item.align : ''} ${item.class ? item.class : ''} ${handleTHeadFixed(item.fixed)}`"
               >
                 <div class="table__cell">{{ item.name }}</div>
               </th>
@@ -152,6 +202,7 @@ defineExpose({});
           >
             <td 
               class="table__td"
+              :class="`${handleTbodyFixed(e.fixed)}`"
               v-for="(e, idx) in theadList" 
               :key="idx"
             >
@@ -220,7 +271,11 @@ table tr {
   height: 60px;
 }
 
-table tr:hover {
+table tr:hover
+, table tr:hover .column__thead-right
+, table tr:hover .column__thead-left
+, table tr:hover .column__tbody-right
+, table tr:hover .column__tbody-left {
   background-color: var(--table-tr-bg-color-hover);
 }
 
@@ -228,8 +283,11 @@ table .table-data__tr:not(:last-child) .table__td {
   border-bottom: 1px solid var(--table-tr-border-color);
 }
 
-.table__cell:not(.has--tip) {
+.table__cell {
   padding: 5px 8px;
+}
+
+.table__cell:not(.has--tip) {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -247,5 +305,33 @@ table .table-data__tr:not(:last-child) .table__td {
 
 .operate__icon:hover {
   opacity: 0.8;
+}
+
+.column__thead-right {
+  position: sticky!important;
+  right: 0px;
+  background: var(--table-th-bg-color);
+  box-shadow: var(--fixed-layout-boxshadow);
+}
+
+.column__thead-left {
+  position: sticky!important;
+  left: 0px;
+  background: var(--table-th-bg-color);
+  box-shadow: var(--fixed-layout-boxshadow);
+}
+
+.column__tbody-right {
+  position: sticky!important;
+  right: 0px;
+  background: var(--table-bg-color);
+  box-shadow: var(--fixed-layout-boxshadow);
+}
+
+.column__tbody-left {
+  position: sticky!important;
+  left: 0px;
+  background: var(--table-bg-color);
+  box-shadow: var(--fixed-layout-boxshadow);
 }
 </style>

@@ -1,12 +1,70 @@
 <script lang="ts" setup>
-const list = ref<StackItem[]>([]);
+import { apiAdd as fileApiAdd } from '~/api/upload/request';
+import { apiAdd, apiGetInfo } from '~/api/project/request';
+import type { AddModel as FileAddModel } from '~/api/upload/model';
+import type { AddModel } from '~/api/project/model';
+import projectDetailView from './project-detail-view.vue';
 
-const formData = reactive({
-  demoAddress: '',
+const { $message } = useNuxtApp();
+const route = useRoute();
+const router = useRouter();
+const mode = route.params.mode;
+const projectId = route.query.id as string;
+
+if (mode === 'add') {
+  useHead({
+    title: '添加项目'
+  });
+} else if (mode === 'edit') {
+  useHead({
+    title: '编辑项目'
+  });
+  initEditData();
+}
+
+const list = ref<StackItem[]>([]);
+const images = ref<string[]>([]);
+const fileList = ref<Array<Upload.FileInfoList>>([]);
+
+const formData = reactive<Omit<AddModel, 'name' | 'status'>>({
+  playLink: '',
   summary: '',
-  introduction: '',
-  responsiblePart: ''
+  description: '',
+  department: '',
+  sort: 1
 });
+
+const projectName = ref('');
+
+function initEditData() {
+  apiGetInfo(projectId)
+  .then(res => {
+    Object.assign(formData, res.data);
+    projectName.value = res.data.name;
+
+    const stackIds: string[] = res.data.stackIds ? JSON.parse(JSON.parse(res.data.stackIds)) : [];
+    
+    list.value = stackIds?.map(e => {
+      return {
+        name: e,
+        icon: '',
+        officalUrl: '',
+        isChoose: false
+      }
+    });
+
+    const imageIds: string[] = res.data.imageIds ? JSON.parse(JSON.parse(res.data.imageIds)) : [];
+    fileList.value = imageIds.map((e, i) => {
+      return {
+        id: i.toString(),
+        fullPath: e.replaceAll('\\', '/')
+      }
+    });
+    
+  }).catch((e) => {
+    console.log(e);
+  });
+}
 
 function handleStackListChange(val: StackItem[]) {
   let remainArr = [];
@@ -25,15 +83,68 @@ function handleStackListChange(val: StackItem[]) {
 
   list.value.splice(0, list.value.length, ...remainArr, ...addArr);
 }
+
+async function handleFileUpload(list: File[]) {
+  for await (let item of list) {
+    const params: FileAddModel = {
+      category: 0,
+      file: item
+    }
+    fileApiAdd(params).then(res => {
+      images.value.push(res.data)
+    }).catch(() => {
+
+    });
+  }
+}
+
+function handleSubmit(val: DetailTitle.Action, title: string) {
+  const params: AddModel = {
+    status: 0,
+    name: title,
+    imageIds: JSON.stringify(unref(images)),
+    stackIds: JSON.stringify(unref(list).map(e => e.name)),
+    ...formData
+  }
+
+  switch (val) {
+    case 'submit':
+      params.status = 1;
+      break;
+    case 'submit-tmp':
+      params.status = 0;
+      break;
+    default:
+      break;
+  }
+
+  apiAdd(params).then(res => {
+    $message.show({
+      message: res.data,
+      type: res.succeeded ? 'success' : 'info'
+    });
+    if (res.succeeded) {
+      router.back();
+    }
+  }).catch(() => {
+
+  });
+}
+
 </script>
 <template>
-  <NuxtLayout 
+  <com-background 
+    v-if="mode !== 'view'"
     name="background-setting"
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="false"
   >
-    <detail-title class="edit__title"></detail-title>
+    <detail-title 
+      :title-value="projectName"
+      @button-action="handleSubmit"
+      class="edit__title"
+    ></detail-title>
     <section>
       <div class="container flex__column">
         <div>
@@ -45,7 +156,7 @@ function handleStackListChange(val: StackItem[]) {
               <com-form-input
                 class="demo__input"
                 width="625"
-                v-model="formData.demoAddress" 
+                v-model="formData.playLink" 
                 placeholder="演示地址"
                 :is-label="false"
               ></com-form-input>
@@ -63,7 +174,22 @@ function handleStackListChange(val: StackItem[]) {
           <div class="flex__row--start flex-wrap">
             <label>项目图片</label>
             <div>
-              <com-upload></com-upload>
+              <com-upload
+                :data-list="fileList"
+                @file-monuted="handleFileUpload"
+              ></com-upload>
+            </div>
+          </div>
+          <div class="flex__row--start my3 flex-wrap">
+            <label>排序</label>
+            <div class="flex1">
+              <com-form-input
+                width="100"
+                :is-label="false"
+                placeholder="请输入排序"
+                v-model="formData.sort" 
+                type="number"
+              ></com-form-input>
             </div>
           </div>
           <div class="flex__row--start my3 flex-wrap">
@@ -85,7 +211,7 @@ function handleStackListChange(val: StackItem[]) {
                 class="detail__textarea"
                 :is-label="false"
                 placeholder="请输入介绍"
-                v-model="formData.introduction" 
+                v-model="formData.description" 
                 type="textarea"
               ></com-form-input>
             </div>
@@ -97,7 +223,7 @@ function handleStackListChange(val: StackItem[]) {
                 class="detail__textarea"
                 placeholder="请输入负责部分"
                 :is-label="false"
-                v-model="formData.responsiblePart" 
+                v-model="formData.department" 
                 type="textarea"
               ></com-form-input>
             </div>
@@ -105,7 +231,8 @@ function handleStackListChange(val: StackItem[]) {
         </div>
       </div>
     </section>
-  </NuxtLayout>
+  </com-background>
+  <project-detail-view :project-id="projectId" v-else></project-detail-view>
 </template>
 <style scoped>
 .edit__title {

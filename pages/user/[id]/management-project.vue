@@ -5,7 +5,7 @@ import { apiGetList, apiDelete } from '~/api/project/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
 const { tagList } = options;
-const { addEditProjectPath, viewProjectPath } = routerMap
+const { projectDetailPath } = routerMap
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
@@ -69,8 +69,9 @@ const tableHead = ref<TableHead[]>([
   },
   {
     name: '操作',
-    width: '100px',
-    operate: ['edit', 'delete']
+    width: '150px',
+    fixed: 'right',
+    operate: ['view', 'edit', 'delete']
   }
 ]);
 const tableData = ref<ListType>([]);
@@ -81,12 +82,14 @@ const pagination = reactive({
 });
 
 function handleAdd() {
-  navigateTo(addEditProjectPath);
+  navigateTo({
+    path: `${projectDetailPath}/add`,
+  });
 }
 
 function handleEdit(item: Record<string, any>) {
   navigateTo({
-    path: addEditProjectPath,
+    path: `${projectDetailPath}/edit`,
     query: {
       id: item.id
     }
@@ -95,7 +98,7 @@ function handleEdit(item: Record<string, any>) {
 
 function handleView(item: Record<string, any>) {
   navigateTo({
-    path: viewProjectPath,
+    path: `${projectDetailPath}/view`,
     query: {
       id: item.id
     }
@@ -145,7 +148,8 @@ function handleTableClick(type: TableCell, data: Record<string, any>) {
     case 'delete':
       handleDelete(data);
       break;
-    case 'cell':
+    case 'view':
+      handleView(data);
       break;
     default:
       break;

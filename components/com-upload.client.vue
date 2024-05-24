@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 type FileType = {
+  dataList?: Array<Upload.FileInfoList>;
   multiple?: boolean;
   accept?: string;
   previewType?: 'file-list' | 'image-list';
@@ -7,17 +8,22 @@ type FileType = {
   label?: string;
 }
 
+const emit = defineEmits<{
+  'fileMonuted': [list: File[]]
+}>()
+
 const props = withDefaults(defineProps<FileType>(), {
+  dataList: () => [],
   multiple: true,
   accept: '*',
   previewType: 'image-list',
-  limit: 5,
+  limit: 5
 });
 
 const slotsVue = useSlots();
 const previewRef = ref();
 
-const fileList = ref<File[]>([]);
+const fileList = ref<File[] & Upload.FileInfoList[]>([]);
 const fileInput = ref<HTMLInputElement>();
 const previewList = ref<string[]>([]);
 const isImageList = computed(() => {
@@ -26,6 +32,11 @@ const isImageList = computed(() => {
 
 const showAddArea = computed(() => {
   return fileList.value.length < props.limit;
+});
+
+watch(props.dataList, (val) => {
+  fileList.value = [];
+  fileList.value.splice(0, 0, ...val);
 });
 
 function handleUpload() {
@@ -43,11 +54,15 @@ function handleFileChange(e: Event) {
           continue;
         } else {
           fileList.value.splice(fileList.value.length, 0, item);
+          if (fileList.value.length === props.limit) {
+            break;
+          }
         }
       }
     }
     clearInputValue();
   }
+  emit('fileMonuted', unref(fileList))
 }
 
 function handleRemoveFile(index: number) {
@@ -92,7 +107,6 @@ function blobToUrl(item: File) {
       tag="ul"
     >
       <li 
-        tabindex="0"
         v-for="(item, index) in fileList" 
         :key="item.name"
         :class="{
@@ -122,7 +136,7 @@ function blobToUrl(item: File) {
           v-else-if="props.previewType === 'image-list'"
           class="flex1 flex__center"
         >
-          <img :src="blobToUrl(item)" :alt="item.name" />
+          <img :src="item.fullPath || blobToUrl(item)" :alt="item.name" />
           <div class="overmark flex__center">
             <div class="overmark__icon flex__row--between">
               <com-icon
@@ -143,21 +157,22 @@ function blobToUrl(item: File) {
           </div>
         </div>
       </li>
-      
+      <li :key="Date.now">
+        <div v-if="isImageList && showAddArea"
+          class="image__add flex__center c-p" 
+          @click="handleUpload"
+        >
+          <com-icon 
+            v-if="!props.label"
+            class="add__icon" 
+            width="30px" 
+            height="30px" 
+            icon="profile-close"
+          ></com-icon>
+          <label v-else>{{ props.label }}</label>
+        </div>
+      </li>
     </transition-group>
-    <div v-if="isImageList && showAddArea"
-        class="image__add flex__center c-p" 
-        @click="handleUpload"
-      >
-        <com-icon 
-          v-if="!props.label"
-          class="add__icon" 
-          width="30px" 
-          height="30px" 
-          icon="profile-close"
-        ></com-icon>
-        <label v-else>{{ props.label }}</label>
-      </div>
     <input 
       ref="fileInput" 
       class="file__input" 

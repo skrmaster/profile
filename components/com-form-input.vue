@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 interface Props {
-  modelValue: string | number;
+  modelValue?: string | number;
   placeholder?: string;
   autocomplete?: string;
   type?: string;
@@ -39,8 +39,8 @@ const props = withDefaults(defineProps<Props>(), {
   textAlign: 'start'
 });
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number],
-  'change': [value: string | number]
+  'update:modelValue': [value: string | number | undefined],
+  'change': [value: string | number | undefined]
 }>();
 
 const input = ref();
@@ -52,7 +52,7 @@ const canShowClearIcon = ref(false);
 const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
 const inputValue = toRef(() => props.modelValue);
-const currentInputValue = ref<string | number>('');
+const currentInputValue = ref<string | number | undefined>();
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -73,7 +73,7 @@ const width = computed((): string | number => {
 watch(inputValue, (val) => {
   currentInputValue.value = val;  
   
-  if (currentInputValue.value.toString()) {
+  if (currentInputValue.value?.toString()) {
     placeholderStatus.value = 0;
   } else {
     placeholderStatus.value = 1;
@@ -104,7 +104,7 @@ onMounted(() => {
 });
 
 function autoSetStatusOfPlaceholder() {
-  if (currentInputValue.value.toString()) {
+  if (currentInputValue.value?.toString()) {
     placeholderStatus.value = 0;
   } else {
     placeholderStatus.value = 1;
@@ -113,8 +113,8 @@ function autoSetStatusOfPlaceholder() {
 
 function handlerContent() {
   autoSetStatusOfPlaceholder();
-  emit('update:modelValue', currentInputValue.value);
-  emit('change', currentInputValue.value);
+  emit('update:modelValue', unref(currentInputValue));
+  emit('change', unref(currentInputValue));
 }
 
 function handlerFocus() {

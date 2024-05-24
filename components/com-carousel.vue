@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 type Prop = {
   isLoop?: boolean;
-  list?: []
+  list?: Carousel.ImageList[]
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -29,23 +29,14 @@ const carousel = reactive({
 
 const translate = ref(props.isLoop ? carousel.transformWidth : 0);
 const itemTime = ref(transitionTime);
-const carouselList = ref([
-  {
-    id: '1',
-    image: '/images/pd3.png',
-    class: 'carousel__item',
-  },
-  {
-    id: '2',
-    image: '/images/pd3.png',
-    class: 'carousel__item',
-  },
-  {
-    id: '3',
-    image: '/images/pd3.png',
-    class: 'carousel__item',
-  }
-]);
+const carouselList = computed(() => {
+  return props.list.map(e => {
+    return {
+      ...e,
+      class: 'carousel__item'
+    }
+  });
+});
 const carouselSwitch = ref(false);
 const offset = ref(0);
 

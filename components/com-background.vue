@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<BgSettingProps>(), {
   bgChangeColor: false,
   bgDefaultSize: false,
   bgStyleContent: 'background: #FFFFFF;'
-})
+});
 
 const slots = useSlots();
 

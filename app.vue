@@ -1,5 +1,7 @@
 <template>
-  <NuxtPage />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 <style lang="scss">
 @import "@wangeditor/editor/dist/css/style.css";

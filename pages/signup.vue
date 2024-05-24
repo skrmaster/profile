@@ -193,8 +193,7 @@ onNuxtReady(() => {
 
 </script>
 <template>
-  <NuxtLayout 
-    name="background-setting" 
+  <com-background
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="true"
@@ -241,7 +240,7 @@ onNuxtReady(() => {
         ></canvas>
       </div>
     </div>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 

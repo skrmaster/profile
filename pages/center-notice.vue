@@ -23,8 +23,7 @@ onNuxtReady(() => {
 })
 </script>
 <template>
-  <NuxtLayout
-    name="background-setting"
+  <com-background
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="true"
@@ -45,7 +44,7 @@ onNuxtReady(() => {
         </div>
       </div>
     </div>
-  </NuxtLayout>
+  </com-background>
 </template>
 <style scoped>
 .text__box {
