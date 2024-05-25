@@ -11,7 +11,7 @@ export async function apiAdd(params: Type.AddModel & Record<string, any>) {
 
   fileContent.append('file', params.file);
 
-  const res = await httpClient<string>(uploadSingleFilePath, {
+  const res = await httpClient<Upload.FileInfo>(uploadSingleFilePath, {
     method: 'POST',
     params: params,
     body: fileContent

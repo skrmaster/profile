@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/tag/model';
+import type { ListType } from '~/api/record/model';
 import PersonalCenter from './components/personal-center.vue';
-import Form from './components/form-tag.vue';
-import { apiGetList, apiDelete } from '~/api/tag/request';
+import { apiGetList, apiDelete } from '~/api/record/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
 const { tagList } = options;
-const formRef = ref();
+const { recordDetailPath, recordDetailViewPath } = routerMap;
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
@@ -49,11 +48,27 @@ const pagination = reactive({
 });
 
 function handleAdd() {
-  formRef.value.open();
+  navigateTo({
+    path: recordDetailPath + '/add',
+  });
 }
 
 function handleEdit(item: Record<string, any>) {
-  formRef.value.open(item);
+  navigateTo({
+    path: recordDetailPath + '/edit',
+    query: {
+      id: item.id
+    }
+  });
+}
+
+function handleView(item: Record<string, any>) {
+  navigateTo({
+    path: recordDetailViewPath,
+    query: {
+      id: item.id
+    }
+  });
 }
 
 function handleDelete(item: Record<string, any>) {
@@ -82,7 +97,6 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
-      e.category = getListLabel(e.category, tagList) || '';
       return e;
     });
     loading.value = false;
@@ -117,7 +131,7 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAdd">新增标签</com-button>
+        <com-button icon="profileadd" @click="handleAdd">新增记录</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">
@@ -139,7 +153,6 @@ getTableData();
         ></com-pagination>
       </div>
     </div>
-    <Form ref="formRef" @refresh-data="getTableData"></Form>
   </personal-center>
 </template>
 <style scoped>

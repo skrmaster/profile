@@ -203,7 +203,9 @@ watch(paginationRef, (val) => {
 });
 
 onBeforeUnmount(() => {
-  elementResize?.unobserve(paginationRef.value);
+  if (paginationRef.value) {
+    elementResize?.unobserve(paginationRef.value);
+  }
 });
 </script>
 <template>
@@ -256,7 +258,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="flex__center mx1">
-      <span class="fs14">跳转到：</span>
+      <span class="fs14 nowrap">跳转到：</span>
       <com-form-input 
         class="pagination-input"
         :is-label="false"
@@ -269,7 +271,7 @@ onBeforeUnmount(() => {
       ></com-form-input>
     </div>
     <div class="flex__center mr1">
-      <p class="fs14">共:
+      <p class="fs14 nowrap">共:
         <span>{{ props.total }}</span>
         {{ props.unit }}
       </p>

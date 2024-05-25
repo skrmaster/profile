@@ -1,16 +1,25 @@
 <script lang="ts" setup>
+import { apiGetInfo } from '~/api/record/request';
 
-const title = ref('添加记录');
-useHead({
-  title
-});
-const formData = reactive({
-  demoAddress: '',
-  summary: '',
-  introduction: '',
-  responsiblePart: ''
-});
 
+
+const route = useRoute();
+const router = useRouter();
+const mode = route.params.mode as DetailTitle.Mode;
+const recordId = route.query.id as string;
+
+if (mode === 'add') {
+  useHead({
+    title: '添加记录'
+  });
+} else if (mode === 'edit') {
+  useHead({
+    title: '编辑记录'
+  });
+  init();
+}
+
+const recordName = ref('');
 const radioValue = ref('1');
 const radioList = ref([
   {
@@ -22,12 +31,31 @@ const radioList = ref([
     value: '2'
   }
 ]);
+const content = ref('1232');
 
+watch(content, (v) => {
+  console.log(v);
+});
+
+function init() {
+  apiGetInfo(recordId).then(res => {
+
+  }).catch(e => {
+
+  });
+}
+
+function handleSubmit() {
+
+}
 </script>
 <template>
   <div class="background">
-    <detail-title 
-      :placeholder="'记录名称'" 
+    <detail-title
+      :mode="mode"
+      :title-value="recordName"
+      @button-action="handleSubmit"
+      :placeholder="'记录名称'"
       class="edit__title"
     ></detail-title>
     <section class="flex1 flex__column">
@@ -38,7 +66,7 @@ const radioList = ref([
             :list="radioList"
           ></com-radio>
         </div>
-        <wang-editor class="flex1"></wang-editor>
+        <wang-editor v-model="content" class="flex1"></wang-editor>
       </div>
     </section>
     <com-footer></com-footer>

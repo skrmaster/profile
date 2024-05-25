@@ -1,3 +1,5 @@
+import { useDayjs } from '#dayjs';
+
 export function debounce(func: (arg: unknown) => unknown, time = 1000) {
   let id: null | ReturnType<typeof setTimeout> = null
   
@@ -31,4 +33,13 @@ export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObs
   }
 
   return resizeObserver;
+}
+
+export function timeNullFormat(time?: string): string {
+  const dayjs = useDayjs();
+  return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+}
+
+export function isFile(variable: any): variable is File {
+  return variable instanceof File;
 }

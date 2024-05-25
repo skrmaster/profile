@@ -3,7 +3,7 @@ import type { ListType } from '~/api/project/model';
 import PersonalCenter from './components/personal-center.vue';
 import { apiGetList, apiDelete } from '~/api/project/request';
 
-const { $dayjs, $confirm, $message } = useNuxtApp();
+const { $confirm, $message } = useNuxtApp();
 const { tagList } = options;
 const { projectDetailPath } = routerMap
 const paginationRef = ref();
@@ -57,7 +57,7 @@ const tableHead = ref<TableHead[]>([
   {
     name: '项目排序',
     width: '100px',
-    field: 'imageIds',
+    field: 'sort',
   },
   {
     name: '创建时间',
@@ -129,8 +129,10 @@ function getTableData() {
   apiGetList(params).then(res => {
     Object.assign(pagination ,res.data.pagination);
     tableData.value = res.data.list.map(e => {
-      e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
-      e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+      e.startTime = timeNullFormat(e.startTime);
+      e.endTime = timeNullFormat(e.endTime);
+      e.createTime = timeNullFormat(e.createTime);
+      e.updateTime = timeNullFormat(e.updateTime);
       e.category = getListLabel(e.category, tagList) || '';
       return e;
     });
@@ -167,7 +169,7 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAdd">新增标签</com-button>
+        <com-button icon="profileadd" @click="handleAdd">新增项目</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">

@@ -1,15 +1,13 @@
 export type AddModel = {
-  name: string;
-  icon: number;
   title: string;
   content?: string;
   tags?: string;
   status: number;
-  category: number;
+  category: string;
 }
 
 export type EditModel = AddModel & {
-  id: number;
+  id: string;
   [key: string]: any;
 }
 

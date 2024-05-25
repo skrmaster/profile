@@ -48,7 +48,12 @@ export async function http(url: string, options: Record<string, any>) {
 }
 
 export async function httpClient<T>(url: string, options: Record<string, any>): Promise<ResponseModel<T>> {
-  const tokenString: string = getToken();
+  let tokenString: string;
+  try {
+    tokenString = getToken()
+  } catch(e) {
+    console.log(e);
+  }
 
   return await $fetch(
     url, 

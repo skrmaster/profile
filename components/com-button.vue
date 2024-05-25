@@ -83,7 +83,6 @@ function handleClick($event: Event) {
       }`,
       backgroundColor: props.bgColor
     }"
-    v-bind="$attrs"
     @click="handleClick"
   >
     <com-icon :icon="props.prefixIcon"></com-icon>

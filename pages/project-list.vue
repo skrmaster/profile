@@ -1,34 +1,51 @@
 <script lang="ts" setup>
+import { apiGetList }  from '~/api/project/request';
+
+type DataItem = {
+  name: string;
+  imageUrl: string;
+}
 
 useHead({
   title: "项目列表"
 });
-const data = [
-  {
-    name: '熊猫系统',
-    imageUrl: '/images/pd3.png'
-  },
-  {
-    name: '熊猫系统2',
-    imageUrl: '/images/pd3.png'
-  },
-  {
-    name: '熊猫系统2',
-    imageUrl: '/images/pd3.png'
-  },
-  {
-    name: '熊猫系统2',
-    imageUrl: '/images/pd3.png'
-  },
-  {
-    name: '熊猫系统2',
-    imageUrl: '/images/pd3.png'
-  },
-  {
-    name: '熊猫系统2',
-    imageUrl: '/images/pd3.png'
+
+const paginationRef = ref();
+const pagination = reactive({
+  total: 0,
+  page: 1,
+  pageSize: 20
+});
+const data = ref<DataItem[]>([]);
+
+init();
+function init() {
+  getData();
+}
+
+function getData() {
+  const params: Omit<Pagination, 'total'> = {
+    page: pagination.page,
+    pageSize: pagination.pageSize
   }
-]
+
+  apiGetList(params).then(res => {
+    Object.assign(pagination ,res.data.pagination);
+    data.value = res.data.list.map(e => {
+      const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
+      return {
+        name: e.name,
+        imageUrl: imageIds[0].fullPath
+      };
+    });
+  }).catch(() => {
+  });
+}
+
+function getDataByPagination() {
+  pagination.page = 1;
+  getData();
+}
 
 </script>
 <template>
@@ -37,26 +54,37 @@ const data = [
     :bg-style-content="''"
     :bg-default-size="true"
   >
-    <com-navigation></com-navigation>
-    <section>
-      <div class="container">
-        <div>
-          <p class="my3 fs24">项目列表</p>
-          <div class="project-gird">
-            <div class="project__item" 
-              v-for="(item, index) in data" 
-              :key="index"
-            >
-              <div class="project__image">
-                <img :src="item.imageUrl" />
+    <div class="h100 flex__column">
+      <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
+      <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+      <section class="flex1 overflow-auto">
+        <div class="container">
+          <div>
+            <p class="my3 fs24">项目列表</p>
+            <div class="project-gird">
+              <div class="project__item" 
+                v-for="(item, index) in data" 
+                :key="index"
+              >
+                <div class="project__image">
+                  <img :src="item.imageUrl" />
+                </div>
+                <p class="text-center my1">{{ item.name }}</p>
               </div>
-              <p class="text-center my1">{{ item.name }}</p>
             </div>
           </div>
         </div>
-        <com-pagination></com-pagination>
-      </div>
-    </section>
+      </section>
+      <com-pagination
+        ref="paginationRef"
+        :total="pagination.total"
+        v-model:current-page="pagination.page"
+        v-model:page-size="pagination.pageSize"
+        @page-size-change="getDataByPagination"
+        @current-page-change="getData"
+      ></com-pagination>
+      <com-footer></com-footer>
+    </div>
   </com-background>
 </template>
 <style scoped>
@@ -73,6 +101,7 @@ const data = [
 }
 
 .project__image {
+  height: 185px;
   border-radius: 10px 10px 0 0;
   overflow: hidden;
   cursor: pointer;

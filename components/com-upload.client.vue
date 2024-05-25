@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 type FileType = {
-  dataList?: Array<Upload.FileInfoList>;
+  dataList?: Array<Upload.FileInfo>;
   multiple?: boolean;
   accept?: string;
   previewType?: 'file-list' | 'image-list';
@@ -9,7 +9,7 @@ type FileType = {
 }
 
 const emit = defineEmits<{
-  'fileMonuted': [list: File[]]
+  'fileMonuted': [list: File[] | Upload.FileInfo[]]
 }>()
 
 const props = withDefaults(defineProps<FileType>(), {
@@ -23,7 +23,9 @@ const props = withDefaults(defineProps<FileType>(), {
 const slotsVue = useSlots();
 const previewRef = ref();
 
-const fileList = ref<File[] & Upload.FileInfoList[]>([]);
+const { $message } = useNuxtApp();
+const fileList = ref<File[] & Upload.FileInfo[]>([]);
+const outDatalist = ref<Upload.FileInfo[]>([]);
 const fileInput = ref<HTMLInputElement>();
 const previewList = ref<string[]>([]);
 const isImageList = computed(() => {
@@ -34,7 +36,8 @@ const showAddArea = computed(() => {
   return fileList.value.length < props.limit;
 });
 
-watch(props.dataList, (val) => {
+watch(() => props.dataList, (val) => {
+  outDatalist.value = val;
   fileList.value = [];
   fileList.value.splice(0, 0, ...val);
 });
@@ -62,7 +65,9 @@ function handleFileChange(e: Event) {
     }
     clearInputValue();
   }
-  emit('fileMonuted', unref(fileList))
+  console.log(fileList.value);
+  
+  emit('fileMonuted', [...unref(outDatalist), ...unref(fileList)])
 }
 
 function handleRemoveFile(index: number) {
@@ -78,12 +83,25 @@ function clearInputValue() {
 
 function handlePreview(item: File) {
   const url = blobToUrl(item);
+  if (!url) {
+    $message.show({
+      message: '无法预览无法加载的图片',
+      type: 'error'
+    });
+    return;
+  }
   previewList.value = [url]
   previewRef.value.open();
 }
 
-function blobToUrl(item: File) {
-  return URL.createObjectURL(item);
+function blobToUrl(item: File): string | undefined {
+  let res: string;
+  try {
+    res = URL.createObjectURL(item);
+    return res;
+  } catch {
+    return;
+  }
 }
 
 </script>

@@ -30,6 +30,16 @@ export const options = {
       label: '游戏',
       value: '4'
     }
+  ],
+  recordCategory: [
+    {
+      label: '原创',
+      value: '1',
+    },
+    {
+      label: '转载',
+      value: '2'
+    }
   ]
 }
 

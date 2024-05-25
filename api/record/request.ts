@@ -6,14 +6,24 @@ const {
   recordAddPath,
   recordEditPath,
   recordDeletePath,
+  recordGetInfoPath
 } = apiMap;
+
+export async function apiGetInfo(id: string) {
+  const url = recordGetInfoPath + `/${id}`
+
+  const res = await httpClient<Type.EditModel>(url, {
+    method: 'get'
+  });
+  return res;
+}
 
 export async function apiGetList(params: Omit<Pagination, 'total'>) {
   const res = await httpClient<ResponsePagination<Type.ListType>>(recordListPath, {
     method: 'get',
     params
   });
-  return res
+  return res;
 }
 
 export async function apiAdd(params: Type.AddModel) {
@@ -21,7 +31,7 @@ export async function apiAdd(params: Type.AddModel) {
     method: 'post',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiUpdate(params: Type.EditModel) {
@@ -30,7 +40,7 @@ export async function apiUpdate(params: Type.EditModel) {
     method: 'put',
     body: params
   });
-  return res
+  return res;
 }
 
 export async function apiDelete(id: number) {
@@ -38,5 +48,5 @@ export async function apiDelete(id: number) {
   const res = await httpClient<string>(deleteUrl, {
     method: 'delete'
   });
-  return res
+  return res;
 }

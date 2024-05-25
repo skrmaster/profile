@@ -8,7 +8,8 @@ declare namespace Layouts {
 }
 
 declare namespace DetailTitle {
-  type Action = 'submit-tmp' | 'submit';
+  type Action = 'submit-tmp' | 'submit' | 'submit-edit';
+  type Mode = 'add' | 'edit' | 'view'
 }
 
 declare namespace Carousel {
@@ -19,7 +20,7 @@ declare namespace Carousel {
 }
 
 declare namespace Upload {
-  type FileInfoList = {
+  type FileInfo = {
     fullPath: string;
     id: string;
   }

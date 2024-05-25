@@ -43,7 +43,7 @@ function init() {
       return item;
     });
 
-    const stackIds: string[] = res.data.stackIds ? JSON.parse(JSON.parse(res.data.stackIds)) : [];
+    const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
     
     list.value = stackIds?.map(e => {
       return {
@@ -54,14 +54,13 @@ function init() {
       }
     });
 
-    const imageIds: string[] = res.data.imageIds ? JSON.parse(JSON.parse(res.data.imageIds)) : [];
+    const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
     imageList.value = imageIds.map((e, i) => {
       return {
-        id: i.toString(),
-        image: e.replaceAll('\\', '/')
+        id: e.id,
+        image: e.fullPath
       }
     });
-
   }).catch((e) => {
     console.log(e);
   });

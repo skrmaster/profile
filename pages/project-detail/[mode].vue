@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { apiAdd as fileApiAdd } from '~/api/upload/request';
-import { apiAdd, apiGetInfo } from '~/api/project/request';
+import { apiAdd, apiGetInfo, apiUpdate } from '~/api/project/request';
 import type { AddModel as FileAddModel } from '~/api/upload/model';
-import type { AddModel } from '~/api/project/model';
+import type { AddModel, EditModel } from '~/api/project/model';
 import projectDetailView from './project-detail-view.vue';
 
 const { $message } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
-const mode = route.params.mode;
+const mode = route.params.mode as DetailTitle.Mode;
 const projectId = route.query.id as string;
 
 if (mode === 'add') {
@@ -23,8 +23,8 @@ if (mode === 'add') {
 }
 
 const list = ref<StackItem[]>([]);
-const images = ref<string[]>([]);
-const fileList = ref<Array<Upload.FileInfoList>>([]);
+const images = ref<Upload.FileInfo[]>([]);
+const fileList = ref<Array<Upload.FileInfo>>([]);
 
 const formData = reactive<Omit<AddModel, 'name' | 'status'>>({
   playLink: '',
@@ -42,7 +42,7 @@ function initEditData() {
     Object.assign(formData, res.data);
     projectName.value = res.data.name;
 
-    const stackIds: string[] = res.data.stackIds ? JSON.parse(JSON.parse(res.data.stackIds)) : [];
+    const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
     
     list.value = stackIds?.map(e => {
       return {
@@ -53,14 +53,14 @@ function initEditData() {
       }
     });
 
-    const imageIds: string[] = res.data.imageIds ? JSON.parse(JSON.parse(res.data.imageIds)) : [];
-    fileList.value = imageIds.map((e, i) => {
+    const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
+    fileList.value = imageIds.map((e) => {
       return {
-        id: i.toString(),
-        fullPath: e.replaceAll('\\', '/')
+        id: e.id,
+        fullPath: e.fullPath
       }
     });
-    
+    images.value = [...fileList.value];
   }).catch((e) => {
     console.log(e);
   });
@@ -84,8 +84,12 @@ function handleStackListChange(val: StackItem[]) {
   list.value.splice(0, list.value.length, ...remainArr, ...addArr);
 }
 
-async function handleFileUpload(list: File[]) {
+async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
   for await (let item of list) {
+    if (!isFile(item)) {
+      continue;
+    }
+
     const params: FileAddModel = {
       category: 0,
       file: item
@@ -99,12 +103,13 @@ async function handleFileUpload(list: File[]) {
 }
 
 function handleSubmit(val: DetailTitle.Action, title: string) {
+  let isEdit = false;
   const params: AddModel = {
     status: 0,
+    ...formData,
     name: title,
     imageIds: JSON.stringify(unref(images)),
     stackIds: JSON.stringify(unref(list).map(e => e.name)),
-    ...formData
   }
 
   switch (val) {
@@ -114,21 +119,42 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     case 'submit-tmp':
       params.status = 0;
       break;
+    case 'submit-edit':
+      isEdit = true;
+      break;
     default:
       break;
   }
+  if (!isEdit) {
+    apiAdd(params).then(res => {
+      $message.show({
+        message: res.data,
+        type: res.succeeded ? 'success' : 'info'
+      });
+      if (res.succeeded) {
+        router.back();
+      }
+    }).catch(() => {
 
-  apiAdd(params).then(res => {
-    $message.show({
-      message: res.data,
-      type: res.succeeded ? 'success' : 'info'
     });
-    if (res.succeeded) {
-      router.back();
+  } else {
+    const p: EditModel = {
+      ...params,
+      id: projectId,
     }
-  }).catch(() => {
+    apiUpdate(p).then(res => {
+      $message.show({
+        message: res.data,
+        type: res.succeeded ? 'success' : 'info'
+      });
+      if (res.succeeded) {
+        router.back();
+      }
+    }).catch(e => {
 
-  });
+    });
+  }
+  
 }
 
 </script>
@@ -141,6 +167,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     :bg-default-size="false"
   >
     <detail-title 
+      :mode="mode"
       :title-value="projectName"
       @button-action="handleSubmit"
       class="edit__title"

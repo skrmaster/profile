@@ -1,21 +1,21 @@
 export type AddModel = {
   name: string;
-  status: number;
+  status?: number;
   startTime?: string;
   endTime?: string;
   description?: string;
   summary?: string;
   department?: string;
   playLink?: string;
-  stackIds?: string;
-  imageIds?: string;
-  videoIds?: string;
-  tagIds?: string;
+  stackIds?: any;
+  imageIds?: any;
+  videoIds?: any;
+  tagIds?: any;
   sort: number;
 }
 
 export type EditModel = AddModel & {
-  id: number;
+  id: string;
   [key: string]: any;
 }
 

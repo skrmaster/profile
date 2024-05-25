@@ -2,6 +2,7 @@
 type Prop = {
   placeholder?: string;
   titleValue?: string;
+  mode?: DetailTitle.Mode;
 }
 
 const emit = defineEmits<{
@@ -9,22 +10,19 @@ const emit = defineEmits<{
 }>();
 const props = withDefaults(defineProps<Prop>(), {
   placeholder: '项目名称',
-  titleValue: ''
+  titleValue: '',
+  mode: 'add'
 });
 
 const router = useRouter();
-const titleVal = toRef(() => props.titleValue);
-
 const title = ref('');
 const titleError = ref(false);
 const textNumber = computed(() => {
-  const len = title.value.length ? title.value.length : 0;
+  const len = title.value?.length ? title.value?.length : 0;
   return Math.abs(5 - len) >= 0 ? 5 - len : 0;
 });
 
-watch(titleVal, (val) => {
-  console.log(val, 'val');
-  
+watch(() => props.titleValue, (val) => {
   if (val) {
     title.value = val;
   }
@@ -79,8 +77,9 @@ function handleSubmit(val: DetailTitle.Action) {
           >还需要输入{{ textNumber }}个字</span>
         </div>
         <div class="display-2-none display-1-none display-0-none">
-          <div class="ml1 btn__group flex__row--between">
-            <com-button class="btn" 
+          <div v-if="mode === 'add'" class="ml1 btn__group flex__row--between">
+            <com-button 
+              class="btn" 
               :need-inner-outline="false" 
               bg-color="#898989"
               @click.stop="handleSubmit('submit-tmp')"
@@ -93,6 +92,11 @@ function handleSubmit(val: DetailTitle.Action) {
             >
               <span class="fs20">发布</span>
             </com-button>
+          </div>
+          <div class="ml1 btn__group" v-else>
+            <com-button
+            @click.stop="handleSubmit('submit-edit')"
+            >确认修改</com-button>
           </div>
         </div>
       </div>
