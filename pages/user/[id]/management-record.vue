@@ -4,25 +4,23 @@ import PersonalCenter from './components/personal-center.vue';
 import { apiGetList, apiDelete } from '~/api/record/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
-const { tagList } = options;
-const { recordDetailPath, recordDetailViewPath } = routerMap;
+const { projectRecordtatus, recordCategory } = options;
+const { recordDetailPath } = routerMap;
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
   {
-    name: '标签名称',
-    field: 'name',
+    name: '记录标题',
+    field: 'title',
     width: '180px'
   },
   {
-    name: '标签图标',
+    name: '记录状态',
     width: '200px',
-    field: 'icon',
-    type: 'div',
-    slotName: 'image'
+    field: 'status'
   },
   {
-    name: '标签分类',
+    name: '记录分类',
     width: '100px',
     field: 'category',
   },
@@ -36,8 +34,9 @@ const tableHead = ref<TableHead[]>([
   },
   {
     name: '操作',
-    width: '100px',
-    operate: ['edit', 'delete']
+    fixed: 'right',
+    width: '150px',
+    operate: ['view', 'edit', 'delete']
   }
 ]);
 const tableData = ref<ListType>([]);
@@ -64,7 +63,7 @@ function handleEdit(item: Record<string, any>) {
 
 function handleView(item: Record<string, any>) {
   navigateTo({
-    path: recordDetailViewPath,
+    path: recordDetailPath + '/view',
     query: {
       id: item.id
     }
@@ -97,6 +96,8 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+      e.status = getListLabel(e.status?.toString() ? e.status.toString() : "", projectRecordtatus) ?? '未知';
+      e.category = getListLabel(e.category.toString(), recordCategory) ?? '未知';
       return e;
     });
     loading.value = false;
@@ -113,7 +114,8 @@ function handleTableClick(type: TableCell, data: Record<string, any>) {
     case 'delete':
       handleDelete(data);
       break;
-    case 'cell':
+    case 'view':
+      handleView(data);
       break;
     default:
       break;

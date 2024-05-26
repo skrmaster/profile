@@ -3,6 +3,7 @@ type Prop = {
   placeholder?: string;
   titleValue?: string;
   mode?: DetailTitle.Mode;
+  status?: number | string;
 }
 
 const emit = defineEmits<{
@@ -11,7 +12,8 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<Prop>(), {
   placeholder: '项目名称',
   titleValue: '',
-  mode: 'add'
+  mode: 'add',
+  status: 0
 });
 
 const router = useRouter();
@@ -79,8 +81,8 @@ function handleSubmit(val: DetailTitle.Action) {
         <div class="display-2-none display-1-none display-0-none">
           <div v-if="mode === 'add'" class="ml1 btn__group flex__row--between">
             <com-button 
-              class="btn" 
-              :need-inner-outline="false" 
+              class="btn"
+              :need-inner-outline="false"
               bg-color="#898989"
               @click.stop="handleSubmit('submit-tmp')"
             >
@@ -93,10 +95,23 @@ function handleSubmit(val: DetailTitle.Action) {
               <span class="fs20">发布</span>
             </com-button>
           </div>
-          <div class="ml1 btn__group" v-else>
-            <com-button
-            @click.stop="handleSubmit('submit-edit')"
-            >确认修改</com-button>
+          <div class="ml1 btn__group flex__row--between" v-else>
+            <template v-if="status == 0">
+              <com-button
+                class="btn"
+                :need-inner-outline="false"
+                bg-color="#898989"
+                @click="handleSubmit('submit-tmp')"
+              >保存</com-button>
+              <com-button
+                @click="handleSubmit('submit')"
+              >发布</com-button>
+            </template>
+            <template v-else-if="status == 1">
+              <com-button
+                @click.stop="handleSubmit('submit-edit')"
+              >确认修改</com-button>
+            </template>
           </div>
         </div>
       </div>

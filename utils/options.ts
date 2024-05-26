@@ -40,15 +40,31 @@ export const options = {
       label: '转载',
       value: '2'
     }
+  ],
+  projectRecordtatus: [
+    {
+      label: '草稿',
+      value: '0',
+    },
+    {
+      label: '已发布',
+      value: '1'
+    }
   ]
 }
 
-export function getListLabel(value: string, list: Array<LabelValue>): string | undefined {
+export function getListLabel(value: string | undefined, list: Array<LabelValue>): string | undefined {
+  if (!value) {
+    return;
+  }
   const item = list.find(e => e.value == value);
   return item ? item.label : item;
 }
 
-export function getListValue(label: string, list: Array<LabelValue>): string | undefined {
+export function getListValue(label: string | undefined, list: Array<LabelValue>): string | undefined {
+  if (!label) {
+    return;
+  }
   const item = list.find(e => e.label == label);
   return item ? item.value : item;
 }

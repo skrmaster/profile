@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import eslintPlugin from 'vite-plugin-eslint';
 
 const cssDir = path.resolve(__dirname, 'assets/css')
 const cssFiles = fs.readdirSync(cssDir).filter(file => file.endsWith('.css'))
@@ -73,6 +74,13 @@ export default defineNuxtConfig({
     }
   },
   vite: {
-    plugins: [vueJsx()]
+    plugins: [
+      eslintPlugin({
+        lintOnStart: false,
+        include: ['src/**/*.ts', 'src/**/*.ts', 'src/**/*.ts'],
+        exclude: ['node_modules', 'public', '.nuxt', '.vs', '.vscode']
+      }),
+      vueJsx()
+    ]
   }
-})
+});

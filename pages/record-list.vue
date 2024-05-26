@@ -1,76 +1,132 @@
 <script lang="ts" setup>
+import { apiGetList, apiGetRankList, apiQueryList } from '~/api/record/request';
+import type { ListType, QueryParam } from '~/api/record/model';
+
+type RankItem = {
+  name: string;
+  fontSize: number;
+  isBold: boolean;
+  }
+
 useHead({
   title: "个人纪录"
 });
 
 const searchVal = ref('');
+const blogList = ref<ListType>([]);
+const rank = ref<RankItem[]>([]);
+const listLoading = ref(false);
+const rankLoading = ref(false);
+const pagination = reactive({
+  total: 0,
+  page: 1,
+  pageSize: 10
+});
 
-const blogList = ref([
-  {
-    title: '标题',
-    describe: `内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容`,
-    imageUrl: '/images/pd3.png',
-    view: 0,
-    collection: 0,
-    like: 0,
-    tread: 0,
-    isLike: false,
-    isTread: false,
-    isCollection: false,
-  },
-  {
-    title: '标题',
-    describe: `内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容`,
-    imageUrl: '/images/pd3.png',
-    view: 0,
-    collection: 0,
-    like: 0,
-    tread: 0,
-    isLike: true,
-    isTread: true,
-    isCollection: true,
-  },
-  {
-    title: '标题',
-    describe: `内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容`,
-    imageUrl: '/images/pd3.png',
-    view: 0,
-    collection: 0,
-    like: 0,
-    tread: 0,
-    isLike: false,
-    isTread: false,
-    isCollection: false,
+watch(searchVal, (val) => {
+  if (!val) {
+    getListData();
   }
-]);
+});
 
-const rank = ref([
-  {
-    name: '排行第一',
-    fontSize: 36,
-    isBold: true
-  },
-  {
-    name: '排行第二',
-    fontSize: 30,
-    isBold: true
-  },
-  {
-    name: '排行第三',
-    fontSize: 26,
-    isBold: true
-  },
-  {
-    name: '排行第四',
-    fontSize: 24,
-    isBold: false
-  },
-  {
-    name: '排行第五',
-    fontSize: 24,
-    isBold: false
-  },
-]);
+init();
+initRank();
+function init() {
+  getListData();
+}
+
+function initRank() {
+  rankLoading.value = true;
+  apiGetRankList(5).then(res => {
+    rank.value = res.data.map((e, i) => {
+      if (i < 3) {
+        return {
+          isBold: true,
+          name: e.title,
+          fontSize: 20
+        }
+      } else {
+        return {
+          isBold: false,
+          name: e.title,
+          fontSize: 20
+        }
+      }
+    });
+    rankLoading.value = false;
+  }).catch(e => {
+    rankLoading.value = false;
+  });
+}
+
+function getListData() {
+  listLoading.value = true;
+  const params: Omit<Pagination, 'total'> = {
+    page: pagination.page,
+    pageSize: pagination.pageSize
+  }
+
+  apiGetList(params).then(res => {
+    Object.assign(pagination ,res.data.pagination);
+    blogList.value = res.data.list.map(e => {
+      return {
+        isLike: false,
+        isTread: false,
+        isCollection: false,
+        imageUrl: '/images/pd3.png',
+        describe: '',
+        ...e
+      }
+    });
+    listLoading.value = false;
+  }).catch(e => {
+    listLoading.value = false;
+  });
+}
+
+function handleSearch() {
+  listLoading.value = true;
+  const params: QueryParam = {
+    title: searchVal.value,
+    page: pagination.page,
+    pageSize: pagination.pageSize
+  }
+
+  apiQueryList(params).then(res => {
+    Object.assign(pagination ,res.data.pagination);
+    blogList.value = res.data.list.map(e => {
+      return {
+        isLike: false,
+        isTread: false,
+        isCollection: false,
+        imageUrl: '/images/pd3.png',
+        describe: '',
+        ...e
+      }
+    });
+    listLoading.value = false;
+  }).catch(e => {
+    listLoading.value = false;
+  });
+}
+
+function getData() {
+  if (searchVal.value) {
+    handleSearch();
+  } else {
+    getListData();
+  }
+}
+
+function getListDataByPagination() {
+  pagination.page = 1;
+  if (searchVal.value) {
+    handleSearch();
+  } else {
+    getListData();
+  }
+}
+
 </script>
 <template>
   <com-background
@@ -78,33 +134,13 @@ const rank = ref([
     :bg-style-content="''"
     :bg-default-size="false"
   >
-    <com-navigation></com-navigation>
-    <!-- <div class="search">
-      <div class="w100 flex__center search__box">
-        <com-form-input
-          class="search__input"
-          type="search"
-          v-model="searchVal" 
-          :is-label="false"
-          :width="1000"
-        >
-          <template #prepend>
-            <com-icon class="ml2 search__icon" icon="profilesign-in">
-            </com-icon>
-          </template>
-          <template #append>
-            <com-button class="search__btn mr2" plain is-ripple>
-              <span class="fs20" style="pointer-events: none;">搜索</span>
-            </com-button>
-          </template>
-        </com-form-input>
-      </div>
-    </div> -->
-    <com-search v-model="searchVal"></com-search>
+    <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
+    <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+    <com-search v-model="searchVal" @search="getListDataByPagination"></com-search>
     <section class="pb5">
       <div class="container">
         <div class="flex content">
-          <div class="blog">
+          <div class="blog" v-if="blogList.length > 0" v-loading="listLoading">
             <div 
               v-for="(item, index) in blogList" 
               :key="index"
@@ -115,8 +151,8 @@ const rank = ref([
               </div>
               <div class="flex flex1">
                 <div class="flex flex1">
-                  <div class="blog__content__box h100">
-                    <div class="describe__box flex__column--between">
+                  <div class="blog__content__box flex1 h100">
+                    <div class="describe__box flex1 flex__column--between">
                       <p class="fs22 describe">{{ item.describe }}</p>
                       <div class="flex__row--end flex-nowrap mt1">
                         <span class="mr1 flex__row">
@@ -143,7 +179,7 @@ const rank = ref([
                               ? 'profile-like-active' 
                               : 'profile-like1'"
                           ></com-icon>
-                          {{ item.tread }}
+                          {{ item.disLike }}
                         </span>
                         <span class="flex__row">
                           <com-icon 
@@ -163,31 +199,45 @@ const rank = ref([
                 </div>
               </div>
             </div>
-            <com-pagination></com-pagination>
+            <com-pagination
+              ref="paginationRef"
+              :pageSizes="[10, 20]"
+              :total="pagination.total"
+              v-model:current-page="pagination.page"
+              v-model:page-size="pagination.pageSize"
+              @page-size-change="getListDataByPagination"
+              @current-page-change="getData"
+            ></com-pagination>
           </div>
+          <com-empty v-else></com-empty>
           <div class="rank">
-            <p class="font-bold fs30">点击排行榜</p>
-            <div>
+            <p class="font-bold fs24">点击排行榜</p>
+            <div v-if="rank.length > 0" v-loading="rankLoading">
               <div v-for="(item, index) in rank" 
                 :key="index"
                 class="rank__item"
                 :class="`fs${item.fontSize} 
                 ${(item.isBold ? 'font-bold' : '')}`"
               >
-                <span 
-                  :class="[
-                    `rank__item-${index+1}`, 
-                    {
-                      'rank__special': index < 3
-                    }
-                  ]"
-                  class="mr1"
+                <div 
+                  style="display: inline-block; width: 52px!important;" 
+                  class="mr1 text-center"
                 >
-                  {{ index + 1 }}
-                </span>
+                  <span 
+                    :class="[
+                      `rank__item-${index+1}`, 
+                      {
+                        'rank__special': index < 3
+                      }
+                    ]"
+                  >
+                    {{ index + 1 }}
+                  </span>
+                </div>
                 <span style="display: inline-block">{{ item.name }}</span>
               </div>
             </div>
+            <com-empty v-else></com-empty>
           </div>
         </div>
       </div>
@@ -196,44 +246,8 @@ const rank = ref([
   </com-background>
 </template>
 <style scoped>
-.search {
-  height: 250px;
-  background-color: var(--white-color);
-  border-bottom: 1px solid var(--primary-border-color);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.search__box {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.search__icon {
-  width: 46px;
-  height: 50px;
-}
-
-.search__btn {
-  width: 120px;
-  height: 60px;
-}
-
-:deep(.search__input.form__input-box) {
-  height: 113px;
-  border-width: 3px;
-  border-radius: 55px;
-}
-
-:deep(.search__input .form__input-field) {
-  height: 100%;
-  border-radius: 55px;
-}
-
 .content {
-  margin-top: 200px;
+  margin-top: 8rem;
   margin-left: -27px;
   margin-right: -27px;
 }
@@ -252,11 +266,12 @@ const rank = ref([
   width: 100%;
   background: var(--white-color);
   padding: 32px;
-  box-shadow: 0px 12px 15px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow-small);
+  transition: all .1s;
 }
 
 .blog__item:hover {
-  
+  box-shadow: var(--box-shadow);
 }
 
 .blog__content__box {
@@ -268,8 +283,6 @@ const rank = ref([
 
 .describe__box {
   height: 100%;
-  max-width: 666px;
-  width: 100%;
   margin: 0 12.5px;
 }
 
@@ -306,7 +319,9 @@ const rank = ref([
   background: var(--white-color);
   border-radius: 20px;
   padding: 36px;
-  box-shadow: 0px 12px 15px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow-small);
+  position: sticky;
+  top: 100px;
 }
 
 .rank__item {
@@ -328,26 +343,29 @@ span[class^="rank__item-"] {
 }
 
 .rank__special {
-  border: 1px solid var(--primary-border-color);
-  border-radius: 10px;
+  border-radius: 50%;
 }
 
 .rank__item-1 {
-  width: 62px;
-  height: 62px;
-  line-height: 62px;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  background-color: #ffd700;
+  color: #fff;
 }
 
 .rank__item-2 {
-  width: 54px;
-  height: 54px;
-  line-height: 54px;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  background-color: #c0c0c0;
 }
 
 .rank__item-3 {
-  width: 44px;
-  height: 44px;
-  line-height: 44px;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  background-color: #cd7f32;
 }
 
 span[class^="rank__item-"]:not(.rank__special) {

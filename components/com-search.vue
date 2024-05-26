@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 type Prop = {
   modelValue?: string;
+  needBg?: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   modelValue: '',
+  needBg: true
 });
 const emit = defineEmits<{
-  'update:modelValue': [val: string]
+  'update:modelValue': [val: string],
+  'search': []
 }>();
 
 const search = computed({
@@ -17,9 +20,13 @@ const search = computed({
   }
 });
 
+function handleSearch() {
+  emit('search');
+}
+
 </script>
 <template>
-  <div class="search">
+  <div class="search p-r">
     <div class="w100 flex__center search__box">
       <com-form-input
         class="search__input"
@@ -27,21 +34,26 @@ const search = computed({
         v-model="search"
         :is-label="false"
         :width="1000"
+        clearable
+        @keydown.enter="handleSearch"
       >
         <template #prepend>
           <com-icon 
-            width="50px"
-            height="50px"
+            width="45px"
+            height="45px"
             class="ml2 search__icon" 
             icon="profile-search"
           > </com-icon>
         </template>
         <template #append>
-          <com-button class="search__btn mr2" plain is-ripple>
+          <com-button @click.stop="handleSearch" class="search__btn mr2" plain is-ripple>
             <span class="fs20" style="pointer-events: none">搜索</span>
           </com-button>
         </template>
       </com-form-input>
+    </div>
+    <div v-if="props.needBg" class="search__background">
+      <canvas id="search"></canvas>
     </div>
   </div>
 </template>
@@ -55,24 +67,30 @@ const search = computed({
   justify-content: center;
 }
 
+.search__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .search__box {
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 0;
+  transform: translateY(50%);
 }
 
 .search__icon {
-  width: 46px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
 }
 
 .search__btn {
-  width: 120px;
-  height: 60px;
+  width: 100px;
+  height: 50px;
 }
 
 :deep(.search__input.form__input-box) {
-  height: 113px;
+  height: 90px;
   border-width: 3px;
   border-radius: 55px;
 }
@@ -81,5 +99,4 @@ const search = computed({
   height: 100%;
   border-radius: 55px;
 }
-
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { apiGetInfo, apiAdd, apiUpdate } from '~/api/record/request';
 import type { AddModel, EditModel } from '~/api/record/model';
+import RecordDetailView from './record-detail-view.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -18,18 +19,20 @@ if (mode === 'add') {
   init();
 }
 
-const { $message } = useNuxtApp();
+const { $message, $sanitize } = useNuxtApp();
 const { recordCategory } = options;
 const recordName = ref('');
 const radioValue = ref('1');
 const radioList = ref(recordCategory);
 const content = ref('');
+const status = ref<string | number | undefined>();
 
 function init() {
   apiGetInfo(recordId).then(res => {
     content.value = res.data.content ?? '';
     recordName.value = res.data.title;
     radioValue.value = res.data.category.toString();
+    status.value = res.data.status;
   }).catch(e => {
 
   });
@@ -38,10 +41,13 @@ function init() {
 function handleSubmit(val: DetailTitle.Action, title: string) {
   let isEdit = false;
   const params: AddModel = {
-    status: 0,
     title,
     category: radioValue.value,
-    content: content.value
+    content: $sanitize(content.value),
+  }
+
+  if (status.value?.toString()) {
+    isEdit = true;
   }
 
   switch (val) {
@@ -52,6 +58,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       params.status = 0;
       break;
     case 'submit-edit':
+      params.status = 1;
       isEdit = true;
       break;
     default:
@@ -91,8 +98,9 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
 }
 </script>
 <template>
-  <div class="background">
+  <div v-if="mode !== 'view'" class="background">
     <detail-title
+      :status="status"
       :mode="mode"
       :title-value="recordName"
       @button-action="handleSubmit"
@@ -115,6 +123,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     </section>
     <com-footer></com-footer>
   </div>
+  <record-detail-view v-else></record-detail-view>
 </template>
 <style scoped>
 .background {

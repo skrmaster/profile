@@ -11,9 +11,7 @@ type KeyOfRouter = 'loginPath'
 | 'navigationPath'
 | 'aphorismsPath'
 | 'projectDetailPath'
-| 'projectDetailViewPath'
 | 'recordDetailPath'
-| 'recordDetailViewPath'
 ;
 
 export const routerMap: Record<KeyOfRouter, string> = {
@@ -30,9 +28,7 @@ export const routerMap: Record<KeyOfRouter, string> = {
   navigationPath: '/user/:id/management-navigation',
   aphorismsPath: '/user/:id/management-aphorisms',
   projectDetailPath: '/project-detail',
-  projectDetailViewPath: '/project-detail-view',
-  recordDetailPath: '/record-detail',
-  recordDetailViewPath: '/record-detail-view'
+  recordDetailPath: '/record-detail'
 }
 
 type KeyOfApi = 'loginPath'
@@ -52,8 +48,10 @@ type KeyOfApi = 'loginPath'
 | 'projectDeletePath'
 | 'recordGetInfoPath'
 | 'recordListPath'
+| 'recordQueryListPath'
 | 'recordAddPath'
 | 'recordEditPath'
+| 'recordRankListPath'
 | 'recordDeletePath'
 | 'navgationListPath'
 | 'navgationAddPath'
@@ -87,6 +85,7 @@ export const apiMap: Record<KeyOfApi, string> = {
   projectEditPath: '/project/update',
   projectDeletePath: '/project/delete',
   recordGetInfoPath: '/record/get',
+  recordRankListPath: '/record/getranklist',
   recordListPath: '/record/getlist',
   recordAddPath: '/record/add',
   recordEditPath: '/record/update',
@@ -102,4 +101,5 @@ export const apiMap: Record<KeyOfApi, string> = {
   aphorismsDeletePath: '/aphorisms/delete',
   uploadSingleFilePath: '/file/upload',
   deleteSingleFilePath: '/file/delete',
+  recordQueryListPath: '/record/getlistbyquery'
 }

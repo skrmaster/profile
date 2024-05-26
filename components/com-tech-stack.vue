@@ -272,7 +272,7 @@ defineExpose({
   padding: 5px 10px;
   border-radius: 10px;
   background-color: var(--white-color);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow-small);
 }
 
 .stack__item.choosed {

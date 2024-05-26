@@ -6,7 +6,9 @@ const {
   recordAddPath,
   recordEditPath,
   recordDeletePath,
-  recordGetInfoPath
+  recordGetInfoPath,
+  recordRankListPath,
+  recordQueryListPath
 } = apiMap;
 
 export async function apiGetInfo(id: string) {
@@ -14,6 +16,24 @@ export async function apiGetInfo(id: string) {
 
   const res = await httpClient<Type.EditModel>(url, {
     method: 'get'
+  });
+  return res;
+}
+
+export async function apiGetRankList(length: number) {
+  const res = await httpClient<Type.ListType>(recordRankListPath, {
+    method: 'get',
+    params: {
+      length
+    }
+  });
+  return res;
+}
+
+export async function apiQueryList(params: Type.QueryParam) {
+  const res = await httpClient<ResponsePagination<Type.ListType>>(recordQueryListPath, {
+    method: 'get',
+    params
   });
   return res;
 }

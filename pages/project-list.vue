@@ -61,7 +61,7 @@ function getDataByPagination() {
         <div class="container">
           <div>
             <p class="my3 fs24">项目列表</p>
-            <div class="project-gird">
+            <div class="project-gird" v-if="data.length > 0">
               <div class="project__item" 
                 v-for="(item, index) in data" 
                 :key="index"
@@ -72,6 +72,7 @@ function getDataByPagination() {
                 <p class="text-center my1">{{ item.name }}</p>
               </div>
             </div>
+            <com-empty v-else></com-empty>
           </div>
         </div>
       </section>
