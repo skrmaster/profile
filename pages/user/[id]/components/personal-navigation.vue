@@ -28,19 +28,13 @@ const list = ref<LinkType[][]>([
       name: '账号信息',
       url: routerMap.userInfoPath,
     },
+    // {
+    //   name: '关注的人',
+    //   url: routerMap.followPath
+    // },
     {
-      name: '关注的人',
-      url: routerMap.followPath
-    }
-  ],
-  [
-    {
-      name: '博客列表',
+      name: '收藏列表',
       url: routerMap.recordListPath
-    },
-    {
-      name: '项目列表',
-      url: routerMap.projectListPath
     }
   ],
   [
@@ -61,7 +55,7 @@ const list = ref<LinkType[][]>([
       url: routerMap.recordMgtPath
     },
     {
-      name: '名言警句管理',
+      name: '语录管理',
       url: routerMap.aphorismsPath
     },
     {
@@ -103,10 +97,10 @@ onNuxtReady(() => {
   }">
     <div v-if="props.avatarBlock" class="flex__column--center">
       <com-avatar :nickname="userInfo?.account || '未知'" :avatar-url="userInfo?.avatar" ></com-avatar>
-      <div class="flex__row--between mt1">
+      <!-- <div class="flex__row--between mt1">
         <span class="mr1">关注: 0</span>
         <span>粉丝: 0</span>
-      </div>
+      </div> -->
     </div>
     <div class="mt2">
       <div v-for="(item, index) in list" :key="index"

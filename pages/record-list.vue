@@ -1,19 +1,24 @@
 <script lang="ts" setup>
-import { apiGetList, apiGetRankList, apiQueryList } from '~/api/record/request';
-import type { ListType, QueryParam } from '~/api/record/model';
+import { apiGetList, apiGetRankList, apiQueryList, apiRecordCount } from '~/api/record/request';
+import type { List, ListItem, QueryParam, CountParam } from '~/api/record/model';
 
 type RankItem = {
+  id: string;
   name: string;
   fontSize: number;
   isBold: boolean;
-  }
+}
 
 useHead({
   title: "个人纪录"
 });
 
+const router = useRouter()
+const route = useRoute()
+
+const { recordDetailPath } = routerMap
 const searchVal = ref('');
-const blogList = ref<ListType>([]);
+const blogList = ref<List>([]);
 const rank = ref<RankItem[]>([]);
 const listLoading = ref(false);
 const rankLoading = ref(false);
@@ -26,13 +31,27 @@ const pagination = reactive({
 watch(searchVal, (val) => {
   if (!val) {
     getListData();
+    redirectToCurrentWithQuery();
+  } else {
+    redirectToCurrentWithQuery({ q: val });
   }
 });
 
 init();
 initRank();
 function init() {
-  getListData();
+  const query = route.query?.q as string;
+  searchVal.value = query || '';
+  if (searchVal.value) {
+    handleSearch();
+  } else {
+    getListData();
+  }
+}
+
+function redirectToCurrentWithQuery (query?: Record<string, string>) {
+  const currentPath = route.path
+  router.push({ path: currentPath, query })
 }
 
 function initRank() {
@@ -41,12 +60,14 @@ function initRank() {
     rank.value = res.data.map((e, i) => {
       if (i < 3) {
         return {
+          id: e.id,
           isBold: true,
           name: e.title,
           fontSize: 20
         }
       } else {
         return {
+          id: e.id,
           isBold: false,
           name: e.title,
           fontSize: 20
@@ -67,18 +88,16 @@ function getListData() {
   }
 
   apiGetList(params).then(res => {
+    listLoading.value = false;
     Object.assign(pagination ,res.data.pagination);
     blogList.value = res.data.list.map(e => {
       return {
-        isLike: false,
-        isTread: false,
-        isCollection: false,
+        isTread: e.isDisLike,
         imageUrl: '/images/pd3.png',
         describe: '',
         ...e
       }
     });
-    listLoading.value = false;
   }).catch(e => {
     listLoading.value = false;
   });
@@ -96,9 +115,7 @@ function handleSearch() {
     Object.assign(pagination ,res.data.pagination);
     blogList.value = res.data.list.map(e => {
       return {
-        isLike: false,
-        isTread: false,
-        isCollection: false,
+        isTread: e.disLike,
         imageUrl: '/images/pd3.png',
         describe: '',
         ...e
@@ -127,6 +144,58 @@ function getListDataByPagination() {
   }
 }
 
+function handleRecordDetail(id: string) {
+  navigateTo({
+    path: recordDetailPath + `/view`,
+    query: {
+      id
+    }
+  })
+}
+
+/**
+ * category 0 - 查看, 1 - 点赞, 2 - 踩, 3 - 收藏
+ */
+function handleUserOperateRecord(index: number, item: ListItem, category: number) {
+  const params: CountParam = {
+    recordId: item.id,
+    category
+  }
+
+  apiRecordCount(params).then(res => {
+    if (res.succeeded) {
+      if (category === 1) {
+        blogList.value[index].isLike = !item.isLike;
+        if (blogList.value[index].isLike) {
+          blogList.value[index].like += 1;
+        } else {
+          blogList.value[index].like -= 1;
+        }
+      } else if (category === 2) {
+        blogList.value[index].isTread = !item.isTread;
+        if (blogList.value[index].isTread) {
+          blogList.value[index].disLike += 1;
+          blogList.value[index].isLike = false;
+          blogList.value[index].like -= 1;
+        } else {
+          blogList.value[index].disLike -= 1;
+        }
+      } else {
+        blogList.value[index].isCollection = !item.isCollection;
+        if (blogList.value[index].isCollection) {
+          blogList.value[index].collection += 1;
+        } else {
+          blogList.value[index].collection -= 1;
+        }
+      }
+    }
+  }).catch(e => {
+    
+  });
+
+  
+}
+
 </script>
 <template>
   <com-background
@@ -145,6 +214,7 @@ function getListDataByPagination() {
               v-for="(item, index) in blogList" 
               :key="index"
               class="blog__item flex__column mb2"
+              @click="handleRecordDetail(item.id)"
             >
               <div class="mb1">
                 <p class="fs22">{{ item.title }}</p>
@@ -164,6 +234,7 @@ function getListDataByPagination() {
                         </span>
                         <span class="mr1 flex__row">
                           <com-icon 
+                            @click.stop="handleUserOperateRecord(index, item, 1)"
                             class="icon__gap" 
                             :icon="item.isLike 
                               ? 'profile-like-active' 
@@ -175,6 +246,7 @@ function getListDataByPagination() {
                         <span class="mr1 flex__row">
                           <com-icon 
                             class="direction--reversal icon__gap" 
+                            @click.stop="handleUserOperateRecord(index, item, 2)"
                             :icon="item.isTread 
                               ? 'profile-like-active' 
                               : 'profile-like1'"
@@ -184,6 +256,7 @@ function getListDataByPagination() {
                         <span class="flex__row">
                           <com-icon 
                             class="icon__gap" 
+                            @click.stop="handleUserOperateRecord(index, item, 3)"
                             :icon="item.isCollection 
                               ? 'profile-collection-active' 
                               : 'profile-collection'"
@@ -215,9 +288,10 @@ function getListDataByPagination() {
             <div v-if="rank.length > 0" v-loading="rankLoading">
               <div v-for="(item, index) in rank" 
                 :key="index"
-                class="rank__item"
+                class="rank__item c-p"
                 :class="`fs${item.fontSize} 
                 ${(item.isBold ? 'font-bold' : '')}`"
+                @click="handleRecordDetail(item.id)"
               >
                 <div 
                   style="display: inline-block; width: 52px!important;" 

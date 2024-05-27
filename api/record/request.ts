@@ -8,7 +8,9 @@ const {
   recordDeletePath,
   recordGetInfoPath,
   recordRankListPath,
-  recordQueryListPath
+  recordQueryListPath,
+  recordCollectionListPath,
+  recordCountPath
 } = apiMap;
 
 export async function apiGetInfo(id: string) {
@@ -21,7 +23,7 @@ export async function apiGetInfo(id: string) {
 }
 
 export async function apiGetRankList(length: number) {
-  const res = await httpClient<Type.ListType>(recordRankListPath, {
+  const res = await httpClient<Type.List>(recordRankListPath, {
     method: 'get',
     params: {
       length
@@ -31,7 +33,7 @@ export async function apiGetRankList(length: number) {
 }
 
 export async function apiQueryList(params: Type.QueryParam) {
-  const res = await httpClient<ResponsePagination<Type.ListType>>(recordQueryListPath, {
+  const res = await httpClient<ResponsePagination<Type.List>>(recordQueryListPath, {
     method: 'get',
     params
   });
@@ -39,7 +41,23 @@ export async function apiQueryList(params: Type.QueryParam) {
 }
 
 export async function apiGetList(params: Omit<Pagination, 'total'>) {
-  const res = await httpClient<ResponsePagination<Type.ListType>>(recordListPath, {
+  const res = await httpClient<ResponsePagination<Type.List>>(recordListPath, {
+    method: 'get',
+    params
+  });
+  return res;
+}
+
+export async function apiCollectionList(params: Omit<Pagination, 'total'>) {
+  const res = await httpClient<ResponsePagination<Type.List>>(recordCollectionListPath, {
+    method: 'get',
+    params
+  });
+  return res;
+}
+
+export async function apiRecordCount(params: Type.CountParam) {
+  const res = await httpClient<boolean>(recordCountPath, {
     method: 'get',
     params
   });

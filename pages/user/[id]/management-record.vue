@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/record/model';
+import type { List } from '~/api/record/model';
 import PersonalCenter from './components/personal-center.vue';
 import { apiGetList, apiDelete } from '~/api/record/request';
 
@@ -39,7 +39,7 @@ const tableHead = ref<TableHead[]>([
     operate: ['view', 'edit', 'delete']
   }
 ]);
-const tableData = ref<ListType>([]);
+const tableData = ref<List>([]);
 const pagination = reactive({
   total: 0,
   page: 1,

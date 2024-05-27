@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { apiGetInfo } from '~/api/record/request';
+import { apiGetInfo, apiRecordCount } from '~/api/record/request';
 import type { ListItem } from '~/api/record/model';
 
 const route = useRoute();
@@ -42,6 +42,10 @@ function handleCopy (event: ClipboardEvent) {
   if (event.clipboardData) {
     event.clipboardData.setData('text/plain', newText);
   }
+}
+
+function handleViewAdd() {
+
 }
 
 onNuxtReady(() => {

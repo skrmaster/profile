@@ -1,4 +1,8 @@
-type KeyOfRouter = 'loginPath' 
+type KeyOfRouter = 'homePath'
+| 'projectPagePath'
+| 'recordPagePath'
+| 'addressListPath'
+| 'loginPath' 
 | 'registerPath' 
 | 'userInfoPath' 
 | 'followPath' 
@@ -28,7 +32,11 @@ export const routerMap: Record<KeyOfRouter, string> = {
   navigationPath: '/user/:id/management-navigation',
   aphorismsPath: '/user/:id/management-aphorisms',
   projectDetailPath: '/project-detail',
-  recordDetailPath: '/record-detail'
+  recordDetailPath: '/record-detail',
+  homePath: '/',
+  addressListPath: '/address-list',
+  projectPagePath: '/project-list',
+  recordPagePath: '/record-list'
 }
 
 type KeyOfApi = 'loginPath'
@@ -53,6 +61,8 @@ type KeyOfApi = 'loginPath'
 | 'recordEditPath'
 | 'recordRankListPath'
 | 'recordDeletePath'
+| 'recordCollectionListPath'
+| 'recordCountPath'
 | 'navgationListPath'
 | 'navgationAddPath'
 | 'navgationEditPath'
@@ -89,6 +99,8 @@ export const apiMap: Record<KeyOfApi, string> = {
   recordListPath: '/record/getlist',
   recordAddPath: '/record/add',
   recordEditPath: '/record/update',
+  recordCollectionListPath: '/record/getcollectionlist',
+  recordCountPath: '/record/recordcount',
   recordDeletePath: '/record/delete',
   navgationListPath: '/navgation/getlist',
   navgationAddPath: '/navgation/add',

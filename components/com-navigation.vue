@@ -9,24 +9,33 @@ type NavItemType = {
   flex?: number;
 }
 
+const {
+  homePath,
+  addressListPath,
+  projectPagePath,
+  recordPagePath,
+  loginPath,
+  registerPath,
+} = routerMap
+
 const navList: Array<NavItemType> = [
   {
-    link: '/',
+    link: homePath,
     name: '首页',
     type: 'link'
   },
   {
-    link: '/project-list',
+    link: projectPagePath,
     name: '项目列表',
     type: 'link'
   },
   {
-    link: '/record-list',
+    link: recordPagePath,
     name: '个人纪录',
     type: 'link'
   },
   {
-    link: '/address-list',
+    link: addressListPath,
     name: '地址导航',
     type: 'link'
   },
@@ -38,12 +47,12 @@ const navList: Array<NavItemType> = [
     button: [
       {
         type: 'link',
-        link: '/login',
+        link: loginPath,
         name: '登录'
       },
       {
         type: 'link',
-        link: '/signup',
+        link: registerPath,
         name: '注册'
       }
     ]
@@ -136,6 +145,7 @@ onNuxtReady(() => {
           }"
           :data-type="item.type"
         >
+          <div class="item__bg"></div>
           <div 
             v-if="item.type === 'link'"
             class="item__box c-p flex__center"
@@ -249,19 +259,50 @@ nav {
 }
 
 .nav__item {
+  position: relative;
   width: 100%;
   height: 100%;
   list-style: none;
   border-radius: 0 0 10px 10px;
 }
 
-[data-type="link"].nav__item:not(.is--active):hover {
-  background: var(--readonly-color);
+.nav__item::before {
+  content: "";
+  height: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--model-bg-color);
+  transition: all .2s ease 0s;
+  border-radius: 0 0 10px 10px;
+}
+
+[data-type="link"].nav__item:not(.is--active):hover::before {
+  height: 100%;
+  pointer-events: none;
 }
 
 .nav__item.is--active {
   color: var(--white-color);
+}
+
+.item__bg {
+  height: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background-color: var(--primary-color);
+  border-radius: 0 0 10px 10px;
+  z-index: -1;
+}
+
+.nav__item.is--active .item__bg {
+  height: 100%;
+  animation: heightTop2bottom .2s ease 0s 1 normal forwards;
 }
 
 .item__box {
