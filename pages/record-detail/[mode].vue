@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { apiGetInfo, apiAdd, apiUpdate } from '~/api/record/request';
+import { apiAdd as fileApiAdd } from '~/api/upload/request';
 import type { AddModel, EditModel } from '~/api/record/model';
+import type { AddModel as FileAddModel } from '~/api/upload/model';
 import RecordDetailView from './record-detail-view.vue';
 
 const route = useRoute();
@@ -26,6 +28,10 @@ const radioValue = ref('1');
 const radioList = ref(recordCategory);
 const content = ref('');
 const status = ref<string | number | undefined>();
+const images = ref<Upload.FileInfo[]>([]);
+const fileList = ref<Array<Upload.FileInfo>>([]);
+const userSubtitle = ref();
+let subtitle: string | undefined;
 
 function init() {
   apiGetInfo(recordId).then(res => {
@@ -33,6 +39,11 @@ function init() {
     recordName.value = res.data.title;
     radioValue.value = res.data.category.toString();
     status.value = res.data.status;
+
+    userSubtitle.value = res.data.subtitle;
+    subtitle = res.data.description;
+    const imageIds: Upload.FileInfo[] = res.data.coverImageUrl ? JSON.parse(res.data.coverImageUrl) : [];
+    fileList.value = imageIds.map(e => e);
   }).catch(e => {
 
   });
@@ -44,6 +55,9 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     title,
     category: radioValue.value,
     content: $sanitize(content.value),
+    coverImageUrl: JSON.stringify(images.value),
+    subtitle: userSubtitle.value,
+    description: subtitle
   }
 
   if (status.value?.toString()) {
@@ -67,7 +81,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
   if (!isEdit) {
     apiAdd(params).then(res => {
       $message.show({
-        message: res.data,
+        message: res.data ?? res.errors,
         type: res.succeeded ? 'success' : 'info'
       });
       if (res.succeeded) {
@@ -84,7 +98,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
 
     apiUpdate(p).then(res => {
       $message.show({
-        message: res.data,
+        message: res.data ?? res.errors,
         type: res.succeeded ? 'success' : 'info'
       });
       if (res.succeeded) {
@@ -94,7 +108,28 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
 
     });
   }
-  
+}
+
+async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
+  for await (let item of list) {
+    if (!isFile(item)) {
+      continue;
+    }
+
+    const params: FileAddModel = {
+      category: 0,
+      file: item
+    }
+    fileApiAdd(params).then(res => {
+      images.value.push(res.data)
+    }).catch(() => {
+
+    });
+  }
+}
+
+function handleEditorText(text: string) {
+  subtitle = text?.slice(0, 200);
 }
 </script>
 <template>
@@ -114,10 +149,31 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
             v-model="radioValue"
             :list="radioList"
           ></com-radio>
+          <div class="my1">
+            <label>封面</label>
+            <com-upload
+              label="上传封面"
+              :data-list="fileList"
+              :limit="1"
+              @file-monuted="handleFileUpload"
+            ></com-upload>
+          </div>
+          <div class="my1">
+            <label>副标题</label>
+            <com-form-input
+              class="mt1"
+              :is-label="false"
+              v-model="userSubtitle"
+              placeholder="请输入副标题"
+              clearable
+            >
+            </com-form-input>
+          </div>
         </div>
         <wang-editor 
           v-model="content" 
           class="flex1"
+          @getText="handleEditorText"
         ></wang-editor>
       </div>
     </section>

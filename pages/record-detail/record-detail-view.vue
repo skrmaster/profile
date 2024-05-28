@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { apiGetInfo, apiRecordCount } from '~/api/record/request';
-import type { ListItem } from '~/api/record/model';
+import type { ListItem, CountParam } from '~/api/record/model';
 
 const route = useRoute();
 const router = useRouter();
 const { $message, $sanitize } = useNuxtApp();
 const recordId = route.query.id as string;
 const { recordCategory } = options;
+const viewJudgeTime = 1000 * 60 * 5;
+let timer: ReturnType<typeof setTimeout> | null;
 
 const editorRef = ref();
 const data = reactive<Partial<ListItem>>({
@@ -45,15 +47,30 @@ function handleCopy (event: ClipboardEvent) {
 }
 
 function handleViewAdd() {
+  const params: CountParam = {
+    category: 0,
+    recordId
+  }
 
+  apiRecordCount(params);
+}
+
+function viewCountAddAfter5min() {
+  timer = setTimeout(() => {
+    handleViewAdd();
+  }, viewJudgeTime);
 }
 
 onNuxtReady(() => {
   init();
+  viewCountAddAfter5min();
   document.addEventListener('copy', handleCopy);
 });
 
 onUnmounted(() => {
+  if (timer) {
+    clearTimeout(timer);
+  }
   document.removeEventListener('copy', handleCopy);
 });
 

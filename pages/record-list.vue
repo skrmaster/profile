@@ -13,10 +13,10 @@ useHead({
   title: "个人纪录"
 });
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
-const { recordDetailPath } = routerMap
+const { recordDetailPath } = routerMap;
 const searchVal = ref('');
 const blogList = ref<List>([]);
 const rank = ref<RankItem[]>([]);
@@ -91,14 +91,16 @@ function getListData() {
     listLoading.value = false;
     Object.assign(pagination ,res.data.pagination);
     blogList.value = res.data.list.map(e => {
+      const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
       return {
         isTread: e.isDisLike,
-        imageUrl: '/images/pd3.png',
-        describe: '',
+        imageUrl: imageIds[0]?.fullPath,
+        describe: e.subtitle ?? e.description,
         ...e
       }
     });
   }).catch(e => {
+    console.log(e);
     listLoading.value = false;
   });
 }
@@ -114,15 +116,18 @@ function handleSearch() {
   apiQueryList(params).then(res => {
     Object.assign(pagination ,res.data.pagination);
     blogList.value = res.data.list.map(e => {
+      const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
       return {
-        isTread: e.disLike,
-        imageUrl: '/images/pd3.png',
-        describe: '',
+        isTread: e.isDisLike,
+        imageUrl: imageIds[0].fullPath,
+        describe: e.subtitle ?? e.description,
         ...e
       }
     });
     listLoading.value = false;
   }).catch(e => {
+    console.log(e);
+    
     listLoading.value = false;
   });
 }
@@ -192,8 +197,6 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
   }).catch(e => {
     
   });
-
-  
 }
 
 </script>
@@ -209,7 +212,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
     <section class="pb5">
       <div class="container">
         <div class="flex content">
-          <div class="blog" v-if="blogList.length > 0" v-loading="listLoading">
+          <div class="blog p1 flex__column overflow-auto" v-if="blogList.length > 0" v-loading="listLoading">
             <div 
               v-for="(item, index) in blogList" 
               :key="index"
@@ -223,8 +226,8 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
                 <div class="flex flex1">
                   <div class="blog__content__box flex1 h100">
                     <div class="describe__box flex1 flex__column--between">
-                      <p class="fs22 describe">{{ item.describe }}</p>
-                      <div class="flex__row--end flex-nowrap mt1">
+                      <p class="fs16 describe">{{ item.describe }}</p>
+                      <div class="flex__row--end flex-wrap mt1">
                         <span class="mr1 flex__row">
                           <com-icon 
                             class="icon__gap" 
@@ -265,14 +268,17 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
                         </span>
                       </div>
                     </div>
-                    <div class="thumbnail">
-                      <img :src="item.imageUrl" />
+                    <div class="thumbnail display-0-none pb2">
+                      <img v-if="item.imageUrl" :src="item.imageUrl" />
+                      <div v-else class="image__seat wh100">
+                        <com-empty info="暂无封面"></com-empty>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <com-pagination
+            <!-- <com-pagination
               ref="paginationRef"
               :pageSizes="[10, 20]"
               :total="pagination.total"
@@ -280,10 +286,10 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
               v-model:page-size="pagination.pageSize"
               @page-size-change="getListDataByPagination"
               @current-page-change="getData"
-            ></com-pagination>
+            ></com-pagination> -->
           </div>
           <com-empty v-else></com-empty>
-          <div class="rank">
+          <div class="rank ml1 mt1 display-2-none display-1-none display-0-none">
             <p class="font-bold fs24">点击排行榜</p>
             <div v-if="rank.length > 0" v-loading="rankLoading">
               <div v-for="(item, index) in rank" 
@@ -322,20 +328,17 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
 <style scoped>
 .content {
   margin-top: 8rem;
-  margin-left: -27px;
-  margin-right: -27px;
 }
 
 .blog {
   max-width: 1000px;
   flex: 2 1 100%;
-  margin: 0 27px;
 }
 
 .blog__item {
   cursor: pointer;
   border-radius: 20px;
-  min-height: 320px;
+  min-height: 300px;
   max-width: 1000px;
   width: 100%;
   background: var(--white-color);
@@ -350,7 +353,6 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
 
 .blog__content__box {
   display: flex;
-  flex-flow: row nowrap;
   align-items: center;
   margin: 0 -12.5px;
 }
@@ -389,7 +391,6 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
   height: 782px;
   height: 100%;
   flex: 1 1 100%;
-  margin: 0 27px;
   background: var(--white-color);
   border-radius: 20px;
   padding: 36px;
@@ -446,5 +447,9 @@ span[class^="rank__item-"]:not(.rank__special) {
   width: 34px;
   height: 34px;
   line-height: 34px;
+}
+
+.image__seat {
+  background: var(--image-element-seat-bg);
 }
 </style>

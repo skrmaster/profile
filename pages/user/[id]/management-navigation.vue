@@ -85,7 +85,7 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
-      e.category = getListLabel(e.category, addressNavigationList) || '';
+      e.category = getListLabel(e.category.toString(), addressNavigationList) || '';
       return e;
     });
     loading.value = false;

@@ -6,7 +6,7 @@ type Resize = {
 type StorageFrom = 'localStorage' | 'sessionStorage';
 
 function resize(el: Element, cb: (arg: Resize) => unknown): ResizeObserver;
-function debounce(func: (arg: unknown) => unknown, time = 1000): (...args: unknown[]) => void;
+function debounce(func: (arg: any) => unknown, time = 1000): (...args: unknown[]) => void;
 
 type Option = {
   message: string;

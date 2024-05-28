@@ -6,6 +6,9 @@ export type AddModel = {
   tags?: string;
   status?: number | string;
   category: string;
+  description?: string;
+  coverImageUrl?: string;
+  subtitle?: string;
 }
 
 export type EditModel = AddModel & {

@@ -116,7 +116,7 @@ export default {
           fieldName: 'file',
 
           // 单个文件的最大体积限制，默认为 2M
-          maxFileSize: 3 * 1024 * 1024, // 1M
+          maxFileSize: 2 * 1024 * 1024,
 
           // 最多可上传几个文件，默认为 100
           maxNumberOfFiles: 5,
@@ -223,6 +223,8 @@ export default {
     },
     valueHtml(newVal) {
       this.$emit('update:modelValue', newVal);
+      const text = this.editorRef.getText();
+      this.$emit('getText', text);
     }
   }
 }

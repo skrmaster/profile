@@ -187,7 +187,7 @@ function blobToUrl(item: File): string | undefined {
             height="30px" 
             icon="profile-close"
           ></com-icon>
-          <label v-else>{{ props.label }}</label>
+          <label class="c-p" v-else>{{ props.label }}</label>
         </div>
       </li>
     </transition-group>

@@ -76,7 +76,7 @@ onNuxtReady(() => {
   bottom: 20px;
   transform: translateX(-50%);
   min-height: 90px;
-  max-width: 480px;
+  max-width: 375px;
   width: 100%;
   background-color: rgb(238, 238, 238);
   /* background-image: radial-gradient(transparent 1px, rgb(238, 238, 238) 1px);
