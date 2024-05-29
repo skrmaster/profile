@@ -3,6 +3,7 @@ import { httpClient } from "../index";
 
 const { 
   aphorismsListPath,
+  aphorismsRandomPath,
   aphorismsAddPath,
   aphorismsEditPath,
   aphorismsDeletePath,
@@ -12,6 +13,13 @@ export async function apiGetList(params: Omit<Pagination, 'total'>) {
   const res = await httpClient<ResponsePagination<Type.ListType>>(aphorismsListPath, {
     method: 'get',
     params
+  });
+  return res
+}
+
+export async function apiGetRandom() {
+  const res = await httpClient<Type.AddModel>(aphorismsRandomPath, {
+    method: 'get'
   });
   return res
 }

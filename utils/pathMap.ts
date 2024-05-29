@@ -69,6 +69,7 @@ type KeyOfApi = 'loginPath'
 | 'navgationDeletePath'
 | 'navgationListCategoryPath'
 | 'aphorismsListPath'
+| 'aphorismsRandomPath'
 | 'aphorismsAddPath'
 | 'aphorismsEditPath'
 | 'aphorismsDeletePath'
@@ -108,6 +109,7 @@ export const apiMap: Record<KeyOfApi, string> = {
   navgationDeletePath: '/navgation/delete',
   navgationListCategoryPath: '/navgation/getallcategorylist',
   aphorismsListPath: '/aphorisms/getlist',
+  aphorismsRandomPath: '/aphorisms/getrandomaphorisms',
   aphorismsAddPath: '/aphorisms/add',
   aphorismsEditPath: '/aphorisms/update',
   aphorismsDeletePath: '/aphorisms/delete',

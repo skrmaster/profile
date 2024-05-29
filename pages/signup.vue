@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import textdata from 'assets/json/constellation.json';
+import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import { apiRegister } from '~/api/user/request'
 import type { registerType } from '~/api/user/model';
@@ -8,12 +9,13 @@ const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
 
 useHead({
-  title: "登录"
+  title: "注册"
 });
 const route = useRoute();
 const form = ref();
 const textArray = textdata.data;
-const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
+const speech = ref<string | undefined>();
+const from = ref<string | undefined>();
 const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
@@ -58,6 +60,20 @@ const config: Array<FormConfig> = [
 const isForget = computed(() => {
   return route.query && route.query.type && route.query.type === 'forget';
 })
+
+init();
+function init() {
+  getRandomAphorisms();
+}
+
+function getRandomAphorisms() {
+  apiGetRandom().then(res => {
+    speech.value = res.data.content;
+    from.value = res.data.from;
+  }).catch(e => {
+
+  });
+}
 
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
@@ -208,6 +224,7 @@ onNuxtReady(() => {
               :href="`${url}/search?q=${speech}`" 
               target="_blank"
             >{{ speech }}</a>
+            <p class="mt1 fs14 text-right">{{ from ? `--${from}` : '' }}</p>
           </div>
         </div>
         <div class="p1 flex1 z-index9">

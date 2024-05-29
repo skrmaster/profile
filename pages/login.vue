@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { apiLogin } from '@/api/user/request';
+import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
 import type { userModel } from '~/api/user/model';
@@ -13,7 +14,8 @@ useHead({
 const form = ref();
 
 const textArray = textdata.data;
-const speech = ref('我认帐，但是老子不给！嘻嘻...老子不给！不给！');
+const speech = ref<string | undefined>();
+const from = ref<string | undefined>();
 const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
@@ -47,6 +49,20 @@ const config = ref<Array<FormConfig>>([
   }
 ]);
 const rememberPassword = ref(false);
+
+init();
+function init() {
+  getRandomAphorisms();
+}
+
+function getRandomAphorisms() {
+  apiGetRandom().then(res => {
+    speech.value = res.data.content;
+    from.value = res.data.from;
+  }).catch(e => {
+
+  });
+}
 
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
@@ -170,8 +186,11 @@ function handleSubmit() {
         await apiLogin(params).then((data) => {
           const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
           const storage = new StorageSuger(storageStr);
-          storage.setValue('token', data.tokenObject.token);
-          storage.setValue('refresh-token', data.tokenObject.refreshToken);
+
+          
+          const token = useCookie('token');
+
+          storage.setValue('token', token);
           storage.setValue('userInfo', data.data);
           useState<userModel>('userInfo', () => data.data);
           navigateTo('/');
@@ -200,6 +219,7 @@ onNuxtReady(() => {
               :href="`${url}/search?q=${speech}`" 
               target="_blank"
             >{{ speech }}</a>
+            <p class="mt1 fs14 text-right">{{ from ? `--${from}` : '' }}</p>
           </div>
         </div>
         <div class="p1 flex1 z-index9">

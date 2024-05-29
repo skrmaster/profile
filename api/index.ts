@@ -48,24 +48,26 @@ export async function http(url: string, options: Record<string, any>) {
 }
 
 export async function httpClient<T>(url: string, options: Record<string, any>): Promise<ResponseModel<T>> {
-  let tokenString: string;
-  try {
-    tokenString = getToken()
-  } catch(e) {
-    console.log(e);
-  }
+  // let tokenString: string;
+  // try {
+  //   tokenString = getToken()
+  // } catch(e) {
+  //   console.log(e);
+  // }
 
   return await $fetch(
     url, 
     {
       baseURL,
+      credentials: 'include',
       method: options.method,
       params: options.params,
       body: options.body,
+      withCredentials: true,
       onRequest({ request, options }) {
-        options.headers = {
-          Authorization: tokenString
-        }
+        // options.headers = {
+        //   Authorization: tokenString
+        // }
       },
       onRequestError({ request, options, error, response }) {
         if (response === undefined && error) {
@@ -76,19 +78,19 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
         }
       },
       onResponse({ request, response, options }) {
-        if (response.status === 401) {
-          MessageManager.show({
-            type: 'error',
-            message: '请先登录'
-          });
-        }
+        // if (response.status === 401) {
+        //   MessageManager.show({
+        //     type: 'error',
+        //     message: '请先登录'
+        //   });
+        // }
         
-        if (response.headers.get('Access-Token')) {
-          response._data.tokenObject = {
-            token: response.headers.get('Access-Token'),
-            refreshToken: response.headers.get('X-Access-Token')
-          }
-        }
+        // if (response.headers.get('Access-Token')) {
+        //   response._data.tokenObject = {
+        //     token: response.headers.get('Access-Token'),
+        //     refreshToken: response.headers.get('X-Access-Token')
+        //   }
+        // }
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors
