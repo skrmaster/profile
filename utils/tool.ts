@@ -19,18 +19,13 @@ export function throttle() {
 }
 
 export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObserver {
-  let isFirstCall = true;
   const resizeObserver = new ResizeObserver((entries) => {
     for (const entry of entries) {
       const obj: Resize = {
         w: entry.borderBoxSize[0].inlineSize,
         h: entry.borderBoxSize[0].blockSize
       }
-      if (isFirstCall) {
-        isFirstCall = false;
-      } else {
-        cb(obj);
-      }
+      cb(obj);
     }
   });
   if (el) {

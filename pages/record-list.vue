@@ -278,7 +278,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
                 </div>
               </div>
             </div>
-            <!-- <com-pagination
+            <com-pagination
               ref="paginationRef"
               :pageSizes="[10, 20]"
               :total="pagination.total"
@@ -286,7 +286,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
               v-model:page-size="pagination.pageSize"
               @page-size-change="getListDataByPagination"
               @current-page-change="getData"
-            ></com-pagination> -->
+            ></com-pagination>
           </div>
           <com-empty v-else></com-empty>
           <div class="rank ml1 mt1 display-2-none display-1-none display-0-none">

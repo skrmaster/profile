@@ -67,9 +67,9 @@ function drawClock() {
   ctx.scale(2, 2);
   ctx.save();
     if (deg < currentTimeRotateDeg) {
-      ctx.rotate((deg * Math.PI / 180));
+      ctx.rotate(-(deg * Math.PI / 180));
     } else {
-      ctx.rotate((deg * Math.PI / 180));
+      ctx.rotate(-(deg * Math.PI / 180));
       canvasAnimateSwitch = false;
     }
     ctx.rotate(-(Math.PI / 60));
@@ -92,6 +92,7 @@ function drawClock() {
           ctx.rotate(Math.PI / 6 * i);
           ctx.translate(0, -145);
           ctx.beginPath();
+          //字号
           ctx.scale(1.5, 1.5);
           const tmp: Record<string, Path2D> = {};
           textArray[i].forEach((e: string, i: number) => {
@@ -182,7 +183,7 @@ function handleSubmit() {
 
 onNuxtReady(() => {
   drawClock();
-})
+});
 
 </script>
 <template>

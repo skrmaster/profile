@@ -15,8 +15,8 @@ const emit = defineEmits<{
   'search': []
 }>();
 
-const canvasRef = shallowRef();
-const debounceFunction = debounce(handleLayout, 500);
+const canvasRef = shallowRef<HTMLElement>();
+const debounceFunction = debounce(ininCanvas, 500);
 let elementResize: ResizeObserver | null = null;
 let scrollBarWidth: number;
 
@@ -27,13 +27,13 @@ const search = computed({
   }
 });
 
-function handleLayout(wh?: Resize[]) {
-  console.log(222);
+function handleLayout(e: UIEvent, wh?: Resize[]) {
+  console.log(e);
   
   if (searchCanvas.element) {
     const item = wh ? wh[0] : null;
     
-    searchCanvas.element.width = item?.w ?? (window.innerWidth - scrollBarWidth);
+    searchCanvas.element.width =  item?.w ?? (window.innerWidth - scrollBarWidth);
     searchCanvas.element.height = 250;
     console.log(searchCanvas.element.width);
     
@@ -44,12 +44,24 @@ function handleSearch() {
   emit('search');
 }
 
+let list: {
+  drawX: number;
+  direction: number;
+}[] | undefined = [];
 const searchCanvas = reactive<{
   element: HTMLCanvasElement | null,
   ctx: CanvasRenderingContext2D | null
+  image: {
+    width: number;
+    height: number;
+  }
 }>({
   element: null,
-  ctx: null
+  ctx: null,
+  image: {
+    width: 755,
+    height: 250
+  }
 });
 let img: HTMLImageElement;
 function ininCanvas() {
@@ -62,6 +74,10 @@ function ininCanvas() {
   img.src = cityImage;
   searchCanvas.element.width = window.innerWidth - scrollBarWidth;
   searchCanvas.element.height = 250;
+
+  img.onload = () => {
+    drawImageWithOffset(window.innerWidth / 2, 250 / 2);
+  };
 }
 
 function drawImageWithOffset(mouseX: number, mouseY: number) {
@@ -74,16 +90,16 @@ function drawImageWithOffset(mouseX: number, mouseY: number) {
 
   const offsetX = (mouseX / window.innerWidth - 0.5) * 50;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const list = generateImageList();
-  list?.forEach(e => {
+ 
+  list?.forEach((e, i) => {
     ctx.save();
-    ctx.drawImage(img, e.drawX - offsetX, 0, 755, 250);
-    // if (e.direction === 0) {
-    // } else {
-    //   ctx.rotate(180 * Math.PI / 360);
-    //   ctx.translate(-e.drawX, 0);
-    //   ctx.drawImage(img, e.drawX - offsetX, 0, 755, 250);
-    // }
+    if (e.direction === 0) {
+      ctx.drawImage(img, e.drawX - offsetX, 0, 755, 250);
+    } else {
+      ctx.translate(e.drawX, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(img, -755 + offsetX, 0, 755, 250);
+    }
     ctx.restore();
   });
 }
@@ -123,22 +139,14 @@ function handleOffset(e: MouseEvent) {
 }
 
 onNuxtReady(() => {
-  console.log(2);
-  
   scrollBarWidth = getScrollBarWidth();
   ininCanvas();
   if (canvasRef.value) {
-    console.log('start');
-    
+    list = generateImageList();
     elementResize = resize(canvasRef.value, (wh) => {
-      console.log(1);
-      debounceFunction(wh);
+      debounceFunction();
     });
   }
-
-  img.onload = () => {
-    drawImageWithOffset(window.innerWidth / 2, 250 / 2);
-  };
 });
 
 onBeforeUnmount(() => {
