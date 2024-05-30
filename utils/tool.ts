@@ -43,9 +43,3 @@ export function timeNullFormat(time?: string): string {
 export function isFile(variable: any): variable is File {
   return variable instanceof File;
 }
-
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-}

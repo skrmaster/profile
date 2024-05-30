@@ -187,6 +187,8 @@ function handleSubmit() {
           const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
           const storage = new StorageSuger(storageStr);
 
+          // const info = aesDecrypt();
+          console.log(document.cookie);
           
           const token = useCookie('token');
 

@@ -13,3 +13,15 @@
 .list__fade-leave-active {
   position: absolute !important;
 }
+
+.bottom2top-move,
+.bottom2top-enter-active,
+.bottom2top-leave-active {
+  transition: all .5s cubic-bezier(0.55, 0, 0.1, 1) 0.5s;
+}
+
+.bottom2top-leave-to,
+.bottom2top-enter-from {
+  opacity: 0;
+  transform: translateY(100%);
+}

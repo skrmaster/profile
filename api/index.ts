@@ -63,7 +63,6 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
       method: options.method,
       params: options.params,
       body: options.body,
-      withCredentials: true,
       onRequest({ request, options }) {
         // options.headers = {
         //   Authorization: tokenString
