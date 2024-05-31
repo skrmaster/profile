@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { userModel } from '~/api/user/model';
+import type { UserModel } from '~/api/user/model';
 
 type NavItemType = {
   link?: string;
@@ -60,7 +60,7 @@ const navList: Array<NavItemType> = [
 ]
 const route = useRoute();
 const currentPath = route.path;
-const userInfo = useState<userModel>('userInfo');
+const userInfo = useState<UserModel>('userInfo');
 
 function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   const argCopy = arg;

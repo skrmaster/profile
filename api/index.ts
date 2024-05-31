@@ -1,6 +1,7 @@
 import { MessageManager } from "~/plugins/message.client";
 
 const baseURL: string = import.meta.env.VITE_PROJECT_API + '/api';
+const { loginPath } = routerMap;
 
 function getToken(): string {
   const localStorage = new StorageSuger("localStorage");
@@ -77,12 +78,14 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
         }
       },
       onResponse({ request, response, options }) {
-        // if (response.status === 401) {
-        //   MessageManager.show({
-        //     type: 'error',
-        //     message: '请先登录'
-        //   });
-        // }
+        if (response.status === 401) {
+          MessageManager.show({
+            type: 'error',
+            message: '请先登录'
+          });
+
+          navigateTo({ path: loginPath });
+        }
         
         // if (response.headers.get('Access-Token')) {
         //   response._data.tokenObject = {

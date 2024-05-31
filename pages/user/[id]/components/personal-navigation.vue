@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { userModel } from '~/api/user/model';
+import type { UserModel } from '~/api/user/model';
 
 type LinkType = {
   name: string;
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Prop>(), {
 
 const route = useRoute();
 const params = route.params;
-const userInfo = useState<userModel>('userInfo');
+const userInfo = useState<UserModel>('userInfo');
 
 const list = ref<LinkType[][]>([
   [

@@ -3,7 +3,7 @@ import textdata from 'assets/json/constellation.json';
 import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import { apiRegister } from '~/api/user/request'
-import type { registerType } from '~/api/user/model';
+import type { RegisterType } from '~/api/user/model';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
@@ -190,7 +190,7 @@ function handleSubmit() {
     form.value.vaildForm()
     .then(async (val: ReturnVaildForm) => {
       if (val.vaild) {
-        const params: registerType = {
+        const params: RegisterType = {
           email: '',
           password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
           code: ''

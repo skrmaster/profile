@@ -1,22 +1,23 @@
-export type loginType = {
+export type LoginType = {
   email: string;
   password: string;
+  isRemember: boolean;
 }
 
-export type registerType = {
+export type RegisterType = {
   email: string;
   password: string;
   code: string;
 }
 
-export type updateInfoType = {
+export type UpdateInfoType = {
   account: string;
   email: string;
   password: string;
   code: string;
 }
 
-export interface userModel {
+export interface UserModel {
   account?: string;
   avatar?: string;
   createTime?: string;

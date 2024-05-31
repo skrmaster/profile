@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { userModel } from '~/api/user/model';
+import type { UserModel } from '~/api/user/model';
 
 const navList = ref([
   {
@@ -20,7 +20,7 @@ const navList = ref([
   },
 ]);
 const currentIndex = ref(0);
-const userInfo = useState<userModel>('userInfo');
+const userInfo = useState<UserModel>('userInfo');
 
 function handleNav(index: number) {
   currentIndex.value = index;

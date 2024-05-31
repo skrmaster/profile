@@ -1,20 +1,27 @@
-import type { userModel, loginType, registerType } from "./model";
+import type { UserModel, LoginType, RegisterType } from "./model";
 import { httpClient } from "../index";
 
-const { loginPath, registerPath } = apiMap;
+const { loginPath, registerPath, userInfoPath } = apiMap;
 
-export async function apiLogin(params: loginType) {
-  const res = await httpClient<userModel>(loginPath, {
+export async function apiUserInfo() {
+  const res = await httpClient<UserModel>(userInfoPath, {
+    method: 'GET'
+  });
+  return res;
+}
+
+export async function apiLogin(params: LoginType) {
+  const res = await httpClient<string>(loginPath, {
     method: 'post',
     body: params
   });
-  return res
+  return res;
 }
 
-export async function apiRegister(params: registerType) {
+export async function apiRegister(params: RegisterType) {
   const res = await httpClient<boolean>(registerPath, {
     method: 'post',
     body: params
   });
-  return res
+  return res;
 }

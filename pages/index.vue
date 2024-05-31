@@ -326,6 +326,8 @@ function getScrollBarWidth(): number {
 
 onNuxtReady(() => {
   scrollBarWidth = getScrollBarWidth();
+
+  const userInfo = useUserInfo();
   
   img = new Image();
   img.src = '/svg/park-bench.svg';

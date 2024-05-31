@@ -1,4 +1,4 @@
-import type { userModel } from '~/api/user/model';
+import type { UserModel } from '~/api/user/model';
  
 export type AddModel = {
   title: string;
@@ -17,7 +17,7 @@ export type EditModel = AddModel & {
 }
 
 export type ListItem = EditModel & {
-  author: userModel;
+  author: UserModel;
   like: number;
   disLike: number;
   view: number;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const cookieAuth = useCookie('i-s');
+const cookieAuth = useCookie('s-auth-cookie');
 
 const emit = defineEmits<{
   'close': []
@@ -11,7 +11,7 @@ function handleAccept() {
     path: '/',
     secure: true,
     sameSite: 'strict'
-  })
+  });
   cookie.value = 'true';
   close();
 }
@@ -22,7 +22,7 @@ function handleDenial() {
     path: '/',
     secure: true,
     sameSite: 'strict'
-  })
+  });
   cookie.value = 'false';
   close();
 }
@@ -35,7 +35,7 @@ function close() {
 <template>
   <div class="cookie__box">
     <div class="container">
-      <div class="flex__row">
+      <div class="flex__center">
         <div class="mr1">
           <div class="flex__row--between">
             <div>
@@ -44,7 +44,7 @@ function close() {
           </div>
           <div class="mt1">
             <h3>为什么使用Cookies?</h3>
-            <p>Cookies是存储在用户设备上的小型文本文件，用于存储有关用户和他们在网站上活动的信息。这些信息可以包括登录状态、用户偏好等。</p>
+            <p>Cookies是存储在用户设备上的小型文本文件，用于存储有关用户和他们在网站上活动的信息。这些信息可以包括登录状态、偏好等。</p>
           </div>
         </div>
         <div class="button__box">

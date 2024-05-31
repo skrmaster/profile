@@ -3,7 +3,7 @@ import { apiLogin } from '@/api/user/request';
 import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
-import type { userModel } from '~/api/user/model';
+import type { UserModel, LoginType } from '~/api/user/model';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
@@ -59,9 +59,7 @@ function getRandomAphorisms() {
   apiGetRandom().then(res => {
     speech.value = res.data.content;
     from.value = res.data.from;
-  }).catch(e => {
-
-  });
+  }).catch(e => {});
 }
 
 function drawClock() {
@@ -179,22 +177,19 @@ function handleSubmit() {
     form.value.vaildForm()
     .then(async (val: ReturnVaildForm) => {
       if (val.vaild) {
-        const params = {
+        const params: LoginType = {
           email: val.data.email,
-          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password)
+          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
+          isRemember: rememberPassword.value
         }
+
         await apiLogin(params).then((data) => {
-          const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
+          const storageStr: StorageFrom = 'localStorage';
           const storage = new StorageSuger(storageStr);
-
-          // const info = aesDecrypt();
-          console.log(document.cookie);
-          
-          const token = useCookie('token');
-
-          storage.setValue('token', token);
           storage.setValue('userInfo', data.data);
-          useState<userModel>('userInfo', () => data.data);
+          const userInfoString = aesDecrypt(data.data);
+          const userInfo: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
+          useState<UserModel>('userInfo', () => userInfo);
           navigateTo('/');
         });
       }

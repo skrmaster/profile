@@ -39,7 +39,3 @@ export function timeNullFormat(time?: string): string {
   const dayjs = useDayjs();
   return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : '暂无';
 }
-
-export function isFile(variable: any): variable is File {
-  return variable instanceof File;
-}
