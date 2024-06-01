@@ -2,8 +2,31 @@
 import type { ListByCategory } from '~/api/address/model';
 import { apiGetListByCategory } from '~/api/address/request';
 
+const categoryList = [
+  {
+    name: '动漫',
+    icon: 'profile-dongman1'
+  }, 
+  {
+    name: '漫画',
+    icon: 'profile-Icon_manhuaB'
+  },
+  {
+    name: '影视',
+    icon: 'profile-dongman'
+  },
+  {
+    name: '小说',
+    icon: 'profile-xiaoshuo'
+  },
+  {
+    name: '游戏',
+    icon: 'profile-youxi'
+  }
+];
+
 useHead({
-  title: "地址导航"
+  title: '地址导航'
 });
 
 const { $dayjs } = useNuxtApp();
@@ -22,9 +45,7 @@ function fetchData() {
 
       return e;
     });
-  }).catch(() => {
-
-  })
+  }).catch(() => {});
 }
 
 fetchData();
@@ -38,14 +59,17 @@ fetchData();
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
     <section>
-      <div class="container">
+      <div class="container overflow-hidden">
         <div class="address">
           <div class="address__item"
             v-for="(item, index) in data"
             :key="index"
             v-show="item.list.length > 0"
           >
-            <h3 class="address__title mt1">{{ item.category.name }}</h3>
+            <h3 class="address__title mt1">
+              <com-icon :icon="categoryList[index].icon"></com-icon>
+              {{ item.category.name }}
+            </h3>
             <div class="address__gird my1">
               <NuxtLink 
                 class="link__item flex__row--between p1"
@@ -71,8 +95,9 @@ fetchData();
 </template>
 <style scoped>
 .address__gird {
+  padding: 0 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(242px, 1fr));
   gap: 30px;
 }
 
@@ -89,7 +114,7 @@ fetchData();
 .link__item:hover {
   background-color: var(--white--color);
   border-color: var(--primary-border-color);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--box-shadow-small);
   transform: translateY(-5px) scale(1.05);
 }
 

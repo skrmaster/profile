@@ -38,14 +38,19 @@ function handleUpdate() {
     avatar: JSON.stringify(images.value[0])
   }
 
-  apiUpdateUserInfo(params).then(res => {
+  apiUpdateUserInfo(params).then((res) => {
     if (res.data) {
       $message.show({
         message: '操作成功',
         type: 'success'
       });
       useClearUserInfoStorage();
-      getUserInfo();
+      useUserInfo().then(res => {
+        if (res) {
+          userInfo.value = res;
+          getUserInfo();
+        }
+      });
     }
   })
 }
@@ -56,7 +61,7 @@ function getUserInfo() {
   formData.email = userInfo.value.email;
   formData.avatar = userInfo.value.avatar;
   
-  const imageIds: Upload.FileInfo = userInfo.value.avatar ? JSON.parse(userInfo.value.avatar) : [];      
+  const imageIds: Upload.FileInfo = userInfo.value.avatar ? JSON.parse(userInfo.value.avatar) : [];
   
   fileList.value = [imageIds].map(e => {
     return {

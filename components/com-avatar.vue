@@ -2,16 +2,13 @@
 type Prop = {
   avatarUrl?: string;
   nickname: string;
+  type?: 'fill' | 'cover' | 'scale-down' | 'contain' | 'none'
 }
 
-const props = defineProps<Prop>();
-// const avatarObj = computed(() => props.avatarUrl);
-// const tmpAvatarUrl = toRef(props.avatarUrl);
-// watchEffect(() => {
-//   const avatar: Upload.FileInfo = avatarObj.value ? JSON.parse(avatarObj.value) : "";
-//   tmpAvatarUrl.value = getAvatar(avatar)
-// });
-
+const props = withDefaults(defineProps<Prop>(), {
+  avatarUrl: '',
+  type: 'cover'
+});
 </script>
 <template>
   <div class="avatar flex__center">
@@ -19,7 +16,9 @@ const props = defineProps<Prop>();
       v-if="props.avatarUrl" 
       :src="props.avatarUrl" 
       :alt="props.nickname"
-      class="scale-down"
+      :style="{
+        'object-fit': props.type
+      }"
     />
     <div v-else>
       <span class="fs14 line1__ellipsis">{{ props.nickname }}</span>
@@ -39,13 +38,5 @@ const props = defineProps<Prop>();
   height: 100%;
   width: 100%;
   border-radius: 50%
-}
-
-.fill {
-  object-fit: fill;
-}
-
-.scale-down {
-  object-fit: scale-down;
 }
 </style>

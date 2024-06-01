@@ -4,7 +4,8 @@ const userInfo = useState<UserModel | undefined>('userInfo');
 
 onNuxtReady(() => {
   const cookie = useCookie("s-getu");
-  if (cookie.value && cookie.value?.toString() !== false.toString()) {
+
+  if (cookie.value && (cookie.value?.toString() !== false.toString())) {
     useUserInfo().then(res => {
       if (res) {
         userInfo.value = res;
