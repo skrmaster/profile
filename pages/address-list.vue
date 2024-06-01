@@ -79,8 +79,8 @@ fetchData();
                 target="_blank"
               >
                 <div class="flex__row">
-                  <div class="link__image">
-                    <img :src="i.icon" :alt="i.name?.slice(0, 3) || 'icon'" />
+                  <div class="link__image flex__center">
+                    <img :src="i.iconUrl" :alt="i.name?.slice(0, 3) || 'icon'" />
                   </div>
                   <p class="link__title line2__ellipsis"><strong>{{ i.name }}</strong></p>
                 </div>
@@ -123,12 +123,13 @@ fetchData();
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--primary-border-color);
+  /* border: 1px solid var(--primary-border-color); */
 }
 
 .link__image img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: cover;
 }
 
 .link__title {

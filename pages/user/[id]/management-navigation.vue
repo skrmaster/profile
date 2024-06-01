@@ -2,7 +2,7 @@
 import type { ListType } from '~/api/address/model';
 import PersonalCenter from './components/personal-center.vue';
 import Form from './components/form-address.vue';
-import { apiGetList, apiDelete } from '~/api/address/request';
+import { apiGetList, apiDelete, apiGetIcons } from '~/api/address/request';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
 const { addressNavigationList } = options;
@@ -29,6 +29,8 @@ const tableHead = ref<TableHead[]>([
     name: '图标icon',
     width: '150px',
     field: 'iconUrl',
+    type: 'div',
+    slotName: 'image'
   },
   {
     name: '创建时间',
@@ -45,6 +47,7 @@ const tableHead = ref<TableHead[]>([
   }
 ]);
 const tableData = ref<ListType>([]);
+const btnLoadingIcon = ref(false);
 const pagination = reactive({
   total: 0,
   page: 1,
@@ -114,19 +117,36 @@ function getTableDataByPagination() {
   getTableData();
 }
 
+function handleGetIcons() {
+  btnLoadingIcon.value = true;
+  apiGetIcons().then(res => {
+    btnLoadingIcon.value = false;
+    if (res.succeeded) {
+      $message.show({
+        message: res.data || res.errors,
+        type: res.data ? 'success' : 'warning'
+      });
+      getTableDataByPagination();
+    }
+  }).catch(e => { 
+    btnLoadingIcon.value = false;
+  });
+}
+
 getTableData();
 </script>
 <template>
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAdd">新增导航地址</com-button>
+        <com-button prefixIcon="profile-add" class="mr1" @click="handleAdd">新增导航地址</com-button>
+        <com-button prefixIcon="profile-arrow" :loading="btnLoadingIcon" @click="handleGetIcons">获取icon</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">
           <template #image="{ data }">
-            <div class="table__cell">
-              <img class="table__image" :src="data.icon" :alt="data.name" />
+            <div class="table__cell overflow-hidden">
+              <img class="table__image" :src="data.iconUrl" :alt="data.name" />
             </div>
           </template>
         </com-table>

@@ -6,13 +6,21 @@ const {
   navgationAddPath,
   navgationEditPath,
   navgationDeletePath,
-  navgationListCategoryPath
+  navgationListCategoryPath,
+  navationGetIconPath
 } = apiMap;
 
 export async function apiGetList(params: Omit<Pagination, 'total'>) {
   const res = await httpClient<ResponsePagination<Type.ListType>>(navgationListPath, {
     method: 'get',
     params
+  });
+  return res;
+}
+
+export async function apiGetIcons() {
+  const res = await httpClient<string>(navationGetIconPath, {
+    method: 'GET'
   });
   return res;
 }
