@@ -15,7 +15,7 @@ export type UpdateInfoType = {
   email: string;
   password: string;
   code: string;
-}
+} & Partial<UserModel>
 
 export interface UserModel {
   account?: string;

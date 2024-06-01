@@ -21,32 +21,26 @@ const navList = ref([
 ]);
 const currentIndex = ref(0);
 const userInfo = useState<UserModel>('userInfo');
+const currentUserInfo = computed(() => userInfo.value);
+
+const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
+
+watchEffect(() => {
+  const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
+  tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
+});
 
 function handleNav(index: number) {
   currentIndex.value = index;
 }
-
-onNuxtReady(() => {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  
-  const userInfo1 = localStorage.getValue("userInfo");
-  const userInfo2 = sectionStorage.getValue("userInfo");
-  
-  if (userInfo1) {
-    userInfo.value = JSON.parse(userInfo1 as string);
-  } else if (userInfo2) {
-    userInfo.value = JSON.parse(userInfo2 as string);
-  }
-});
 </script>
 <template>
   <div>
     <div class="navigation--small px1">
       <div class="mr1">
         <com-avatar 
-          :avatar-url="userInfo?.avatar" 
-          :nickname="userInfo?.account || '未知'">
+          :avatar-url="tempUserInfo?.avatar" 
+          :nickname="tempUserInfo?.account || '未知'">
         </com-avatar>
       </div>
       <nav class="flex1 flex__row--between">

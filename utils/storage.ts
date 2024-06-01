@@ -38,9 +38,9 @@ export class StorageSuger implements StorageType {
         const expressTime = value.expressTime;
         
         if (now >= expressTime) {
-          return [value.data , 'express-time: true'];
+          return [value.data , 'express'];
         } else {
-          return [value.data , 'express-time: false'];
+          return [value.data , 'no-express'];
         }
       }
     }

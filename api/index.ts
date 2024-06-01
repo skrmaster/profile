@@ -1,7 +1,7 @@
 import { MessageManager } from "~/plugins/message.client";
 
 const baseURL: string = import.meta.env.VITE_PROJECT_API + '/api';
-const { loginPath } = routerMap;
+const { loginPath, userInfoPath } = routerMap;
 
 function getToken(): string {
   const localStorage = new StorageSuger("localStorage");
@@ -16,6 +16,12 @@ function getToken(): string {
     : 'Bearer';
 
   return res.replaceAll("\"", "");
+}
+
+function noAuthPath(path: RequestInfo): boolean {
+  const noAuth = [userInfoPath];
+  const item = noAuth.find(e => e === path);
+  return !!item;
 }
 
 export async function http(url: string, options: Record<string, any>) {
@@ -78,7 +84,7 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
         }
       },
       onResponse({ request, response, options }) {
-        if (response.status === 401) {
+        if (response.status === 401 && noAuthPath(request)) {
           MessageManager.show({
             type: 'error',
             message: '请先登录'

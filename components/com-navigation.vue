@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { UserModel } from '~/api/user/model';
+import { apiUserLogout } from '~/api/user/request';
 
 type NavItemType = {
   link?: string;
@@ -61,6 +62,13 @@ const navList: Array<NavItemType> = [
 const route = useRoute();
 const currentPath = route.path;
 const userInfo = useState<UserModel>('userInfo');
+const currentUserInfo = computed(() => userInfo.value);
+const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
+
+watchEffect(() => {
+  const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
+  tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
+});
 
 function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   const argCopy = arg;
@@ -102,33 +110,23 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
 }
 
 async function loginout() {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  localStorage.clearAll();
-  sectionStorage.clearAll();
+  apiUserLogout().then(async (res) => {
+    if (res.succeeded) {
+      const localStorage = new StorageSuger("localStorage");
+      const sectionStorage = new StorageSuger("sessionStorage");
+      localStorage.clearAll();
+      sectionStorage.clearAll();
 
-  await navigateTo('/');
-  location.reload();
+      await navigateTo('/');
+      location.reload();
+    }
+  }).catch(e => {})
 }
 
 function personalCenter() {
-  const userId = userInfo.value.id;
+  const userId = tempUserInfo.value.id;
   navigateTo(`/user/${userId}/user-info`);
 }
-
-onNuxtReady(() => {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  
-  const userInfo1 = localStorage.getValue("userInfo");
-  const userInfo2 = sectionStorage.getValue("userInfo");
-  
-  if (userInfo1) {
-    userInfo.value = JSON.parse(userInfo1 as string);
-  } else if (userInfo2) {
-    userInfo.value = JSON.parse(userInfo2 as string);
-  }
-});
 
 </script>
 <template>
@@ -188,8 +186,8 @@ onNuxtReady(() => {
               <com-avatar
                 class="c-p"
                 style="height: 50px;width: 50px;"
-                :avatar-url="userInfo?.avatar" 
-                :nickname="userInfo?.account || '未知'"
+                :avatar-url="tempUserInfo?.avatar" 
+                :nickname="tempUserInfo?.account || '未知'"
               ></com-avatar>
               <div class="user__menu">
                 <div class="p-r">

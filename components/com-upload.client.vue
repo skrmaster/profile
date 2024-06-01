@@ -65,8 +65,7 @@ function handleFileChange(e: Event) {
     }
     clearInputValue();
   }
-  console.log(fileList.value);
-  
+
   emit('fileMonuted', [...unref(outDatalist), ...unref(fileList)])
 }
 
@@ -81,8 +80,14 @@ function clearInputValue() {
   }
 }
 
-function handlePreview(item: File) {
-  const url = blobToUrl(item);
+function handlePreview(item: File | Upload.FileInfo) {
+  let url: string | undefined;
+  if (isFile(item)) {
+    url = blobToUrl(item);
+  } else {
+    url = item.fullPath;
+  }
+
   if (!url) {
     $message.show({
       message: '无法预览无法加载的图片',

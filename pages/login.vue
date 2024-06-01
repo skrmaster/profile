@@ -20,6 +20,7 @@ const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
 const currentTimeRotateDeg = getRotateDeg();
+const btnLoading = ref(false);
 const config = ref<Array<FormConfig>>([
   {
     require: true,
@@ -48,6 +49,7 @@ const config = ref<Array<FormConfig>>([
     }
   }
 ]);
+const userInfo = useState<UserModel | undefined>('userInfo');
 const rememberPassword = ref(false);
 
 init();
@@ -173,6 +175,7 @@ function getTodayNumber(): number {
 }
 
 function handleSubmit() {
+  btnLoading.value = true;
   if (form.value) {
     form.value.vaildForm()
     .then(async (val: ReturnVaildForm) => {
@@ -184,14 +187,22 @@ function handleSubmit() {
         }
 
         await apiLogin(params).then((data) => {
+          const cookie = useCookie("s-getu");
+          cookie.value = true.toString();
+
           const storageStr: StorageFrom = 'localStorage';
           const storage = new StorageSuger(storageStr);
           storage.setValue('userInfo', data.data);
           const userInfoString = aesDecrypt(data.data);
-          const userInfo: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
-          useState<UserModel>('userInfo', () => userInfo);
+          const userInfoObj: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
+          userInfo.value = { ...userInfoObj };
           navigateTo('/');
+          btnLoading.value = false;
+        }).catch(e => {
+          btnLoading.value = false;
         });
+      } else {
+        btnLoading.value = false;
       }
     });
   }
@@ -237,6 +248,7 @@ onNuxtReady(() => {
                 </NuxtLink>
               </div>
               <com-button 
+                :loading="btnLoading"
                 class="action-btn fs24" 
                 @click="handleSubmit"
               >登录</com-button>

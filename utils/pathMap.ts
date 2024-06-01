@@ -20,7 +20,7 @@ type KeyOfRouter = 'homePath'
 
 export const routerMap: Record<KeyOfRouter, string> = {
   loginPath: '/login',
-  registerPath: '/register',
+  registerPath: '/signup',
   userInfoPath: '/user/:id/user-info',
   followPath: '/user/:id/follow',
   recordListPath: '/user/:id/record-list',
@@ -42,6 +42,8 @@ export const routerMap: Record<KeyOfRouter, string> = {
 type KeyOfApi = 'loginPath'
 | 'registerPath'
 | 'userInfoPath'
+| 'userUpdatePath'
+| 'userLogoutPath'
 | 'skillListPath'
 | 'skillAddPath'
 | 'skillEditPath'
@@ -83,6 +85,8 @@ export const apiMap: Record<KeyOfApi, string> = {
   loginPath: '/user/login',
   registerPath: '/user/register',
   userInfoPath: '/user/getuserinfo',
+  userUpdatePath: '/user/update',
+  userLogoutPath: '/user/logout',
   skillListPath: '/skill/getlist',
   skillAddPath: '/skill/add',
   skillEditPath: '/skill/update',

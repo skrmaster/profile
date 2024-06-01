@@ -13,6 +13,7 @@ useHead({
   title: "首页"
 });
 
+const userInfo = useState("userInfo");
 const benchData = benchPath.data;
 const roadData = roadPath.data;
 const roadWidth = 642;
@@ -327,14 +328,12 @@ function getScrollBarWidth(): number {
 onNuxtReady(() => {
   scrollBarWidth = getScrollBarWidth();
 
-  const userInfo = useUserInfo();
-  
   img = new Image();
   img.src = '/svg/park-bench.svg';
   lightImg = new Image();
   lightImg.src = '/svg/light-on.svg';
   grassImg = new Image();
-  grassImg.src = '/images/grass2.jpg';
+  grassImg.src = '/images/grass2.jpg';  
 
   initCanvas();
   const resizeHandler = debounce(initCanvas, 500);

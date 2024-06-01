@@ -5,6 +5,12 @@ type Prop = {
 }
 
 const props = defineProps<Prop>();
+// const avatarObj = computed(() => props.avatarUrl);
+// const tmpAvatarUrl = toRef(props.avatarUrl);
+// watchEffect(() => {
+//   const avatar: Upload.FileInfo = avatarObj.value ? JSON.parse(avatarObj.value) : "";
+//   tmpAvatarUrl.value = getAvatar(avatar)
+// });
 
 </script>
 <template>

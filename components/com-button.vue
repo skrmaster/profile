@@ -73,7 +73,8 @@ function handleClick($event: Event) {
     :class="{
       'primary': props.type === 'primary',
       'plain': props.plain,
-      'disabled': props.disabled
+      'disabled': props.disabled,
+      'loading': props.loading
     }"
     :style="{
       '--btn-box-shadow': `0px 0px 8px 2px rgba(0, 0, 0, 0.2)
@@ -144,5 +145,24 @@ function handleClick($event: Event) {
 .btn--link {
   background: transparent;
   height: auto;
+}
+
+.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.loading:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--white-color);
+  border-top: 2px solid var(--primary-border-color);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  transform: translate(-50%, -50%);
 }
 </style>

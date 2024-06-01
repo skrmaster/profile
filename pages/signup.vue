@@ -13,6 +13,7 @@ useHead({
 });
 const route = useRoute();
 const form = ref();
+const btnLoading = ref(false);
 const textArray = textdata.data;
 const speech = ref<string | undefined>();
 const from = ref<string | undefined>();
@@ -186,6 +187,7 @@ function getTodayNumber(): number {
 }
 
 function handleSubmit() {
+  btnLoading.value = true;
   if (form.value) {
     form.value.vaildForm()
     .then(async (val: ReturnVaildForm) => {
@@ -196,10 +198,15 @@ function handleSubmit() {
           code: ''
         }
         await apiRegister(params).then(res => {
+          btnLoading.value = false;
           if (res) {
             navigateTo('/login');
           }
+        }).catch(e => {
+          btnLoading.value = false;
         }); 
+      } else {
+        btnLoading.value = false;
       }
     });
   }

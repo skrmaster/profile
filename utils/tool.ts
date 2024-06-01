@@ -1,5 +1,7 @@
 import { useDayjs } from '#dayjs';
 
+const imagePrefix = import.meta.env.VITE_PROJECT_IMAGE_PREFIX;
+
 export function debounce(func: (arg: unknown) => unknown, time = 1000): (...arg: unknown[]) => void {
   let id: null | ReturnType<typeof setTimeout> = null;
 
@@ -38,4 +40,20 @@ export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObs
 export function timeNullFormat(time?: string): string {
   const dayjs = useDayjs();
   return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+}
+
+export function splicingImageUrl(raw: string): string | undefined {
+  if (!raw) {
+    return;
+  }
+  const url = new URL(raw, imagePrefix);
+  return url.toString();
+}
+
+export function getAvatar(item: Upload.FileInfo): string | undefined {
+  if (!item) {
+    return;
+  }
+
+  return splicingImageUrl(item.fullPath);
 }

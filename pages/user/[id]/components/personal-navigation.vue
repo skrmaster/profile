@@ -13,7 +13,7 @@ type Prop = {
 }
 
 const props = withDefaults(defineProps<Prop>(), {
-  avatarBlock: true,
+  avatarBlock: false,
   closeButton: false,
   height: '100%'
 });
@@ -21,7 +21,8 @@ const props = withDefaults(defineProps<Prop>(), {
 const route = useRoute();
 const params = route.params;
 const userInfo = useState<UserModel>('userInfo');
-
+const currentUserInfo = computed(() => userInfo.value);
+const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
 const list = ref<LinkType[][]>([
   [
     {
@@ -65,6 +66,11 @@ const list = ref<LinkType[][]>([
   ]
 ]);
 
+watchEffect(() => {
+  const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
+  tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
+});
+
 function isCurrentRoute(item: string) {
   let fullPath = route.fullPath;
   item = item.replace(':id', params.id as string);
@@ -76,27 +82,14 @@ function handleJump(item: LinkType) {
   item.url = item.url.replace(':id', params.id as string);
   navigateTo(item.url, { replace: true });
 }
-
-onNuxtReady(() => {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  
-  const userInfo1 = localStorage.getValue("userInfo");
-  const userInfo2 = sectionStorage.getValue("userInfo");
-  
-  if (userInfo1) {
-    userInfo.value = JSON.parse(userInfo1 as string);
-  } else if (userInfo2) {
-    userInfo.value = JSON.parse(userInfo2 as string);
-  }
-});
 </script>
 <template>
   <aside class="mr1" :style="{
     '--aside-height': props.height
   }">
     <div v-if="props.avatarBlock" class="flex__column--center">
-      <com-avatar :nickname="userInfo?.account || '未知'" :avatar-url="userInfo?.avatar" ></com-avatar>
+      <com-avatar :nickname="tempUserInfo?.account || '未知'" :avatar-url="tempUserInfo?.avatar" ></com-avatar>
+      <p>{{ tempUserInfo?.account }}</p>
       <!-- <div class="flex__row--between mt1">
         <span class="mr1">关注: 0</span>
         <span>粉丝: 0</span>

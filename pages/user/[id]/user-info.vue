@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import PersonalCenter from './components/personal-center.vue';
+import { apiUpdateUserInfo } from '~/api/user/request';
+import { apiAdd as fileApiAdd } from '~/api/upload/request';
 import type { UserModel, UpdateInfoType } from '~/api/user/model';
+import type { AddModel as FileAddModel  } from '~/api/upload/model';
 
 const userInfo = useState<UserModel>("userInfo");
 const formData = reactive<UpdateInfoType>({
@@ -9,23 +12,62 @@ const formData = reactive<UpdateInfoType>({
   password: '',
   code: ''
 });
+const { $message } = useNuxtApp();
+const images = ref<Upload.FileInfo[]>([]);
+const fileList = ref<Array<Upload.FileInfo>>([]);
 
+async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
+  for await (let item of list) {
+    if (!isFile(item)) {
+      continue;
+    }
 
-onNuxtReady(() => {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  
-  const userInfo1 = localStorage.getValue("userInfo");
-  const userInfo2 = sectionStorage.getValue("userInfo");
-  
-  if (userInfo1) {
-    userInfo.value = JSON.parse(userInfo1 as string);
-  } else if (userInfo2) {
-    userInfo.value = JSON.parse(userInfo2 as string);
+    const params: FileAddModel = {
+      category: 0,
+      file: item
+    }
+    fileApiAdd(params).then(res => {
+      images.value.push(res.data)
+    }).catch(() => {});
+  }
+}
+
+function handleUpdate() {
+  const params: UpdateInfoType = {
+    ...formData,
+    avatar: JSON.stringify(images.value[0])
   }
 
+  apiUpdateUserInfo(params).then(res => {
+    if (res.data) {
+      $message.show({
+        message: '操作成功',
+        type: 'success'
+      });
+      useClearUserInfoStorage();
+      getUserInfo();
+    }
+  })
+}
+
+function getUserInfo() {
+  formData.id = userInfo.value.id;
   formData.account = userInfo.value.account || '';
   formData.email = userInfo.value.email;
+  formData.avatar = userInfo.value.avatar;
+  
+  const imageIds: Upload.FileInfo = userInfo.value.avatar ? JSON.parse(userInfo.value.avatar) : [];      
+  
+  fileList.value = [imageIds].map(e => {
+    return {
+      id: e.id,
+      fullPath: splicingImageUrl(e.fullPath) || ""
+    }
+  });
+}
+
+onNuxtReady(() => {
+  getUserInfo();
 });
 
 </script>
@@ -36,7 +78,9 @@ onNuxtReady(() => {
         <label class="label">头像</label>
         <com-upload 
           label="上传头像"
-          :limit="1"
+          :data-list="fileList"
+              :limit="1"
+              @file-monuted="handleFileUpload"
           class="form__item-avatar"
         ></com-upload>
       </div>
@@ -68,7 +112,7 @@ onNuxtReady(() => {
       </div>
       <div class="form__item">
         <label class="label"></label>
-        <com-button style="width: 100px">
+        <com-button style="width: 100px" @click.stop="handleUpdate">
           <span>保存</span>
         </com-button>
       </div>
