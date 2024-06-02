@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import roadPath from 'assets/json/road.json';
-import benchPath from 'assets/json/bench.json'
+import benchPath from 'assets/json/bench.json';
+import benchSvg from 'assets/svg/park-bench.svg';
+import ligthOnSvg from 'assets/svg/light-on.svg';
+import walking from 'assets/json/walkMan.json';
 
 type Park = {
   ctx: CanvasRenderingContext2D | null;
@@ -13,13 +16,10 @@ useHead({
   title: "首页"
 });
 
-const userInfo = useState("userInfo");
 const benchData = benchPath.data;
 const roadData = roadPath.data;
-const roadWidth = 642;
-const roadHeight = 573;
-const roadGap = -55;
-let roadCount = 0;
+const walkData = walking.data;
+
 const formConfig: Array<FormConfig> = [
   {
     require: true,
@@ -57,6 +57,13 @@ const formConfig: Array<FormConfig> = [
   }
 ];
 
+const road = {
+  width: 642,
+  height: 573,
+  gap: -55,
+  count: 0,
+}
+
 const parkCanvas: Park = {
   ctx: null,
   width: 0,
@@ -84,68 +91,171 @@ const grass = {
   gap: 110,
 }
 
+const man = {
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  stepX: 0,
+  stepY: 0,
+  stepYDiff: 0,
+  countY: 0,
+  sitingTime: 100,
+  walkWidth: 0,
+  timeControl: 0,
+  walkToSitingWaitTime: 10,
+  sitingToWalkToWaitTime: 10,
+}
+
+const timer: {
+  [key in string]: ReturnType<typeof setTimeout> | undefined
+} = {
+  lastFrameTimer: undefined,
+}
+
+const requestTimer: {
+  [key in string]: ReturnType<typeof requestAnimationFrame> | undefined
+} = {
+  animateTimerTop: undefined,
+  animateTimerTop1: undefined,
+  animateTimerTop2: undefined,
+  animateTimerTop3: undefined,
+  animateTimerTop4: undefined,
+  animateTimerTop5: undefined,
+  animateTimerTop6: undefined,
+}
+
 let scrollBarWidth: number;
 let img: HTMLImageElement;
 let lightImg: HTMLImageElement;
-let grassImg: HTMLImageElement;
-
-function featherImage(
-  ctx: CanvasRenderingContext2D, 
-  img: HTMLImageElement, 
-  x: number, 
-  y: number, 
-  width: number, 
-  height: number
-) {
-  ctx.drawImage(img, x, y, width, height);
-  const gradient = ctx.createRadialGradient(
-    x + width / 2, 
-    y + height / 2
-    , 
-    0, 
-    x + width / 2, y + height / 2, 
-    Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) / 2);
-
-  gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-  gradient.addColorStop(0.8, 'rgba(255, 255, 255, 0)');
-  gradient.addColorStop(1, 'rgba(255, 255, 255, 1)');
-
-  ctx.globalCompositeOperation = 'destination-in';
-  ctx.fillStyle = gradient;
-  ctx.fillRect(x, y, width, height);
-}
-
 
 function initCanvas() {
-  const canvas = document.getElementById('park') as HTMLCanvasElement;
-  if (!canvas) {
-    throw new Error('canvas element is null!');
+  for (let item in timer) {
+    clearTimeout(timer[item]);
   }
 
-  canvas.width = window.innerWidth - scrollBarWidth - 1;
+  for (let item in requestTimer) {
+    if (!isUndefined(requestTimer[item])) {
+      window.cancelAnimationFrame(requestTimer[item] as number);
+    }
+  }
+
+  const canvas = document.getElementById('park') as HTMLCanvasElement;
+  if (!canvas) {
+    return;
+  }
+
+  canvas.width = window.innerWidth - scrollBarWidth;
   canvas.height = 1006;
   parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
-  roadCount = Math.ceil((window.innerWidth + 50) / roadWidth);
+  road.count = Math.ceil((window.innerWidth + 50) / road.width);
   grass.count = Math.ceil(window.innerWidth / grass.width);
+  man.walkWidth = window.innerWidth;
+  man.stepY = parkCanvas.height + 100;
+  man.stepYDiff = (parkCanvas.height - man.height - 150 * 2) - man.stepY;
+  man.countY = man.walkWidth / 2 / man.stepX;
+  man.y = (parkCanvas.height - man.height - 150 * 2) + (man.stepYDiff / man.countY);
 
   parkCanvas.ctx = canvas.getContext('2d');
   parkCanvas.horizon = canvas.height / 2;
-  
-  if (!parkCanvas.ctx) {
-    throw new Error('canvas context is null!');
-  }
 
-  window.requestAnimationFrame(draw);
+  requestTimer.animateTimerTop = window.requestAnimationFrame(draw);
 }
 
-function draw(): void {
+function draw() {
   let ctx: CanvasRenderingContext2D ;
   if (parkCanvas.ctx) {
     ctx = parkCanvas.ctx
   } else {
     return;
   }
+
+  if (man.stepX * man.timeControl / 100 > man.walkWidth) {
+    //循环动画第一帧
+    man.timeControl = 0;
+    man.sitingTime = 100;
+    man.walkToSitingWaitTime = 10;
+    man.sitingToWalkToWaitTime = 10;
+    timer.lastFrameTimer = setTimeout(() => {
+      requestTimer.animateTimerTop6 = window.requestAnimationFrame(draw);
+    }, 500);
+    return;
+  }
+
+  if (man.timeControl % 100 === 0) {
+    if (isNull(parkCanvas.ctx)) {
+      return; 
+    }
+    ctx.clearRect(0, 0, 5000, 5000);
+    ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
+      parkCanvas.height / 2 - bench.smallHeight / 10, 
+      bench.smallWidth, bench.smallHeight);
+    
+    ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
+      parkCanvas.height / 2 - light.smallHeight / 1.5, 
+      light.smallWidth, light.smallHeight);
+    if (man.stepX * man.timeControl / 100 >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
+      if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
+        man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
+        drawWalkingMan(
+          ctx, 
+          0, 
+          man.y, 
+          man.stepX * man.timeControl / 100
+        );
+        // drawLight(ctx);
+        drawRoad(ctx);
+        requestTimer.animateTimerTop2 = window.requestAnimationFrame(draw);
+        man.sitingToWalkToWaitTime--;
+        return
+      } else {
+        if (man.sitingTime > 1) {
+          drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
+        } else {
+          drawWalkingMan(
+            ctx, 
+            0, 
+            man.y, 
+            man.stepX * man.timeControl / 100
+          );
+        }
+        // drawLight(ctx);
+        drawRoad(ctx);
+        man.sitingTime--;
+        requestTimer.animateTimerTop3 = window.requestAnimationFrame(draw);
+        return;
+      }
+    } else {
+      if (man.stepX * man.timeControl / 100 >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+        man.y += ((man.walkToSitingWaitTime - 10) * 2);
+        drawWalkingMan(
+          ctx, 
+          0, 
+          man.y, 
+          man.stepX * man.timeControl / 100
+        );
+        // drawLight(ctx);
+        drawRoad(ctx);
+        requestTimer.animateTimerTop4 = window.requestAnimationFrame(draw);
+        man.walkToSitingWaitTime--;
+        return
+      } else {
+        drawWalkingMan(
+          ctx, 
+          0, 
+          man.y, 
+          man.stepX * man.timeControl / 100
+        );
+      }
+    }
+  } else {
+    requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
+    man.timeControl++;
+    return;
+  }
+  
+  man.timeControl++;
 
   // ctx.save();
   // const x = parkCanvas.width / 2 - bench.width / 2 ;
@@ -155,43 +265,53 @@ function draw(): void {
   // drawBench(ctx, benchData);
   // ctx.restore();
 
+  // drawLight(ctx);
+  drawRoad(ctx);
+  requestTimer.animateTimerTop1 = window.requestAnimationFrame(draw);
+}
+
+function drawWalkingMan(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
   ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(0, parkCanvas.horizon);
-  ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.horizon - 100, 
-    parkCanvas.width, parkCanvas.horizon);
-  ctx.lineTo(parkCanvas.width, parkCanvas.height - 200);
-  ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 300, 
-    0, parkCanvas.height - 200);
-  ctx.lineTo(0, parkCanvas.horizon);
-  ctx.stroke();
-  ctx.clip();
-  ctx.closePath();
-  for (let i = 0; i <= grass.count; i++) {
-    // featherImage(ctx, grassImg, i * grass.width, 400, grass.width, grass.height);
-    // ctx.drawImage(
-    //   grassImg, 
-    //   0,
-    //   0,
-    //   grass.width - grass.gap - 50,
-    //   grass.height,
-    //   i * grass.width,
-    //   400,
-    //   grass.width,
-    //   grass.height
-    // );
-  }
-
+  ctx.translate(x + offset, y);
+  const path = new Path2D(walkData[0]);
+  const p = new Path2D();
+  p.addPath(path);
+  ctx.fillStyle = '#0a0b0b';
+  ctx.fill(p);
   ctx.restore();
+}
 
-  ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-    parkCanvas.height / 2 - bench.smallHeight / 10, 
-    bench.smallWidth, bench.smallHeight);
-  
-  ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-    parkCanvas.height / 2 - light.smallHeight / 1.5, 
-    light.smallWidth, light.smallHeight);
- 
+function drawSitingMan(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(2, 2);
+  const path = new Path2D(walkData[1]);
+  const p = new Path2D();
+  p.addPath(path);
+  ctx.fillStyle = '#0a0b0b';
+  ctx.fill(p);
+  ctx.restore();
+}
+
+function drawLight(ctx: CanvasRenderingContext2D) {
+  //灯光
+  simulateYellowLight(ctx, parkCanvas.width / 2 + 3.5 * light.smallWidth, 
+    parkCanvas.height / 2 - light.smallHeight / 1.5 + 90, 800)
+}
+//#region 路
+function drawRoad(ctx: CanvasRenderingContext2D) {
+  ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, parkCanvas.horizon);
+    ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.horizon - 100, 
+      parkCanvas.width, parkCanvas.horizon);
+    ctx.moveTo(parkCanvas.width, parkCanvas.height - 200)
+    // ctx.lineTo(parkCanvas.width, parkCanvas.height - 200);
+    ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 300, 
+      0, parkCanvas.height - 200);
+    ctx.stroke();
+    ctx.closePath();
+  ctx.restore();
 
   ctx.beginPath();
   ctx.moveTo(0, parkCanvas.height - 200);
@@ -200,28 +320,30 @@ function draw(): void {
   ctx.lineTo(parkCanvas.width, parkCanvas.height);
   ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 100, 
     0, parkCanvas.height);
+  ctx.lineTo(0, parkCanvas.height - 200);
   ctx.stroke();
-  ctx.clip();
   ctx.closePath();
 
   ctx.save();
-  ctx.translate(roadGap - 50, roadHeight + 150);
-  for (let i = 0; i <= roadCount; i++) {
-    if (i % 2 === 1) {
-      generateRoad(ctx, () => {
-        ctx.translate((i + 1) * roadWidth - roadGap, roadHeight / 2);
-        ctx.rotate(180 * Math.PI / 180);
-        ctx.transform(1, 0, 0, 0.5, 0, 0);
-      });
-    } else {
-      generateRoad(ctx, () => {
-        ctx.translate(i * roadWidth, 0);
-        ctx.transform(1, 0, 0, 0.5, 0, 0);
-      });
+    ctx.clip();
+    ctx.translate(road.gap - 50, road.height + 150);
+    for (let i = 0; i <= road.height; i++) {
+      if (i % 2 === 1) {
+        generateRoad(ctx, () => {
+          ctx.translate((i + 1) * road.width - road.gap, road.height / 2);
+          ctx.rotate(180 * Math.PI / 180);
+          ctx.transform(1, 0, 0, 0.5, 0, 0);
+        });
+      } else {
+        generateRoad(ctx, () => {
+          ctx.translate(i * road.width, 0);
+          ctx.transform(1, 0, 0, 0.5, 0, 0);
+        });
+      }
     }
-  }
   ctx.restore();
 }
+//#endregion
 
 const styleMap: Record<string, 'lineWidth' | 'strokeStyle' | 'miterLimit' | 'lineCap' | 'lineJoin' | 'fillStyle'> = {
   'stroke-width': 'lineWidth',
@@ -230,6 +352,17 @@ const styleMap: Record<string, 'lineWidth' | 'strokeStyle' | 'miterLimit' | 'lin
   'stroke-linecap': 'lineCap',
   'stroke-linejoin': 'lineJoin',
   'fill': 'fillStyle',
+}
+
+function simulateYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+  let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+  gradient.addColorStop(0, 'rgba(255, 255, 0, 0.5)');
+  gradient.addColorStop(0.15, 'rgba(255, 255, 0, 0.2)');
+  gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, 2 * Math.PI);
+  ctx.fill();
 }
 
 function drawBench(ctx: CanvasRenderingContext2D, arr: typeof benchData) {
@@ -314,28 +447,25 @@ function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
   ctx.restore();
 }
 
-function getScrollBarWidth(): number {
-  const div = document.createElement('div');
-  div.style.overflowY = 'scroll';
-  div.style.width = '50px';
-  div.style.height = '50px';
-  document.body.appendChild(div);
-  const scrollbarWidth = div.offsetWidth - div.clientWidth;
-  document.body.removeChild(div);
-  return scrollbarWidth;
-}
-
 onNuxtReady(() => {
   scrollBarWidth = getScrollBarWidth();
 
   img = new Image();
-  img.src = '/svg/park-bench.svg';
-  lightImg = new Image();
-  lightImg.src = '/svg/light-on.svg';
-  grassImg = new Image();
-  grassImg.src = '/images/grass2.jpg';  
+  img.src = benchSvg;
 
-  initCanvas();
+  man.width = 110;
+  man.height = 200;
+  man.stepX = 110;
+
+  img.onload = () => {
+    lightImg = new Image();
+    lightImg.src = ligthOnSvg;
+
+    lightImg.onload = () => {
+      initCanvas();
+    }
+  }
+
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
 });
