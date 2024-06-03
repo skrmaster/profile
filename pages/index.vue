@@ -145,7 +145,7 @@ function initCanvas() {
     return;
   }
 
-  canvas.width = window.innerWidth - scrollBarWidth;
+  canvas.width = window.innerWidth - scrollBarWidth - 1;
   canvas.height = 1006;
   parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
@@ -171,7 +171,7 @@ function draw() {
     return;
   }
 
-  if (man.stepX * man.timeControl / 100 > man.walkWidth) {
+  if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
     //循环动画第一帧
     man.timeControl = 0;
     man.sitingTime = 100;
@@ -179,7 +179,7 @@ function draw() {
     man.sitingToWalkToWaitTime = 10;
     timer.lastFrameTimer = setTimeout(() => {
       requestTimer.animateTimerTop6 = window.requestAnimationFrame(draw);
-    }, 500);
+    }, 5000);
     return;
   }
 
@@ -195,14 +195,14 @@ function draw() {
     ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
       parkCanvas.height / 2 - light.smallHeight / 1.5, 
       light.smallWidth, light.smallHeight);
-    if (man.stepX * man.timeControl / 100 >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
+    if (man.stepX * (man.timeControl / 100 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
       if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
         man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
         drawWalkingMan(
           ctx, 
           0, 
           man.y, 
-          man.stepX * man.timeControl / 100
+          man.stepX * (man.timeControl / 100 - 2)
         );
         // drawLight(ctx);
         drawRoad(ctx);
@@ -217,7 +217,7 @@ function draw() {
             ctx, 
             0, 
             man.y, 
-            man.stepX * man.timeControl / 100
+            man.stepX * (man.timeControl / 100 - 2)
           );
         }
         // drawLight(ctx);
@@ -227,13 +227,13 @@ function draw() {
         return;
       }
     } else {
-      if (man.stepX * man.timeControl / 100 >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+      if (man.stepX * (man.timeControl / 100 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
         man.y += ((man.walkToSitingWaitTime - 10) * 2);
         drawWalkingMan(
           ctx, 
           0, 
           man.y, 
-          man.stepX * man.timeControl / 100
+          man.stepX * (man.timeControl / 100 - 2)
         );
         // drawLight(ctx);
         drawRoad(ctx);
@@ -245,7 +245,7 @@ function draw() {
           ctx, 
           0, 
           man.y, 
-          man.stepX * man.timeControl / 100
+          man.stepX * (man.timeControl / 100 - 2)
         );
       }
     }
@@ -529,7 +529,7 @@ onNuxtReady(() => {
       <ClientOnly>
         <com-form class="index__form mx-auto mb4" :model="formConfig">
           <div class="flex__center">
-            <com-button class="submit-btn mt1 fs24">提交</com-button>
+            <com-button class="submit-btn fs20">提交</com-button>
           </div>
         </com-form>
       </ClientOnly>
@@ -624,7 +624,7 @@ onNuxtReady(() => {
 }
 
 .submit-btn {
-  width: 250px;
-  height: 92px;
+  width: 150px;
+  height: 52px;
 }
 </style>

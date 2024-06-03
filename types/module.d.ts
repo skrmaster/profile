@@ -1,15 +1,5 @@
-import { SlateDescendant, SlateElement, SlateText } from '@wangeditor/editor';
 //避免全局污染
-export {}
-
-declare module 'vue' {
-  interface HTMLElement {
-    _loadingStartTime?: number;
-    _loadingDisplayStartTime?: number;
-    _loadingTimerMounted?: ReturnType<typeof setTimeout>;
-    _loadingTimerUpdate?: ReturnType<typeof setTimeout>;
-  }
-}
+export {};
 
 declare module '#app' {
   interface NuxtApp {
@@ -18,16 +8,7 @@ declare module '#app' {
     $sanitize: DOMPurify.DOMPurifyI.sanitize;
   }
 }
-
-declare module '@wangeditor/editor' {
-  // 扩展 Text
-  interface SlateText {
-    text: string;
-  }
-
-  // 扩展 Element
-  interface SlateElement {
-    type: string;
-    children: SlateDescendant[];
-  }
+declare module '@wangeditor/editor-for-vue' {
+  const content: any;
+  export default content;
 }

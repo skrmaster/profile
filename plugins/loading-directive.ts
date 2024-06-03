@@ -1,7 +1,12 @@
-import { defineNuxtPlugin } from '#app'
-import type { HTMLElement as HL } from 'nuxt/dist/app/compat/capi';
+import { defineNuxtPlugin } from '#app';
+interface VueExtends {
+  _loadingStartTime?: number;
+  _loadingDisplayStartTime?: number;
+  _loadingTimerMounted?: ReturnType<typeof setTimeout>;
+  _loadingTimerUpdate?: ReturnType<typeof setTimeout>;
+}
 
-type ElementType = HL & HTMLElement;
+type ElementType = HTMLElement & VueExtends;
 const loadingCircleClass = 'loading-spinner';
 const loadingMaskClass = 'loading-mask';
 const minElapsed = 200;

@@ -186,7 +186,7 @@ function mountedSkills() {
   });
 }
 
-fetchData();
+// fetchData();
 
 onMounted(() => {
   if (skillBox.value) {

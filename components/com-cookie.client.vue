@@ -75,7 +75,7 @@ function close() {
   z-index: 990;
   width: 100%;
   min-height: 150px;
-  padding: 50px;
+  padding: 15px;
 }
 
 .button__box {

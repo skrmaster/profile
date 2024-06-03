@@ -1,7 +1,5 @@
-import fs from 'fs'
-import path from 'path'
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import eslintPlugin from 'vite-plugin-eslint';
+import fs from 'fs';
+import path from 'path';
 
 const cssDir = path.resolve(__dirname, 'assets/css')
 const cssFiles = fs.readdirSync(cssDir).filter(file => file.endsWith('.css'))
@@ -14,7 +12,7 @@ export default defineNuxtConfig({
       //https://nuxt.com/modules/eslint-module
       '@nuxtjs/eslint-module', 
       { 
-        lintOnStart: true,
+        lintOnStart: false,
         cache: true
       }
     ],
@@ -46,21 +44,25 @@ export default defineNuxtConfig({
       "compilerOptions": {
         "allowJs": true,
         "noEmit": true,
-        "module": "ESNext",
-        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "module": "es2022",
+        "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "jsx": "preserve",
         "jsxImportSource": "vue",
         "noImplicitThis": true,
         "strict": true,
         "verbatimModuleSyntax": true,
-        "target": "ESNext",
+        "target": "es2022",
         "useDefineForClassFields": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "baseUrl": ".",
-        "types": ["@types/node"]
+        "typeRoots": [
+          "./node_modules/@types",
+          "./types"
+        ]
       },
       "include": [
         "lib/*.d.ts",
@@ -74,13 +76,5 @@ export default defineNuxtConfig({
     }
   },
   vite: {
-    plugins: [
-      eslintPlugin({
-        lintOnStart: false,
-        include: ['src/**/*.ts', 'src/**/*.ts', 'src/**/*.ts'],
-        exclude: ['node_modules', 'public', '.nuxt', '.vs', '.vscode']
-      }),
-      vueJsx()
-    ]
   }
 });
