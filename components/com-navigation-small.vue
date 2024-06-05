@@ -1,24 +1,36 @@
 <script lang="ts" setup>
 import type { UserModel } from '~/api/user/model';
 
+const {
+  homePath,
+  addressListPath,
+  projectPagePath,
+  recordPagePath,
+} = routerMap
 const navList = ref([
   {
     name: '首页',
-    icon: 'profile-home1'
+    icon: 'profile-home1',
+    link: homePath,
   },
   {
     name: '项目',
-    icon: 'profile-projects'
+    icon: 'profile-projects',
+    link: projectPagePath,
   },
   {
     name: '记录',
-    icon: 'profile-blogs'
+    icon: 'profile-blogs',
+    link: recordPagePath,
   },
   {
     name: '地址',
-    icon: 'profile-address'
+    icon: 'profile-address',
+    link: addressListPath,
   },
 ]);
+
+const route = useRoute();
 const currentIndex = ref(0);
 const userInfo = useState<UserModel>('userInfo');
 const currentUserInfo = computed(() => userInfo.value);
@@ -30,8 +42,18 @@ watchEffect(() => {
   tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
 });
 
+function isCurrentRoute(item: string) {
+  let fullPath = route.fullPath;
+
+  return item === fullPath;
+}
+
 function handleNav(index: number) {
   currentIndex.value = index;
+
+  navigateTo({
+    path: navList.value[index].link
+  });
 }
 </script>
 <template>
@@ -49,12 +71,12 @@ function handleNav(index: number) {
           :key="index"
           class="navigation__item"
           :class="{
-            'active': currentIndex === index
+            'active': isCurrentRoute(item.link)
           }"
           @click="handleNav(index)"
         >
           <com-icon class="nav__icon" :icon="item.icon"></com-icon>
-          <span v-show="currentIndex === index" class="fs18">{{ item.name }}</span>
+          <span v-show="isCurrentRoute(item.link)" class="fs18">{{ item.name }}</span>
         </div>
       </nav>
       <div class="theme__control flex__row--end">

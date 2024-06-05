@@ -13,6 +13,7 @@ const boxRef = ref();
 const carouselRef = ref();
 const boxOutRef = ref();
 
+const { $message } = useNuxtApp();
 let currentVal = 2;
 const transitionTime = 0.3;
 const currentIndex = ref(props.isLoop ? currentVal : 1);
@@ -26,6 +27,7 @@ const carousel = reactive({
   activeWidth: 629,
   activeHeight: 342,
 });
+let elementResize: ResizeObserver | null = null;
 
 const translate = ref(props.isLoop ? carousel.transformWidth : 0);
 const itemTime = ref(transitionTime);
@@ -105,9 +107,15 @@ function iconNext(index: number) {
 
   if (isFirst || isLast) {
     if (isFirst) {
-      alert('已经是第一张了')
+      $message.show({
+        message: '已经是第一张了',
+        type: 'info'
+      });
     } else {
-      alert('已经是最后一张了')
+      $message.show({
+        message: '已经是最后一张了',
+        type: 'info'
+      });
     }
 
     return
@@ -147,9 +155,9 @@ function next(index: number) {
   }, transitionTime * 1000);
 }
 
-onNuxtReady(() => {
-  const observer = resize(carouselRef.value , (arg: Resize) => {
-    const numArr = stringRegexp(boxRef.value.style.transform, 'number');
+onMounted(() => {
+  elementResize = resize(carouselRef.value , (arg: Resize) => {
+    const numArr = stringRegexp(boxRef.value?.style.transform, 'number');
     
     if (carousel.boxWidth > arg.w) {
       offset.value = carousel.boxWidth - arg.w;
@@ -172,6 +180,10 @@ onNuxtReady(() => {
     }
   });
 });
+
+onBeforeUnmount(() => {
+  elementResize?.unobserve(boxRef.value);
+})
 </script>
 <template>
   <div 
@@ -236,7 +248,7 @@ onNuxtReady(() => {
   margin-right: auto;
   max-width: 1395px;
   width: 100%;
-  /* border: 1px solid var(--primary-border-color); */
+  height: 100%;
   overflow: hidden;
   position: relative;
 }

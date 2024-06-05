@@ -20,6 +20,7 @@ const benchData = benchPath.data;
 const roadData = roadPath.data;
 const walkData = walking.data;
 
+const windowWidth = ref(0);
 const formConfig: Array<FormConfig> = [
   {
     require: true,
@@ -56,6 +57,10 @@ const formConfig: Array<FormConfig> = [
     }
   }
 ];
+const parkScale = ref(1);
+const parkTransform = computed(() => {
+  return `scale(${parkScale.value})`;
+});
 
 const road = {
   width: 642,
@@ -130,6 +135,8 @@ let img: HTMLImageElement;
 let lightImg: HTMLImageElement;
 
 function initCanvas() {
+  windowWidth.value = window.innerWidth;
+
   for (let item in timer) {
     clearTimeout(timer[item]);
   }
@@ -145,8 +152,19 @@ function initCanvas() {
     return;
   }
 
-  canvas.width = window.innerWidth - scrollBarWidth - 1;
-  canvas.height = 1006;
+  if (window.innerWidth <= 992) {
+    let reallyWidth = window.innerWidth;
+    let w = 992;
+    parkScale.value = reallyWidth / w;
+
+    canvas.width = w - scrollBarWidth - 1;
+    canvas.height = 1006;
+  } else {
+    parkScale.value = 1;
+    canvas.width = window.innerWidth - scrollBarWidth - 1;
+    canvas.height = 1006;
+  }
+  
   parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
   road.count = Math.ceil((window.innerWidth + 50) / road.width);
@@ -474,10 +492,19 @@ onNuxtReady(() => {
 <template>
   <NuxtLayout name="header-section-footer">
     <section class="p-r">
-      <canvas id="park" class="z-index2"></canvas>
+      <canvas 
+        :style="{
+          'transform-origin': 'top left',
+          'transform': parkTransform
+        }" 
+        id="park" 
+        class="z-index2"
+      ></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
       <div class="container z-index4">
-        <div class="introduction">
+        <div class="introduction" :class="{
+          'introducion-small': windowWidth < 992
+        }">
           <div class="flex__center flex-wrap introduciton-text-height">
             <div class="fs48 text-right self-introduction">
               <p>嗨,</p>
@@ -486,7 +513,7 @@ onNuxtReady(() => {
             </div>
             <div class="section__avatar">
               <div class="avatar__box mx-auto">
-                <img src="" alt="avatar" />
+                <!-- <img src="" alt="avatar" /> -->
               </div>
             </div>
             <div>
@@ -500,10 +527,12 @@ onNuxtReady(() => {
             </div>
           </div>
         </div>
+        <div v-if="windowWidth > 578 && windowWidth < 992" class="introducion-seat"></div>
       </div>
     </section>
-    <index-skills></index-skills>
-    <index-projects></index-projects>
+    <index-skills v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
+    <index-skills-small v-else></index-skills-small>
+    <index-projects :width="windowWidth"></index-projects>
     <div class="container">
       <div class="text-center">
         <p class="fs48">联系我</p>
@@ -523,7 +552,9 @@ onNuxtReady(() => {
         <div class="contact__item flex__column--center">
           <com-icon width="60px" height="60px" icon="profile-email"></com-icon>
           <p class="contact__item-gap fs24">邮箱</p>
-          <p class="fs30">18283170317zy@gmail.com</p>
+          <p class="fs30 flex__row">
+            <span style="word-break: break-all;">18283170317zy@gmail.com</span>
+          </p>
         </div>
       </div>
       <ClientOnly>
@@ -545,6 +576,16 @@ onNuxtReady(() => {
 
 .introduction {
   height: 1006px;
+  /* height: 100%; */
+  margin-bottom: 3em;
+}
+
+.introducion-small {
+  height: 100%;
+}
+
+.introducion-seat {
+  height: 300px;
 }
 
 .introduciton-text-height {
@@ -557,8 +598,12 @@ onNuxtReady(() => {
 }
 
 .avatar__box {
-  width: 363px;
-  height: 363px;
+  max-width: 363px;
+  max-height: 363px;
+  width: 100%;
+  height: 100%;
+  min-width: 150px;
+  min-height: 150px;
 }
 
 .avatar__box img {
@@ -589,7 +634,7 @@ onNuxtReady(() => {
   max-width: 500px;
   width: 100%;
   height: 338px;
-  min-width: 390px;
+  min-width: 300px;
   margin: 0 auto;
 }
 
@@ -597,8 +642,6 @@ onNuxtReady(() => {
   height: 60px;
   width: 60px
 }
-
-
 
 .contact__item-gap {
   margin-top: 15px;

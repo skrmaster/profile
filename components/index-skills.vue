@@ -19,6 +19,21 @@ type SkillName = {
   id: number;
 }
 
+type Prop = {
+	width?: number;
+}
+
+const props = withDefaults(defineProps<Prop>(), {
+	width: 0
+});
+
+const windowWidth = computed(() => props.width);
+watch(windowWidth, (val) => {
+	if (val) {
+    1
+	}
+});
+
 const proficiencyMap: Record<number, string> = {
   100: '38',
   90: '30',
@@ -103,26 +118,28 @@ function mountedSkills() {
     let xCount = 0;
     let yCount = 0;
 
-    if (i <= 2) {
-      widthGap = skillBox.value!.offsetWidth / 4;
-      xCount = i % 4 === 0 ? 1 : i % 4 + 1;
-      yCount = 0;
-    } else if (i <= 5) {
-      widthGap = skillBox.value!.offsetWidth / 4;
-      xCount = i % 3 === 0 ? 1 : i % 3 + 1;
-      yCount = 1;
-    } else if (i <= 9) {
-      widthGap = skillBox.value!.offsetWidth / 5;
-      xCount = i % 5 === 0 ? 1 : i % 5;
-      yCount = 2;
-    } else if (i <= 12) {
-      widthGap = skillBox.value!.offsetWidth / 4;
-      xCount = i % 4 === 0 ? 1 : i % 4;
-      yCount = 3;
-    } else if (i <= 14) {
-      widthGap = skillBox.value!.offsetWidth / 3;
-      xCount = i % 2 === 0 ? 1 : i % 2 + 1;
-      yCount = 4;
+    if (skillBox.value) {
+      if (i <= 2) {
+        widthGap = skillBox.value.offsetWidth / 4;
+        xCount = i % 4 === 0 ? 1 : i % 4 + 1;
+        yCount = 0;
+      } else if (i <= 5) {
+        widthGap = skillBox.value!.offsetWidth / 4;
+        xCount = i % 3 === 0 ? 1 : i % 3 + 1;
+        yCount = 1;
+      } else if (i <= 9) {
+        widthGap = skillBox.value!.offsetWidth / 5;
+        xCount = i % 5 === 0 ? 1 : i % 5;
+        yCount = 2;
+      } else if (i <= 12) {
+        widthGap = skillBox.value!.offsetWidth / 4;
+        xCount = i % 4 === 0 ? 1 : i % 4;
+        yCount = 3;
+      } else if (i <= 14) {
+        widthGap = skillBox.value!.offsetWidth / 3;
+        xCount = i % 2 === 0 ? 1 : i % 2 + 1;
+        yCount = 4;
+      }
     }
     
     return {
@@ -186,9 +203,8 @@ function mountedSkills() {
   });
 }
 
-// fetchData();
-
 onMounted(() => {
+  fetchData();
   if (skillBox.value) {
     elementResize = resize(skillBox.value, (wh) => {
       minWidth = skillCircle.value!.offsetLeft;
@@ -259,6 +275,12 @@ onBeforeUnmount(() => {
   height: 800px;
   padding: 20px;
   position: relative;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
 }
 
 .skills-text {

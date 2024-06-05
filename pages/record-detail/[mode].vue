@@ -43,7 +43,12 @@ function init() {
     userSubtitle.value = res.data.subtitle;
     subtitle = res.data.description;
     const imageIds: Upload.FileInfo[] = res.data.coverImageUrl ? JSON.parse(res.data.coverImageUrl) : [];
-    fileList.value = imageIds.map(e => e);
+    fileList.value = imageIds.map((e) => {
+      return {
+        id: e.id,
+        fullPath: splicingImageUrl(e.fullPath) || ""
+      }
+    });
   }).catch(e => {
 
   });
@@ -133,7 +138,7 @@ function handleEditorText(text: string) {
 }
 </script>
 <template>
-  <div v-if="mode !== 'view'" class="background">
+  <div v-if="mode !== 'view'" class="mode__background">
     <detail-title
       :status="status"
       :mode="mode"
@@ -182,7 +187,7 @@ function handleEditorText(text: string) {
   <record-detail-view v-else></record-detail-view>
 </template>
 <style scoped>
-.background {
+.mode__background {
   background-image: radial-gradient(#ffffff 0, var(--background-color) 100%);
   background-blend-mode: screen;
   max-width: 100vw;

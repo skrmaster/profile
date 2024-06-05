@@ -19,8 +19,10 @@ export type EditModel = AddModel & {
   [key: string]: any;
 }
 
-export type ListType = Array<EditModel & {
+export type ListItem = EditModel & {
   creatorId: number;
   createTime: string;
   updateTime?: string;
-}>
+}
+
+export type ListType = Array<ListItem>;

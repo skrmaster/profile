@@ -57,7 +57,7 @@ function initEditData() {
     fileList.value = imageIds.map((e) => {
       return {
         id: e.id,
-        fullPath: e.fullPath
+        fullPath: splicingImageUrl(e.fullPath) || ""
       }
     });
     images.value = [...fileList.value];

@@ -58,7 +58,7 @@ function init() {
     imageList.value = imageIds.map((e, i) => {
       return {
         id: e.id,
-        image: e.fullPath
+        image: splicingImageUrl(e.fullPath) || ""
       }
     });
   }).catch((e) => {
@@ -80,7 +80,7 @@ function goBack() {
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
     <section>
-      <div class="container">
+      <div class="container flex__column">
         <div class="title flex__center mt2 mb3">
           <div class="back">
             <div class="flex__row" @click="goBack">
@@ -94,13 +94,15 @@ function goBack() {
           </div>
           <div class="flex__center">
             <div class="text-center title__bg">
-              <span class="font-bold fs24">{{ title }}</span>
+              <h1 class="font-bold fs24">{{ title }}</h1>
             </div>
           </div>
         </div>
-        <com-carousel
-          :list="imageList"
-        ></com-carousel>
+        <div style="height: 360px; overflow: hidden">
+          <com-carousel
+            :list="imageList"
+          ></com-carousel>
+        </div>
         <div class="stack__box">
           <p><label>技术栈</label></p>
           <div class="my1">
@@ -130,6 +132,16 @@ function goBack() {
   </com-background>
 </template>
 <style scoped>
+.background {
+  background-image: radial-gradient(#ffffff 0, var(--background-color) 100%);
+  background-blend-mode: screen;
+  max-width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
   height: 100px;
   position: relative;
@@ -162,6 +174,8 @@ function goBack() {
 }
 
 .stack__box {
+  overflow: hidden;
+  box-sizing: border-box;
   min-height: 200px;
 }
 

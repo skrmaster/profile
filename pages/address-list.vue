@@ -51,14 +51,8 @@ function fetchData() {
 fetchData();
 </script>
 <template>
-  <com-background
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="true"
-  >
-    <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
-    <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
-    <section>
+  <NuxtLayout name="header-section-footer" bg-change-color bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(#ffffff 0, var(--background-color) 100%)">
+    <section class="flex1">
       <div class="container overflow-hidden">
         <div class="address">
           <div class="address__item"
@@ -91,9 +85,13 @@ fetchData();
         </div>
       </div>
     </section>
-  </com-background>
+  </NuxtLayout>
 </template>
 <style scoped>
+.address {
+  padding-bottom: 50px;
+}
+
 .address__gird {
   padding: 0 20px;
   display: grid;

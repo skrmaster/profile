@@ -1,22 +1,20 @@
 <script lang="ts" setup>
 import { apiGetList }  from '~/api/project/request';
-
-type DataItem = {
-  name: string;
-  imageUrl: string;
-}
+import type { ListType, ListItem }  from '~/api/project/model';
 
 useHead({
   title: "项目列表"
 });
 
 const paginationRef = ref();
+
+const { projectDetailPath } = routerMap;
 const pagination = reactive({
   total: 0,
   page: 1,
   pageSize: 20
 });
-const data = ref<DataItem[]>([]);
+const data = ref<ListType>([]);
 
 init();
 function init() {
@@ -34,12 +32,22 @@ function getData() {
     data.value = res.data.list.map(e => {
       const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
       return {
+        ...e,
         name: e.name,
-        imageUrl: imageIds[0].fullPath
+        imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
       };
     });
   }).catch(() => {
   });
+}
+
+function handleViewProject(item: ListItem) {
+  navigateTo({
+    path: projectDetailPath + '/view',
+    query: {
+      id: item.id
+    }
+  })
 }
 
 function getDataByPagination() {
@@ -59,12 +67,13 @@ function getDataByPagination() {
       <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
       <section class="flex1 overflow-auto">
         <div class="container">
-          <div>
+          <div class="flex__row flex-wrap">
             <p class="my3 fs24">项目列表</p>
             <div class="project-gird" v-if="data.length > 0">
               <div class="project__item" 
                 v-for="(item, index) in data" 
                 :key="index"
+                @click="handleViewProject(item)"
               >
                 <div class="project__image">
                   <img :src="item.imageUrl" />

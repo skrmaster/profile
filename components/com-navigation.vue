@@ -17,7 +17,7 @@ const {
   recordPagePath,
   loginPath,
   registerPath,
-} = routerMap
+} = routerMap;
 
 const navList: Array<NavItemType> = [
   {

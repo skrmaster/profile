@@ -9,6 +9,7 @@ const recordId = route.query.id as string;
 const { recordCategory } = options;
 const viewJudgeTime = 1000 * 60 * 5;
 let timer: ReturnType<typeof setTimeout> | null;
+const scrollBarWidth = ref(0);
 
 const editorRef = ref();
 const data = reactive<Partial<ListItem>>({
@@ -62,6 +63,7 @@ function viewCountAddAfter5min() {
 }
 
 onNuxtReady(() => {
+  scrollBarWidth.value = getScrollBarWidth();
   init();
   viewCountAddAfter5min();
   document.addEventListener('copy', handleCopy);
@@ -76,8 +78,8 @@ onUnmounted(() => {
 
 </script>
 <template>
-  <NuxtLayout name="header-section-footer">
-    <div class="container p1">
+  <NuxtLayout name="header-section-footer" bg-change-color bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(#ffffff 0, var(--background-color) 100%)">
+    <div class="container p1 flex1">
       <div class="back__nav mb1 pb1">
         <div class="c-p" @click="goBack">
           <com-icon icon="profile-left"></com-icon>
@@ -125,6 +127,11 @@ onUnmounted(() => {
 
 :deep(.c-d .icon) {
   cursor: default;
+}
+
+:deep(.background) {
+  display: flex;
+  flex-direction: column;
 }
 
 .back__nav {
