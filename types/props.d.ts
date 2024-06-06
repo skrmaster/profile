@@ -25,3 +25,23 @@ declare namespace Upload {
     id: string;
   }
 }
+
+declare namespace Skill {
+  type Skill = {
+    name: string;
+    mastery: string;
+    x: number;
+    y: number;
+    moveVector: number;
+    originX: number;
+    originY: number;
+    class: string;
+    id: string;
+  }
+  
+  type SkillName = {
+    name: string;
+    proficiency: number;
+    id: number;
+  }
+}

@@ -8,6 +8,8 @@ import type { RegisterType } from '~/api/user/model';
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
 
+const { $message } = useNuxtApp();
+
 useHead({
   title: "注册"
 });
@@ -22,6 +24,18 @@ let deg = 0;
 let canvasAnimateSwitch = true;
 const currentTimeRotateDeg = getRotateDeg();
 const config: Array<FormConfig> = [
+  {
+    require: true,
+    field: 'account',
+    type: 'text',
+    rule: 'account',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请输入账号',
+      clearable: true,
+      errorMsg: '请输2~8个字符'
+    }
+  },
   {
     require: true,
     field: 'email',
@@ -74,6 +88,24 @@ function getRandomAphorisms() {
   }).catch(e => {
 
   });
+}
+
+let time = 3;//秒
+let timer: ReturnType<typeof setTimeout>;
+function wheelSetTimeout(updateCallback: (...args: any) => any, resultCallback: (...args: any) => any) {
+  timer = setTimeout(() => {
+    time--;
+    if (updateCallback) {
+      updateCallback();
+    }
+    wheelSetTimeout(updateCallback, resultCallback);
+    if (time === 0) {
+      clearTimeout(timer);
+      if (resultCallback) {
+        resultCallback();
+      }
+    }
+  }, 1000);
 }
 
 function drawClock() {
@@ -193,14 +225,29 @@ function handleSubmit() {
     .then(async (val: ReturnVaildForm) => {
       if (val.vaild) {
         const params: RegisterType = {
-          email: '',
+          account: val.data.account,
+          email: val.data.email,
           password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
           code: ''
         }
+
         await apiRegister(params).then(res => {
           btnLoading.value = false;
-          if (res) {
-            navigateTo('/login');
+          if (res.succeeded) {
+            $message.show({
+              message: res.data.toString(),
+              type: 'success'
+            });
+            wheelSetTimeout(() => {
+              $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
+            }, () => {
+              navigateTo('/login');
+            });
+          } else {
+            $message.show({
+              message: res.data.toString() || JSON.stringify(res.errors),
+              type: 'error'
+            });
           }
         }).catch(e => {
           btnLoading.value = false;

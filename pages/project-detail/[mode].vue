@@ -5,7 +5,7 @@ import type { AddModel as FileAddModel } from '~/api/upload/model';
 import type { AddModel, EditModel } from '~/api/project/model';
 import projectDetailView from './project-detail-view.vue';
 
-const { $message } = useNuxtApp();
+const { $message, $dayjs } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 const mode = route.params.mode as DetailTitle.Mode;
@@ -31,10 +31,20 @@ const formData = reactive<Omit<AddModel, 'name' | 'status'>>({
   summary: '',
   description: '',
   department: '',
+  startTime: $dayjs().format('YYYY-MM-DD'),
+  endTime: $dayjs().format('YYYY-MM-DD'),
   sort: 1
 });
-
+const startMinTime = ref();
+const endMinTime = ref();
 const projectName = ref('');
+
+watch(() => formData.startTime, (val) => {
+  if ($dayjs(val).isAfter($dayjs(formData.endTime))) {
+    formData.endTime = formData.startTime;
+  }
+  endMinTime.value = val;
+});
 
 function initEditData() {
   apiGetInfo(projectId)
@@ -134,9 +144,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       if (res.succeeded) {
         router.back();
       }
-    }).catch(() => {
-
-    });
+    }).catch(() => {});
   } else {
     const p: EditModel = {
       ...params,
@@ -150,9 +158,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       if (res.succeeded) {
         router.back();
       }
-    }).catch(e => {
-
-    });
+    }).catch(e => {});
   }
   
 }
@@ -188,6 +194,18 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
                 :is-label="false"
               ></com-form-input>
             </div>
+          </div>
+          <div class="flex__row my2">
+            <label>
+              项目开始时间
+            </label>
+            <input type="date" v-model="formData.startTime" :min="startMinTime" />
+          </div>
+          <div class="flex__row my2">
+            <label>
+              项目结束时间
+            </label>
+            <input type="date" v-model="formData.endTime" :min="endMinTime" />
           </div>
           <div class="flex__row my2">
             <label class="stack__label flex__center">技术栈</label>
@@ -270,7 +288,9 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
 }
 
 .demo__label {
-  width: 100px;
+  max-width: 120px;
+  width: 100%;
+  min-width: 50px;
   height: 70px;
   line-height: 70px;
   font-size: 18px;
@@ -296,8 +316,8 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
 label {
   display: block;
   text-align: center;
-  max-width: 100px;
-  width: 100px;
+  max-width: 120px;
+  width: 100%;
   min-width: 50px;
 }
 
@@ -330,5 +350,12 @@ label {
   height: 323px;
   padding: 20px;
   background-color: var(--readonly-color);
+}
+
+input[type="date"] {
+  height: 60px;
+  padding: 0 20px;
+  font-size: 18px;
+  border-radius: var(--border-radius-large);
 }
 </style>

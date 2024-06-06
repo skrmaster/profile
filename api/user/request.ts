@@ -39,7 +39,7 @@ export async function apiLogin(params: LoginType) {
 }
 
 export async function apiRegister(params: RegisterType) {
-  const res = await httpClient<boolean>(registerPath, {
+  const res = await httpClient<boolean | string>(registerPath, {
     method: 'post',
     body: params
   });

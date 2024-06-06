@@ -1,26 +1,7 @@
 <script lang="ts" setup>
-import { apiSkillGetList } from '~/api/skill/request'
- 
-type Skill = {
-  name: string;
-  mastery: string;
-  x: number;
-  y: number;
-  moveVector: number;
-  originX: number;
-  originY: number;
-  class: string;
-  id: string;
-}
-
-type SkillName = {
-  name: string;
-  proficiency: number;
-  id: number;
-}
-
 type Prop = {
 	width?: number;
+  skillName: Skill.SkillName[];
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -44,8 +25,8 @@ const proficiencyMap: Record<number, string> = {
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skillsName = ref<SkillName[]>([]);
-const skills = ref<Array<Skill>>([]);
+const skillsName = computed(() => props.skillName);
+const skills = ref<Array<Skill.Skill>>([]);
 let elementResize: null | ResizeObserver = null;
   
 let widthGap = 0;
@@ -54,12 +35,6 @@ let minWidth = 0;
 let minHeight = 0;
 let maxWidth = 0;
 let maxHeight = 0;
-
-function callback(entries: ResizeObserverEntry[]) {
-  for (const entry of entries) {
-    const w = entry.contentRect.width;
-  }
-}
 
 function active($event: MouseEvent) {
   const mouseX = $event.offsetX;
@@ -90,26 +65,6 @@ function inactive() {
 
 function handleAddSkill() {
   navigateTo(skillMgtPath);
-}
-
-function fetchData() {
-  const params: Omit<Pagination, 'total'> = {
-    page: 1,
-    pageSize: 15
-  }
-
-  apiSkillGetList(params).then(res => {
-    skillsName.value = res.data.list.map(e => {
-      return {
-        name: e.name,
-        proficiency: e.proficiency,
-        id: e.id
-      }
-    });
-    mountedSkills();
-  }).catch(() => {
-    skillsName.value = [];
-  });
 }
 
 const debounceMoutedskills = debounce(mountedSkills, 500);
@@ -156,7 +111,7 @@ function mountedSkills() {
   });
 
   nextTick(() => {
-    const gap = 15;
+    const gap = 30;
     minWidth -= gap;
     maxWidth += gap;
     minHeight -= gap;
@@ -204,7 +159,6 @@ function mountedSkills() {
 }
 
 onMounted(() => {
-  fetchData();
   if (skillBox.value) {
     elementResize = resize(skillBox.value, (wh) => {
       minWidth = skillCircle.value!.offsetLeft;

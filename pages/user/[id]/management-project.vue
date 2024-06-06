@@ -129,8 +129,8 @@ function getTableData() {
   apiGetList(params).then(res => {
     Object.assign(pagination ,res.data.pagination);
     tableData.value = res.data.list.map(e => {
-      e.startTime = timeNullFormat(e.startTime);
-      e.endTime = timeNullFormat(e.endTime);
+      e.startTime = timeNullFormat(e.startTime, 'YYYY-MM-DD');
+      e.endTime = timeNullFormat(e.endTime, 'YYYY-MM-DD');
       e.createTime = timeNullFormat(e.createTime);
       e.updateTime = timeNullFormat(e.updateTime);
       e.category = getListLabel(e.category, tagList) || '';

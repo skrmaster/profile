@@ -37,9 +37,17 @@ const showAddArea = computed(() => {
 });
 
 watch(() => props.dataList, (val) => {
-  outDatalist.value = val;
+  const really = val.flatMap(e => {
+    if (e.fullPath && e.id) {
+      return e;
+    } else {
+      return [];
+    }
+  });
+  
+  outDatalist.value = really;
   fileList.value = [];
-  fileList.value.splice(0, 0, ...val);
+  fileList.value.splice(0, 0, ...really);
 });
 
 function handleUpload() {

@@ -37,9 +37,9 @@ export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObs
   return resizeObserver;
 }
 
-export function timeNullFormat(time?: string): string {
+export function timeNullFormat(time?: string, formatString = 'YYYY-MM-DD HH:mm:ss'): string {
   const dayjs = useDayjs();
-  return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+  return time ? dayjs(time).format(formatString) : '暂无';
 }
 
 export function splicingImageUrl(raw: string): string | undefined {

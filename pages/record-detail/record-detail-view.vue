@@ -7,7 +7,7 @@ const router = useRouter();
 const { $message, $sanitize } = useNuxtApp();
 const recordId = route.query.id as string;
 const { recordCategory } = options;
-const viewJudgeTime = 1000 * 60 * 5;
+const viewJudgeTime = 3000 || 1000 * 60 * 5;
 let timer: ReturnType<typeof setTimeout> | null;
 const scrollBarWidth = ref(0);
 

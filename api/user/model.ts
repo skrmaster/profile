@@ -5,6 +5,7 @@ export type LoginType = {
 }
 
 export type RegisterType = {
+  account: string;
   email: string;
   password: string;
   code: string;
@@ -23,4 +24,5 @@ export interface UserModel {
   createTime?: string;
   email: string;
   id: number;
+  permission?: string;
 }

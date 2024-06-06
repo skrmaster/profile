@@ -15,6 +15,7 @@ const formData = reactive<UpdateInfoType>({
 const { $message } = useNuxtApp();
 const images = ref<Upload.FileInfo[]>([]);
 const fileList = ref<Array<Upload.FileInfo>>([]);
+const canUpload = ref(false);
 
 async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
   for await (let item of list) {
@@ -55,6 +56,18 @@ function handleUpdate() {
   })
 }
 
+hasUploadAuth();
+function hasUploadAuth() {
+  useUserInfo().then(res => {
+    const userInfo = res;
+    if (userInfo) {
+      canUpload.value = userInfo.permission?.includes('1') ?? false;
+    } else {
+      canUpload.value = false;
+    }
+  })
+}
+
 function getUserInfo() {
   formData.id = userInfo.value.id;
   formData.account = userInfo.value.account || '';
@@ -79,7 +92,7 @@ onNuxtReady(() => {
 <template>
   <personal-center>
     <div class="main__content flex__column">
-      <div class="form__item">
+      <div class="form__item" v-if="canUpload">
         <label class="label">头像</label>
         <com-upload 
           label="上传头像"

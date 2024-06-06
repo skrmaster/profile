@@ -24,6 +24,8 @@ const detailList = ref([
     content: ''
   }
 ]);
+const startTime = ref('');
+const endTime = ref('');
 
 useHead({
   title
@@ -61,6 +63,9 @@ function init() {
         image: splicingImageUrl(e.fullPath) || ""
       }
     });
+
+    startTime.value = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
+    endTime.value = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
   }).catch((e) => {
     console.log(e);
   });
@@ -103,9 +108,17 @@ function goBack() {
             :list="imageList"
           ></com-carousel>
         </div>
+        <div class="project__scope my1">
+          <label>参与开发项目时间</label>
+          <p class="mt1">
+            <span class="project__time">{{ startTime }}</span>
+            <span class="mx1">~</span>
+            <span class="project__time">{{ endTime }}</span>
+          </p>
+        </div>
         <div class="stack__box">
           <p><label>技术栈</label></p>
-          <div class="my1">
+          <div class="mt1">
             <com-tech-stack 
               :data-list="list"
               mode="view"
@@ -161,6 +174,17 @@ function goBack() {
   border-radius: 10px;
 }
 
+.project__scope {
+  min-height: 80px;
+}
+
+.project__time {
+  background: var(--white-color);
+  box-shadow: var(--box-shadow-small);
+  padding: 10px;
+  border-radius: var(--border-radius);
+}
+
 .stack-content:hover .stack-content__label {
   box-sizing: content-box!important;
   border-top: 1px solid var(--primary-border-color);
@@ -176,7 +200,7 @@ function goBack() {
 .stack__box {
   overflow: hidden;
   box-sizing: border-box;
-  min-height: 200px;
+  min-height: 150px;
 }
 
 .stack-content__label {

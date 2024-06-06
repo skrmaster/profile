@@ -37,8 +37,7 @@ function getData() {
         imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
       };
     });
-  }).catch(() => {
-  });
+  }).catch(() => {});
 }
 
 function handleViewProject(item: ListItem) {
@@ -76,7 +75,7 @@ function getDataByPagination() {
                 @click="handleViewProject(item)"
               >
                 <div class="project__image">
-                  <img :src="item.imageUrl" />
+                  <img :src="item.imageUrl" alt="项目图片" />
                 </div>
                 <p class="text-center my1">{{ item.name }}</p>
               </div>

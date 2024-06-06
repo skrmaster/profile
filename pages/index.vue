@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { apiSkillGetList } from '~/api/skill/request';
+
 import roadPath from 'assets/json/road.json';
 import benchPath from 'assets/json/bench.json';
 import benchSvg from 'assets/svg/park-bench.svg';
@@ -134,9 +136,29 @@ let scrollBarWidth: number;
 let img: HTMLImageElement;
 let lightImg: HTMLImageElement;
 
-function initCanvas() {
-  windowWidth.value = window.innerWidth;
 
+const skillsName = ref<Skill.SkillName[]>([]);
+const skills = ref<Array<Skill.Skill>>([]);
+function fetchSkillsData() {
+  const params: Omit<Pagination, 'total'> = {
+    page: 1,
+    pageSize: 15
+  }
+
+  apiSkillGetList(params).then(res => {
+    skillsName.value = res.data.list.map(e => {
+      return {
+        name: e.name,
+        proficiency: e.proficiency,
+        id: e.id
+      }
+    });
+  }).catch(() => {
+    skillsName.value = [];
+  });
+}
+
+function clearAnimate() {
   for (let item in timer) {
     clearTimeout(timer[item]);
   }
@@ -146,6 +168,12 @@ function initCanvas() {
       window.cancelAnimationFrame(requestTimer[item] as number);
     }
   }
+}
+
+function initCanvas() {
+  windowWidth.value = window.innerWidth;
+
+  clearAnimate();
 
   const canvas = document.getElementById('park') as HTMLCanvasElement;
   if (!canvas) {
@@ -466,6 +494,9 @@ function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
 }
 
 onNuxtReady(() => {
+  console.log(1);
+  
+  fetchSkillsData();
   scrollBarWidth = getScrollBarWidth();
 
   img = new Image();
@@ -486,6 +517,10 @@ onNuxtReady(() => {
 
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
+});
+
+onBeforeUnmount(() => {
+  clearAnimate();
 });
 
 </script>
@@ -530,8 +565,8 @@ onNuxtReady(() => {
         <div v-if="windowWidth > 578 && windowWidth < 992" class="introducion-seat"></div>
       </div>
     </section>
-    <index-skills v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
-    <index-skills-small v-else></index-skills-small>
+    <index-skills :skill-name="skillsName" v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
+    <index-skills-small :skills="skillsName" v-else></index-skills-small>
     <index-projects :width="windowWidth"></index-projects>
     <div class="container">
       <div class="text-center">

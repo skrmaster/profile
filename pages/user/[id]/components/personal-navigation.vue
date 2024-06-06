@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { UserModel } from '~/api/user/model';
+import { isPathInList, hasPermissions, getUserPermissions } from '~/middleware/auth.global'
 
 type LinkType = {
   name: string;
@@ -23,7 +24,7 @@ const params = route.params;
 const userInfo = useState<UserModel>('userInfo');
 const currentUserInfo = computed(() => userInfo.value);
 const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
-const list = ref<LinkType[][]>([
+const list = ref<Array<Array<LinkType | undefined>>>([
   [
     {
       name: '账号信息',
@@ -37,39 +38,57 @@ const list = ref<LinkType[][]>([
       name: '收藏列表',
       url: routerMap.recordListPath
     }
-  ],
-  [
-    {
-      name: '技能管理',
-      url: routerMap.skillMgtPath
-    },
-    {
-      name: '标签管理',
-      url: routerMap.tagMgtPath
-    },
-    {
-      name: '项目管理',
-      url: routerMap.projectMgtPath
-    },
-    {
-      name: '博客管理',
-      url: routerMap.recordMgtPath
-    },
-    {
-      name: '语录管理',
-      url: routerMap.aphorismsPath
-    },
-    {
-      name: '地址导航管理',
-      url: routerMap.navigationPath
-    }
   ]
+]);
+const listMore = ref<Array<LinkType | undefined>>([
+  {
+    name: '技能管理',
+    url: routerMap.skillMgtPath
+  },
+  {
+    name: '标签管理',
+    url: routerMap.tagMgtPath
+  },
+  {
+    name: '项目管理',
+    url: routerMap.projectMgtPath
+  },
+  {
+    name: '博客管理',
+    url: routerMap.recordMgtPath
+  },
+  {
+    name: '语录管理',
+    url: routerMap.aphorismsPath
+  },
+  {
+    name: '地址导航管理',
+    url: routerMap.navigationPath
+  }
 ]);
 
 watchEffect(() => {
   const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
   tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
 });
+
+auth();
+async function auth() {
+  const items = await Promise.all(
+    listMore.value.map(async (item) => {
+      const userPermissions = await getUserPermissions();
+      const auth = item && item.url ? hasPermissions(item.url, userPermissions) : false;
+
+      if (item && item.url && isPathInList(item.url) && auth) {
+        return item
+      } else {
+        return undefined;
+      }
+    })
+  );
+  listMore.value = items.flatMap((item) => item ? [item] : []);
+  list.value = list.value.concat([listMore.value]);
+}
 
 function isCurrentRoute(item: string) {
   let fullPath = route.fullPath;
@@ -78,9 +97,12 @@ function isCurrentRoute(item: string) {
   return item === fullPath;
 }
 
-function handleJump(item: LinkType) {
-  item.url = item.url.replace(':id', params.id as string);
-  navigateTo(item.url, { replace: true });
+function handleJump(item?: LinkType) {
+  if (item) {
+    item.url = item.url.replace(':id', params.id as string);
+    navigateTo(item.url, { replace: true });
+  }
+  
 }
 </script>
 <template>
@@ -100,18 +122,22 @@ function handleJump(item: LinkType) {
         class="mb2"
       >
         <div class="flex1 flex__column--center">
-          <div 
-            v-for="(e, i) in item" 
+          <template 
+            v-for="(e, i) in item"  
             :key="i" 
-            class="nav__item flex__center flex1"
-            :class="{
-              'is--active': isCurrentRoute(e.url)
-            }"
-            @click="handleJump(e)"
           >
-            <span class="link__name">{{ e.name }}</span>
-            <com-icon class="link__icon" icon="profile-left"></com-icon>
-          </div>
+            <div
+              v-if="e"
+              class="nav__item flex__center flex1"
+              :class="{
+                'is--active': isCurrentRoute(e ? e.url : '')
+              }"
+              @click="handleJump(e)"
+            >
+              <span class="link__name">{{ e ? e.name : '' }}</span>
+              <com-icon class="link__icon" icon="profile-left"></com-icon>
+            </div>
+          </template>
         </div>
       </div>
     </div>
