@@ -4,9 +4,12 @@ import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import textdata from 'assets/json/constellation.json';
 import type { UserModel, LoginType } from '~/api/user/model';
+import type { StorageSuger as StorageSugerType } from '#imports';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
+const themeState = useState('theme', () => 'light');
+let storage: StorageSugerType;
 
 useHead({
   title: "登录"
@@ -210,6 +213,18 @@ function handleSubmit() {
 
 onNuxtReady(() => {
   drawClock();
+
+  storage = new StorageSuger('localStorage');
+  const themeString = storage.getValue('theme') as string;
+  const currentTheme = themeString ? JSON.parse(themeString) : '';
+
+  if (currentTheme === 'light') {
+    setTheme('light');    
+    themeState.value = 'light';
+  } else {
+    setTheme('dark');
+    themeState.value = 'dark';
+  }
 });
 
 </script>
@@ -221,6 +236,7 @@ onNuxtReady(() => {
   >
     <div class="container flex__center">
       <div class="login-box row">
+        <NuxtLink class="gohome c-p underline" to="/">返回首页</NuxtLink>
         <div class="notice-box p1 z-index9">
           <div class="notic-box--resize">
             <a 
@@ -269,7 +285,6 @@ onNuxtReady(() => {
   </com-background>
 </template>
 <style scoped>
-
 .login-box {
   max-width: 1411px;
   max-height: 867px;
@@ -279,11 +294,17 @@ onNuxtReady(() => {
   box-shadow: var(--box-shadow);
   border-top: 16px solid var(--primary-border-color);
   background-size: 10px 10px;
-  background-image: 
-    radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
+  background-image: var(--login-box-bg);
   overflow: hidden;
   align-items: center;
   position: relative;
+}
+
+.gohome {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  z-index: 999;
 }
 
 .notice-box {
@@ -304,10 +325,10 @@ onNuxtReady(() => {
 
 .input-box {
   border-width: 2px;
-  border-color: #eeeeee;
+  border-color: var(--login-box-border-color);
   border-style: solid;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: var(--white-color);
   max-width: 430px;
   width: 100%;
   min-width: 300px;

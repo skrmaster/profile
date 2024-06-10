@@ -4,14 +4,21 @@ export type LoginType = {
   isRemember: boolean;
 }
 
-export type RegisterType = {
+export type Register = {
   account: string;
   email: string;
   password: string;
   code: string;
 }
 
-export type UpdateInfoType = {
+export type UpdatePwd = {
+  email: string;
+  originPassword: string;
+  password: string;
+  code: string;
+}
+
+export type UpdateInfo = {
   account: string;
   email: string;
   password: string;

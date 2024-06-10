@@ -200,14 +200,16 @@ onBeforeUnmount(() => {
 <style scoped>
 .search {
   height: 250px;
-  /* background: var(--white-color) url('~/assets/images/city.png') repeat-x;
-  background-size: auto 250px;
-  background-position: bottom bottom; */
   background: var(--white-color);
   border-bottom: 1px solid var(--primary-border-color);
   display: flex;
   align-items: flex-end;
   justify-content: center;
+}
+
+:deep(input.form__input-field) {
+  background: var(--white-color);
+  color: var(--primary-color);
 }
 
 .search__background {

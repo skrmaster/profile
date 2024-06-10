@@ -112,6 +112,7 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
 async function loginout() {
   apiUserLogout().then(async (res) => {
     if (res.succeeded) {
+      clearNuxtState();
       const localStorage = new StorageSuger("localStorage");
       const sectionStorage = new StorageSuger("sessionStorage");
       localStorage.clearAll();
@@ -215,7 +216,7 @@ function personalCenter() {
   </div>
 </template>
 <style scoped>
-.nav-box {
+:global(.nav-box) {
   height: 80px;
   position: sticky;
   top: 0;
@@ -224,7 +225,14 @@ function personalCenter() {
   background-size: 6px 6px;
   backdrop-filter: saturate(50%) blur(4px);
   -webkit-backdrop-filter: saturate(50%) blur(4px);
-  /* box-shadow: var(--box-shadow); */
+}
+
+:global(.dark-theme .nav-box) {
+  height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--white-color);
 }
 
 .line-wave__up {
@@ -233,7 +241,7 @@ function personalCenter() {
   bottom: 1px;
   height: 2px;
   background-image: linear-gradient(to right, 
-    var(--primary-color) 50%, transparent 50%);
+    var(--nav-wave-1) 50%, transparent 50%);
   background-size: 20px 100%;
 }
 
@@ -243,7 +251,7 @@ function personalCenter() {
   bottom: 0;
   height: 2px;
   background-image: linear-gradient(to left, 
-    var(--primary-color) 50%, transparent 50%);
+    var(--nav-wave-1) 50%, transparent 50%);
   background-size: 20px 100%;
 }
 
@@ -272,7 +280,7 @@ nav {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--model-bg-color);
+  background: var(--nav-item-bg);
   transition: all .2s ease 0s;
   border-radius: 0 0 10px 10px;
 }
@@ -283,7 +291,7 @@ nav {
 }
 
 .nav__item.is--active {
-  color: var(--white-color);
+  color: var(--nav-item-active-color);
 }
 
 .item__bg {
@@ -293,7 +301,7 @@ nav {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--primary-color);
+  background-color: var(--nav-item-active-bg-color);
   border-radius: 0 0 10px 10px;
   z-index: -1;
 }
@@ -301,6 +309,11 @@ nav {
 .nav__item.is--active .item__bg {
   height: 100%;
   animation: heightTop2bottom .2s ease 0s 1 normal forwards;
+}
+
+.nav__item:not(.is--active) .item__box
+, .item__box :deep(.btn--link) {
+  color: var(--nav-item-color);
 }
 
 .item__box {

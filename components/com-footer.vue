@@ -17,5 +17,6 @@ footer {
 
 .footer__box {
   height: 80px;
+  color: var(--primary-color);
 }
 </style>

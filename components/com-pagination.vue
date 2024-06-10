@@ -291,6 +291,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-flow: row nowrap;
   overflow: auto;
+  color: var(--primary-color)
 }
 
 .pagination-box {
@@ -333,6 +334,12 @@ onBeforeUnmount(() => {
   min-width: 50px;
   height: 30px;
   text-align: start;
+}
+
+:deep(.form__input-field)
+, :deep(select) {
+  background: var(--white-color);
+  color: var(--primary-color);
 }
 
 .icon__right {

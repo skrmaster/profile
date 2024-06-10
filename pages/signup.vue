@@ -3,10 +3,13 @@ import textdata from 'assets/json/constellation.json';
 import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
 import { apiRegister } from '~/api/user/request'
-import type { RegisterType } from '~/api/user/model';
+import type { Register, UpdatePwd } from '~/api/user/model';
+import type { StorageSuger as StorageSugerType } from '#imports';
 
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
+const themeState = useState('theme', () => 'light');
+let storage: StorageSugerType;
 
 const { $message } = useNuxtApp();
 
@@ -23,7 +26,10 @@ const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
 const currentTimeRotateDeg = getRotateDeg();
-const config: Array<FormConfig> = [
+
+const config = ref<Array<FormConfig>>([]);
+
+const registerConfig: Array<FormConfig> = [
   {
     require: true,
     field: 'account',
@@ -70,11 +76,68 @@ const config: Array<FormConfig> = [
       errorMsg: '请输入6位数字验证码'
     }
   }
-];
+]
+
+const forgetPwdConfig: Array<FormConfig> = [
+  {
+    require: true,
+    field: 'email',
+    type: 'text',
+    rule: 'email',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请输入邮箱',
+      clearable: true,
+      errorMsg: '请输入正确的邮箱格式'
+    }
+  },
+  {
+    require: true,
+    field: 'oldPassword',
+    type: 'password',
+    rule: 'password',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请输入原来的密码',
+      clearable: false,
+      errorMsg: '请输入8~16位数字,大小写字母的密码'
+    }
+  },
+  {
+    require: true,
+    field: 'password',
+    type: 'password',
+    rule: 'password',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请输入新密码',
+      clearable: false,
+      errorMsg: '请输入8~16位数字,大小写字母的密码'
+    }
+  },
+  {
+    require: true,
+    field: 'code',
+    type: 'verification-code',
+    rule: 'numberCode',
+    elementConfig: {
+      placeholder: '请输入验证码',
+      errorMsg: '请输入6位数字验证码'
+    }
+  }
+]
 
 const isForget = computed(() => {
   return route.query && route.query.type && route.query.type === 'forget';
-})
+});
+
+watchEffect(() => {
+  if (isForget.value) {
+    config.value = forgetPwdConfig;
+  } else {
+    config.value = registerConfig;
+  }
+});
 
 init();
 function init() {
@@ -224,34 +287,46 @@ function handleSubmit() {
     form.value.vaildForm()
     .then(async (val: ReturnVaildForm) => {
       if (val.vaild) {
-        const params: RegisterType = {
-          account: val.data.account,
-          email: val.data.email,
-          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
-          code: ''
-        }
-
-        await apiRegister(params).then(res => {
-          btnLoading.value = false;
-          if (res.succeeded) {
-            $message.show({
-              message: res.data.toString(),
-              type: 'success'
-            });
-            wheelSetTimeout(() => {
-              $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
-            }, () => {
-              navigateTo('/login');
-            });
-          } else {
-            $message.show({
-              message: res.data.toString() || JSON.stringify(res.errors),
-              type: 'error'
-            });
+        if (!isForget.value) {
+          const params: Register = {
+            account: val.data.account,
+            email: val.data.email,
+            password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
+            code: ''
           }
-        }).catch(e => {
-          btnLoading.value = false;
-        }); 
+
+          await apiRegister(params).then(res => {
+            btnLoading.value = false;
+            if (res.succeeded) {
+              $message.show({
+                message: res.data.toString(),
+                type: 'success'
+              });
+              wheelSetTimeout(() => {
+                $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
+              }, () => {
+                navigateTo('/login');
+              });
+            } else {
+              $message.show({
+                message: res.data.toString() || JSON.stringify(res.errors),
+                type: 'error'
+              });
+            }
+          }).catch(e => {
+            btnLoading.value = false;
+          }); 
+        } else {
+          const params: UpdatePwd = {
+            email: val.data.email,
+            originPassword: md5(import.meta.env.VITE_PROJECT_SALT + val.data.oldPassword),
+            password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
+            code: ''
+          }
+
+          
+
+        }
       } else {
         btnLoading.value = false;
       }
@@ -261,6 +336,18 @@ function handleSubmit() {
 
 onNuxtReady(() => {
   drawClock();
+
+  storage = new StorageSuger('localStorage');
+  const themeString = storage.getValue('theme') as string;
+  const currentTheme = themeString ? JSON.parse(themeString) : '';
+
+  if (currentTheme === 'light') {
+    setTheme('light');    
+    themeState.value = 'light';
+  } else {
+    setTheme('dark');
+    themeState.value = 'dark';
+  }
 });
 
 </script>
@@ -272,6 +359,7 @@ onNuxtReady(() => {
   >
     <div class="container flex__center">
       <div class="login-box row">
+        <NuxtLink class="gohome c-p underline" to="/">返回首页</NuxtLink>
         <div class="notice-box p1 z-index9">
           <div class="notic-box--resize">
             <a 
@@ -316,7 +404,6 @@ onNuxtReady(() => {
   </com-background>
 </template>
 <style scoped>
-
 .login-box {
   max-width: 1411px;
   max-height: 867px;
@@ -326,11 +413,17 @@ onNuxtReady(() => {
   box-shadow: var(--box-shadow);
   border-top: 16px solid var(--primary-border-color);
   background-size: 10px 10px;
-  background-image: 
-    radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
-  overflow: hidden;
+  background-image: var(--login-box-bg);
+  overflow: hidden auto;
   align-items: center;
   position: relative;
+}
+
+.gohome {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  z-index: 999;
 }
 
 .notice-box {
@@ -351,10 +444,10 @@ onNuxtReady(() => {
 
 .input-box {
   border-width: 2px;
-  border-color: #eeeeee;
+  border-color: var(--login-box-border-color);
   border-style: solid;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: var(--white-color);
   max-width: 430px;
   width: 100%;
   min-width: 300px;

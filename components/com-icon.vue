@@ -23,7 +23,6 @@ const icon = computed((): string => {
   return `${props.prefix}-${props.icon}`
 });
 
-
 function handleClick($event: Event) {
   emit('click', $event);
 }
@@ -55,5 +54,6 @@ function handleClick($event: Event) {
   fill: currentColor;
   overflow: hidden;
   cursor: pointer;
+  color: var(--primary-color)!important;
 }
 </style>

@@ -6,6 +6,8 @@ const {
   addressListPath,
   projectPagePath,
   recordPagePath,
+  loginPath,
+  userInfoPath
 } = routerMap
 const navList = ref([
   {
@@ -44,7 +46,6 @@ watchEffect(() => {
 
 function isCurrentRoute(item: string) {
   let fullPath = route.fullPath;
-
   return item === fullPath;
 }
 
@@ -55,11 +56,24 @@ function handleNav(index: number) {
     path: navList.value[index].link
   });
 }
+
+function handleAvatarJump() {
+  if (currentUserInfo.value) {
+    navigateTo({
+      path: userInfoPath
+    });
+  } else {
+    navigateTo({
+      path: loginPath
+    });
+  }
+}
+
 </script>
 <template>
   <div>
     <div class="navigation--small px1">
-      <div class="mr1">
+      <div class="mr1" @click="handleAvatarJump">
         <com-avatar 
           :avatar-url="tempUserInfo?.avatar" 
           :nickname="tempUserInfo?.account || '未知'">
@@ -94,21 +108,13 @@ function handleNav(index: number) {
   min-height: 90px;
   max-width: 375px;
   width: 100%;
-  background-color: rgb(238, 238, 238);
-  /* background-image: radial-gradient(transparent 1px, rgb(238, 238, 238) 1px);
-  background-size: 6px 6px;
-  backdrop-filter: saturate(50%) blur(4px);
-  -webkit-backdrop-filter: saturate(50%) blur(4px); */
+  background-color: var(--nav-small-bg);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
   z-index: 999;
   border-radius: 45px;
   display: flex;
   align-items: center;
 }
-
-/* nav {
-  margin: 0 -20px;
-} */
 
 .navigation__item {
   display: flex;
@@ -119,8 +125,9 @@ function handleNav(index: number) {
 
 .navigation__item.active {
   padding: 10px 18px;
-  background: var(--nav-active-bg-color);
+  background: var(--nav-small-item-active-bg);
   border-radius: 5px;
+  color: var(--primary-color);
 }
 
 .navigation__item.active .nav__icon {
@@ -130,7 +137,7 @@ function handleNav(index: number) {
 
 .theme__control {
   border-left: 2px solid var(--primary-border-color);
-  max-width: 84px;
+  max-width: 65px;
   width: 100%;
 }
 </style>

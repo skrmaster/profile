@@ -1,6 +1,14 @@
 :root {
   --background-color: #eef1f5;
   --white-color: #FFFFFF;
+  --nav-item-color: #0a0b0b;
+  --nav-theme-btn-bg: #eef1f5;
+  --nav-item-active-color: #ffffff;
+  --nav-item-bg: rgba(0, 0, 0, 0.6);
+  --nav-item-active-bg-color: #0a0b0b;
+  --nav-small-bg: rgb(238, 238, 238);
+  --gaussian-blur: rgba(248, 248, 248, 0.4);
+  --nav-wave-1: rgba(0, 0, 0, 0.6);
   --primary-color: #0a0b0b;
   --primary-border-color: #1b1b1b;
   --error-color: #f5576c;
@@ -23,6 +31,7 @@
   --nav-link-bg: #eeeeee;
   --nav-link-hover: rgba(250, 250, 250, 1);
   --nav-item-bg-active: #eeeeee;
+  --nav-small-item-active-bg: #dcdcdc;
   --table-bg-color: #f9f9f9;
   --table-th-bg-color: #e5e5e5;
   --table-th-color: #666666;
@@ -34,4 +43,35 @@
   --message-error-color: #F56C6C;
   --message-info-color: #0a0b0b;
   --image-element-seat-bg: #eeeeee;
+  --login-box-bg: radial-gradient(circle at center, #ebebeb 10%, transparent 20%);
+  --login-box-border-color: #eeeeee;
+  --input-placeholder-color: #999999;
+  --btn-bg-default-color: #0a0b0b;
+  --btn-bg-primary-text-color: #ffffff;
+}
+
+.dark-theme {
+  --background-color: #0a0b0b;
+  --white-color: #1b1b1b;
+  --nav-item-color: #ffffff;
+  --nav-theme-btn-bg: rgba(0, 0, 0, 0.6);
+  --nav-item-active-color: #ffffff;
+  --nav-item-bg: rgba(0, 0, 0, 0.6);
+  --nav-item-active-bg-color: #0a0b0b;
+  --nav-small-bg: #1b1b1b;
+  --nav-small-item-active-bg: #0a0b0b;
+  --gaussian-blur: rgba(248, 248, 248, 0.1);
+  --nav-wave-1: rgba(0, 0, 0, 0.6);
+  --primary-color: #eef1f5;
+  --primary-border-color: rgba(255, 255, 255, 0.25);
+  --box-shadow: 0px 5px 20px 0px rgba(255, 255, 255, 0.25);
+  --box-shadow-small: 0px 2px 4px 0px rgba(255, 255, 255, 0.25);
+  --login-box-bg: radial-gradient(circle at center, var(--white-color) 10%, transparent 20%);
+  --login-box-border-color: #1b1b1b;
+  --btn-bg-default-color: #0a0b0b;
+  --btn-bg-primary-text-color: #ffffff;
+}
+
+body {
+  color: var(--primary-color);
 }

@@ -51,8 +51,17 @@ function fetchData() {
 fetchData();
 </script>
 <template>
-  <NuxtLayout name="header-section-footer" bg-change-color bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(#ffffff 0, var(--background-color) 100%)">
-    <section class="flex1">
+  <NuxtLayout 
+    name="header-section-footer" 
+    bg-change-color 
+    bg-style-content="
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+    "
+  >
+    <section class="flex1" style="color: var(--primary-color)">
       <div class="container overflow-hidden">
         <div class="address">
           <div class="address__item"
@@ -121,7 +130,6 @@ fetchData();
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  /* border: 1px solid var(--primary-border-color); */
 }
 
 .link__image img {

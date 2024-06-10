@@ -202,14 +202,18 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
 </script>
 <template>
   <com-background
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="false"
+    bg-change-color 
+    bg-style-content="
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+    "
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
     <com-search v-model="searchVal" @search="getListDataByPagination"></com-search>
-    <section class="pb5">
+    <section class="pb5 flex1">
       <div class="container">
         <div class="flex content">
           <div class="blog p1 flex__column overflow-auto" v-if="blogList.length > 0" v-loading="listLoading">

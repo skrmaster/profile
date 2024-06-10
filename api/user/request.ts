@@ -1,4 +1,4 @@
-import type { UserModel, LoginType, RegisterType, UpdateInfoType } from "./model";
+import type { UserModel, LoginType, Register, UpdateInfo } from "./model";
 import { httpClient } from "../index";
 
 const { loginPath, registerPath, userInfoPath, userUpdatePath, userLogoutPath } = apiMap;
@@ -20,7 +20,7 @@ export async function apiUserLogout() {
   return res;
 }
 
-export async function apiUpdateUserInfo(params: UpdateInfoType) {
+export async function apiUpdateUserInfo(params: UpdateInfo) {
   const url = userUpdatePath + `/${params.id}`
 
   const res = await httpClient<boolean>(url, {
@@ -38,7 +38,7 @@ export async function apiLogin(params: LoginType) {
   return res;
 }
 
-export async function apiRegister(params: RegisterType) {
+export async function apiRegister(params: Register) {
   const res = await httpClient<boolean | string>(registerPath, {
     method: 'post',
     body: params

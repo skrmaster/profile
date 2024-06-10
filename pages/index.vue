@@ -5,6 +5,7 @@ import roadPath from 'assets/json/road.json';
 import benchPath from 'assets/json/bench.json';
 import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
+import ligthOffSvg from 'assets/svg/light-off.svg';
 import walking from 'assets/json/walkMan.json';
 
 type Park = {
@@ -22,6 +23,14 @@ const benchData = benchPath.data;
 const roadData = roadPath.data;
 const walkData = walking.data;
 
+const themeState = useState('theme');
+const theme = computed(() => themeState.value);
+
+watch(theme, (val) => {
+  if (val) {
+    changeLight(val as string);
+  }
+});
 const windowWidth = ref(0);
 const formConfig: Array<FormConfig> = [
   {
@@ -172,6 +181,9 @@ function clearAnimate() {
 
 function initCanvas() {
   windowWidth.value = window.innerWidth;
+  man.width = 110;
+  man.height = 200;
+  man.stepX = 110;
 
   clearAnimate();
 
@@ -250,7 +262,7 @@ function draw() {
           man.y, 
           man.stepX * (man.timeControl / 100 - 2)
         );
-        // drawLight(ctx);
+        drawLight(ctx);
         drawRoad(ctx);
         requestTimer.animateTimerTop2 = window.requestAnimationFrame(draw);
         man.sitingToWalkToWaitTime--;
@@ -266,7 +278,7 @@ function draw() {
             man.stepX * (man.timeControl / 100 - 2)
           );
         }
-        // drawLight(ctx);
+        drawLight(ctx);
         drawRoad(ctx);
         man.sitingTime--;
         requestTimer.animateTimerTop3 = window.requestAnimationFrame(draw);
@@ -281,7 +293,7 @@ function draw() {
           man.y, 
           man.stepX * (man.timeControl / 100 - 2)
         );
-        // drawLight(ctx);
+        drawLight(ctx);
         drawRoad(ctx);
         requestTimer.animateTimerTop4 = window.requestAnimationFrame(draw);
         man.walkToSitingWaitTime--;
@@ -311,7 +323,7 @@ function draw() {
   // drawBench(ctx, benchData);
   // ctx.restore();
 
-  // drawLight(ctx);
+  drawLight(ctx);
   drawRoad(ctx);
   requestTimer.animateTimerTop1 = window.requestAnimationFrame(draw);
 }
@@ -340,6 +352,11 @@ function drawSitingMan(ctx: CanvasRenderingContext2D, x: number, y: number) {
 }
 
 function drawLight(ctx: CanvasRenderingContext2D) {
+  if (theme.value === 'light') {
+    clearYellowLight(ctx, parkCanvas.width / 2 + 3.5 * light.smallWidth, 
+    parkCanvas.height / 2 - light.smallHeight / 1.5 + 90, 800);
+    return;
+  }
   //灯光
   simulateYellowLight(ctx, parkCanvas.width / 2 + 3.5 * light.smallWidth, 
     parkCanvas.height / 2 - light.smallHeight / 1.5 + 90, 800)
@@ -404,6 +421,17 @@ function simulateYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number
   let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
   gradient.addColorStop(0, 'rgba(255, 255, 0, 0.5)');
   gradient.addColorStop(0.15, 'rgba(255, 255, 0, 0.2)');
+  gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, 2 * Math.PI);
+  ctx.fill();
+}
+
+function clearYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+  let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+  gradient.addColorStop(0, 'rgba(255, 255, 0, 0)');
+  gradient.addColorStop(0.15, 'rgba(255, 255, 0, 0)');
   gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
   ctx.fillStyle = gradient;
   ctx.beginPath();
@@ -493,12 +521,13 @@ function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
   ctx.restore();
 }
 
-onNuxtReady(() => {
-  console.log(1);
-  
-  fetchSkillsData();
-  scrollBarWidth = getScrollBarWidth();
+function changeLight(val: string) {
+  if (lightImg && lightImg.src) {
+    lightImg.src = val === 'light' ? ligthOffSvg : ligthOnSvg;
+  }
+}
 
+function loadResource() {
   img = new Image();
   img.src = benchSvg;
 
@@ -508,13 +537,19 @@ onNuxtReady(() => {
 
   img.onload = () => {
     lightImg = new Image();
-    lightImg.src = ligthOnSvg;
+    lightImg.src = theme.value === 'light' ? ligthOffSvg : ligthOnSvg;
 
     lightImg.onload = () => {
       initCanvas();
     }
   }
+}
 
+onNuxtReady(() => {
+  fetchSkillsData();
+  scrollBarWidth = getScrollBarWidth();
+
+  loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
 });
@@ -558,7 +593,7 @@ onBeforeUnmount(() => {
                 开发、组件二次封装、<span class="font-bold">SSR</span>网站
                 前端开发等等...
               </p>
-              <com-button suffix-icon="profile-arrow" link><span class="fs18">了解更多</span></com-button>
+              <com-button suffix-icon="profile-arrow" link><span class="fs18" style="color: var(--primary-color);">了解更多</span></com-button>
             </div>
           </div>
         </div>
@@ -569,7 +604,7 @@ onBeforeUnmount(() => {
     <index-skills-small :skills="skillsName" v-else></index-skills-small>
     <index-projects :width="windowWidth"></index-projects>
     <div class="container">
-      <div class="text-center">
+      <div class="text-center contact__me">
         <p class="fs48">联系我</p>
         <p class="fs18 text-uppercase">contact me</p>
       </div>
@@ -595,7 +630,7 @@ onBeforeUnmount(() => {
       <ClientOnly>
         <com-form class="index__form mx-auto mb4" :model="formConfig">
           <div class="flex__center">
-            <com-button class="submit-btn fs20">提交</com-button>
+            <com-button class="submit-btn fs20" is-ripple>提交</com-button>
           </div>
         </com-form>
       </ClientOnly>
@@ -625,6 +660,7 @@ onBeforeUnmount(() => {
 
 .introduciton-text-height {
   height: 550px;
+  color: var(--primary-color);
 }
 
 .section__avatar {
@@ -659,6 +695,10 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
+.contact__me {
+  color: var(--primary-color);
+}
+
 .contact {
   display: flex;
   flex-flow: row wrap;
@@ -671,6 +711,7 @@ onBeforeUnmount(() => {
   height: 338px;
   min-width: 300px;
   margin: 0 auto;
+  color: var(--primary-color);
 }
 
 .contact__icon {
@@ -690,15 +731,15 @@ onBeforeUnmount(() => {
 
 :deep(.index__form .form__input-box) {
   border-style: dashed!important;
-  background: #eeeeee;
+  background: var(--white-color)!important;
 }
 
 :deep(.index__form .form__input-box .form__placeholder--active) {
-  background: #eeeeee;
+  background: var(--white-color)!important;
 }
 
 :deep(.index__form .form__input-box input) {
-  background: #eeeeee;
+  background: var(--white-color)!important;
 }
 
 .submit-btn {

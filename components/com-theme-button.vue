@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { StorageSuger as StorageSugerType } from '#imports';
 
 enum Theme {
   'light' = 0,
@@ -7,13 +8,44 @@ enum Theme {
 
 const theme = ref<Theme>(0);
 const start = ref(false);
+const themeState = useState('theme', () => 'light');
+let storage: StorageSugerType;
 
 function handleStart() {
   start.value = !start.value;
-  theme.value === 0
-  ? theme.value = 1
-  : theme.value = 0;
+  setCurrentTheme();
 }
+
+function setCurrentTheme() {
+  if (theme.value === 0) {
+    theme.value = 1;
+    setTheme('dark');
+    storage.setValue('theme', 'dark');
+    themeState.value = 'dark';
+  } else {
+    theme.value = 0;
+    setTheme('light');
+    storage.setValue('theme', 'light');
+    themeState.value = 'light';
+  }
+}
+
+onNuxtReady(() => {
+  storage = new StorageSuger('localStorage');
+  const themeString = storage.getValue('theme') as string;
+  const currentTheme = themeString ? JSON.parse(themeString) : '';
+
+  if (currentTheme === 'light') {
+    theme.value = 0;
+    setTheme('light');    
+    themeState.value = 'light';
+  } else {
+    theme.value = 1;
+    start.value = true;
+    setTheme('dark');
+    themeState.value = 'dark';
+  }
+});
 </script>
 <template>
   <button 
@@ -38,6 +70,7 @@ function handleStart() {
   width: 50px;
   border: 1px solid var(--primary-border-color);
   border-radius: 28px;
+  background: var(--nav-theme-btn-bg);
 }
 
 .theme__content {

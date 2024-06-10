@@ -25,13 +25,13 @@ const typeClass = computed(() => `message-${props.type ? props.type : ''}`);
 const iconClass = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'icon-success';
+      return 'profile-chenggong';
     case 'warning':
-      return 'icon-warning';
+      return 'profile-jinggao';
     case 'info':
-      return 'icon-info';
+      return 'profile-xinxi';
     case 'error':
-      return 'icon-error';
+      return 'profile-shibai';
     default:
       return '';
   }

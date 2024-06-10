@@ -52,7 +52,7 @@ a {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--primary-border-color);
+  background-color: var(--primary-color);
   transform-origin: center;
   transition: all .2s;
 }
@@ -84,7 +84,7 @@ a {
 }
 
 .gaussian-blur {
-  background: rgba(248, 248, 248, 0.4);
+  background: var(--gaussian-blur);
 }
 
 .text-uppercase {

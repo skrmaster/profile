@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import PersonalCenter from './components/personal-center.vue';
-import { apiUpdateUserInfo } from '~/api/user/request';
+import { apiUpdateUserInfo, apiUserLogout } from '~/api/user/request';
 import { apiAdd as fileApiAdd } from '~/api/upload/request';
-import type { UserModel, UpdateInfoType } from '~/api/user/model';
+import type { UserModel, UpdateInfo } from '~/api/user/model';
 import type { AddModel as FileAddModel  } from '~/api/upload/model';
 
 const userInfo = useState<UserModel>("userInfo");
-const formData = reactive<UpdateInfoType>({
+const formData = reactive<UpdateInfo>({
   account: '',
   email: '',
   password: '',
@@ -34,7 +34,7 @@ async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
 }
 
 function handleUpdate() {
-  const params: UpdateInfoType = {
+  const params: UpdateInfo = {
     ...formData,
     avatar: JSON.stringify(images.value[0])
   }
@@ -84,6 +84,21 @@ function getUserInfo() {
   });
 }
 
+function handleLoginout() {
+  apiUserLogout().then(async (res) => {
+    if (res.succeeded) {
+      clearNuxtState();
+      const localStorage = new StorageSuger("localStorage");
+      const sectionStorage = new StorageSuger("sessionStorage");
+      localStorage.clearAll();
+      sectionStorage.clearAll();
+
+      await navigateTo('/');
+      location.reload();
+    }
+  }).catch(e => {})
+}
+
 onNuxtReady(() => {
   getUserInfo();
 });
@@ -128,10 +143,13 @@ onNuxtReady(() => {
           v-model="formData.code"
         ></com-form-verification-code>
       </div>
-      <div class="form__item">
+      <div class="form__item flex__row">
         <label class="label"></label>
         <com-button style="width: 100px" @click.stop="handleUpdate">
           <span>保存</span>
+        </com-button>
+        <com-button class="ml1" style="width: 80px; height: 40px" plain @click.stop="handleLoginout">
+          <span>登出</span>
         </com-button>
       </div>
     </div>

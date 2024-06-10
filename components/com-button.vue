@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   link: false,
   isRipple: false,
-  bgColor: 'var(--primary-color)',
+  bgColor: 'var(--btn-bg-default-color)',
   needInnerOutline: true
 });
 
@@ -118,8 +118,7 @@ function handleClick($event: Event) {
   </button>
 </template>
 <style scoped>
-
-.btn{
+.btn {
   border-radius: 50px;
   padding: 8px 15px;
 }
@@ -137,14 +136,9 @@ function handleClick($event: Event) {
 .btn.primary {
   box-shadow: var(--btn-box-shadow);
   background-color: var(--primary-color);
-  color: var(--white-color);
+  color: var(--btn-bg-primary-text-color);
   border: solid 5px var(--white-color);
 }
-
-/* .btn.primary:active {
-  box-shadow: none!important;
-} */
-
 
 .btn.plain {
   box-shadow: none;

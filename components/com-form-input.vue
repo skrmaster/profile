@@ -252,6 +252,8 @@ function handlePasswordIcon() {
   border: 0;
   outline: 0;
   flex: 1;
+  color: var(--primary-color);
+  background: var(--white-color);
 }
 
 textarea.form__input-field {
@@ -267,7 +269,7 @@ textarea.form__input-field {
 
 .form__placeholder {
   font-size: 18px;
-  color: #999999;
+  color: var(--input-placeholder-color);
   position: absolute;
   top: 50%;
   left: var(--input-placeholder-gap);
@@ -288,7 +290,7 @@ textarea.form__input-field {
   top: 0;
   left: 10px;
   transform: translate(0, -50%);
-  background: #FFFFFF;
+  background: var(--white-color);
 }
 
 .form__input-box.error .form__placeholder {

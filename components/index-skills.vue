@@ -250,6 +250,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
+  color: var(--primary-color);
 }
 
 .skills-line {
@@ -269,6 +270,7 @@ onBeforeUnmount(() => {
 .skills__item {
   transform-origin: center center;
   transition: all .2s ease-in-out;
+  color: var(--primary-color);
 }
 
 .none-transform {

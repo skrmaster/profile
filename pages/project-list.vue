@@ -66,9 +66,9 @@ function getDataByPagination() {
       <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
       <section class="flex1 overflow-auto">
         <div class="container">
-          <div class="flex__row flex-wrap">
-            <p class="my3 fs24">项目列表</p>
-            <div class="project-gird" v-if="data.length > 0">
+          <div style="color: var(--primary-color)">
+            <p class="py3 fs24">项目列表</p>
+            <div class="project-gird pb1" v-if="data.length > 0">
               <div class="project__item" 
                 v-for="(item, index) in data" 
                 :key="index"
@@ -98,6 +98,7 @@ function getDataByPagination() {
 </template>
 <style scoped>
 .project-gird {
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(311px, 1fr));
   gap: 30px;

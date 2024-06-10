@@ -9,10 +9,12 @@ const props = withDefaults(defineProps<Prop>(), {
 
 </script>
 <template>
-  <div class="flex__center wh100">
+  <div class="flex__center wh100 empty__box">
     <div class="p2">{{props.info}}</div>
   </div>
 </template>
 <style scoped>
-
+.empty__box {
+  background: var(--white-color);
+}
 </style>

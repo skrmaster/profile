@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<Prop>(), {
   border: 1px solid var(--primary-border-color);
   border-radius: 50%;
   background: var(--white-color);
+  color: var(--primary-color);
 }
 
 .avatar img {

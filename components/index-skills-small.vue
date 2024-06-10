@@ -62,6 +62,7 @@ function handleAddSkill() {
 
 .skills-text {
   padding: 20px;
+  color: var(--primary-color);
 }
 
 .skills-line {
@@ -74,6 +75,7 @@ function handleAddSkill() {
 .skills__item {
   height: 50px;
   box-shadow: var(--box-shadow-small);
+  color: var(--primary-color);
 }
 
 .skills-line span:not(:nth-child(2)) {
