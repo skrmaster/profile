@@ -28,6 +28,7 @@ const emit = defineEmits<{
   'update:modelValue': [val: string]
 }>();
 
+const verifyRef = ref();
 const time = 10;
 const code = ref('');
 const text = '发送验证码';
@@ -52,12 +53,19 @@ function running() {
 }
 
 function handleClick() {
-  if (start.value) {
-    return;
+  verifyRef.value?.open();
+  countdown.value = time;
+}
+
+function handleGetCode(val: boolean) {
+  if (val) {
+    if (start.value) {
+      return;
+    }
+    start.value = true;
+    counter = running();
+    fetchCode();
   }
-  start.value = true;
-  counter = running();
-  fetchCode();
 }
 
 function fetchCode() {
@@ -92,9 +100,11 @@ onMounted(() => {
       ></com-form-input>
     </div>
     <div class="verification__btn">
-      <com-button plain @click="handleClick" class="nowrap">
-        {{ start ? `${countdown}s` : text }}
-      </com-button>
+      <com-verify ref="verifyRef" @verify="handleGetCode">
+        <com-button plain @click.stop="handleClick" class="nowrap">
+          {{ start ? `${countdown}s` : text }}
+        </com-button>
+      </com-verify>
     </div>
   </div>
 </template>

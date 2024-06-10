@@ -194,11 +194,8 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
         }
       }
     }
-  }).catch(e => {
-    
-  });
+  }).catch(e => {});
 }
-
 </script>
 <template>
   <com-background
