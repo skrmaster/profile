@@ -9,6 +9,8 @@ import type { StorageSuger as StorageSugerType } from '#imports';
 const url = import.meta.env.VITE_PROJECT_OUTSIDE_ENGINE;
 const dayjs = useDayjs();
 const themeState = useState('theme', () => 'light');
+const { $message } = useNuxtApp();
+
 let storage: StorageSugerType;
 
 useHead({
@@ -70,14 +72,16 @@ function getRandomAphorisms() {
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
   if (!canvas) {
-    throw new Error('canvas element is null!');
+    drawClock();
+    return;
   }
   const w_canvas = canvas.width;
   const h_canvas = canvas.height;
   const ctx = canvas.getContext('2d');
   
   if (!ctx) {
-    throw new Error('canvas context is null!');
+    drawClock();
+    return;
   }
 
   ctx.clearRect(0, 0, w_canvas, h_canvas);
@@ -190,17 +194,25 @@ function handleSubmit() {
         }
 
         await apiLogin(params).then((data) => {
-          const cookie = useCookie("s-getu");
-          cookie.value = true.toString();
-
-          const storageStr: StorageFrom = 'localStorage';
-          const storage = new StorageSuger(storageStr);
-          storage.setValue('userInfo', data.data);
-          const userInfoString = aesDecrypt(data.data);
-          const userInfoObj: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
-          userInfo.value = { ...userInfoObj };
-          navigateTo('/');
           btnLoading.value = false;
+          
+          if (data.succeeded) {
+            const cookie = useCookie("s-getu");
+            cookie.value = true.toString();
+
+            const storageStr: StorageFrom = 'localStorage';
+            const storage = new StorageSuger(storageStr);
+            storage.setValue('userInfo', data.data);
+            const userInfoString = aesDecrypt(data.data);
+            const userInfoObj: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
+            userInfo.value = { ...userInfoObj };
+            navigateTo('/');
+          } else {
+            $message.show({
+              message: data.errors,
+              type: 'error'
+            });
+          }
         }).catch(e => {
           btnLoading.value = false;
         });

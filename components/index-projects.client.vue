@@ -22,17 +22,116 @@ watch(windowWidth, (val) => {
 	}
 });
 const data = ref<Array<ListItem | undefined>>([]);
+const threeRef = ref();
 
-initData();
+//场景
+const scene = new THREE.Scene();
+
+//相机
+const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
+camera.position.z = 700;
+
+// 添加环境光
+const ambientLight = new THREE.AmbientLight(0xffffff, 1); // 白色光，强度为1
+scene.add(ambientLight);
+
+// 添加方向光
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(1, 1, 1).normalize(); // 设置光源方向
+scene.add(directionalLight);
+
+//渲染器
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize( window.innerWidth - 50, window.innerHeight );
+renderer.setClearColor("#FFFFFF", 0);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+// 设置控制器属性
+controls.enableDamping = true; // 启用阻尼效果，使旋转更加平滑
+controls.dampingFactor = 0.1; // 阻尼系数
+controls.rotateSpeed = 0.5; // 旋转速度
+//controls.zoomSpeed = 1.2; // 缩放速度
+controls.enableZoom = false;
+controls.enablePan = false;
+// controls.update();
+
+const loader = new GLTFLoader();
+const loadModelOrigin = await loader.loadAsync('/models/signpost.gltf');
+const loadModel = loadModelOrigin.scene;
+
+// 射线投射器
+const raycaster = new THREE.Raycaster();
+raycaster.far = 1000;
+const mouse = new THREE.Vector2();
+
+let index = 0;
+let modelLen = 0;
+let list = data.value;
+
+function init() {
+	loadModel2Sence();
+}
+
 function initData() {
 	apiGetList({
 		page: 1,
 		pageSize: 6
 	}).then(res => {
-		data.value = res.data.list;
-	}).catch(e => {
+		list = res.data.list;
+		init();
+	}).catch(e => {});
+}
 
+function loadModel2Sence() {
+	loadModel.traverse((child) => {
+		const node = child as THREE.Mesh;
+
+		if (child.children && child.type.toLocaleLowerCase() === 'group') {
+			modelLen = child.children.length;
+			let diff = (modelLen > 6 ? 6 : modelLen) - list.length;
+			const diffArr: Array<undefined> = Array.from({ length: diff }).fill(undefined) as Array<undefined>;
+			list = list.concat(diffArr);
+			list = list.reverse();	
+		}
+
+		if (node.isMesh) {
+			let text: string = '······';
+			if (index <= list.length - 1) {
+				let e = list[index];
+
+				node.userData.projectId = e?.id;
+				text = e?.name || '······';
+				index++;
+			}
+
+    if (node.name !== '路牌1主轴') {
+				let material;
+				if (node.name.includes('_反')) {
+					if (node.name.includes('路牌2_反')) {
+						text = '项目展示路牌'
+						material = createMaterial(text, 400, 70, 400 / 6);
+					} else {
+						material = createMaterial(text, 400, 70, 400 / 6);
+					}
+				} else {
+					material = createMaterial(text, 400, 70);
+				}
+				node.material = material as THREE.Material;
+      } else {
+        node.material = new THREE.MeshStandardMaterial({
+          color: 0xffffff, // 设置颜色为白色
+          metalness: 0.1, // 金属度
+          roughness: 0.1 // 粗糙度
+        });
+      }
+    }
 	});
+
+	loadModel.position.set(0, -250, 0);
+	scene.add(loadModel);
+
+	animate();
 }
 
 function createMaterial(text: string, width = 400, height = 70, widthOffset = width / 4, heightOffset = 10) {
@@ -74,98 +173,6 @@ function resizeModel(width: number) {
 	renderer.setSize(width - 50, width / rate);
 }
 
-//#region
-const threeRef = ref();
-//场景
-const scene = new THREE.Scene();
-//相机
-const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
-camera.position.z = 700;
-
-// 添加环境光
-const ambientLight = new THREE.AmbientLight(0xffffff, 1); // 白色光，强度为1
-scene.add(ambientLight);
-
-// 添加方向光
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(1, 1, 1).normalize(); // 设置光源方向
-scene.add(directionalLight);
-
-//渲染器
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize( window.innerWidth - 50, window.innerHeight );
-renderer.setClearColor("#FFFFFF", 0);
-renderer.setPixelRatio(window.devicePixelRatio);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-// 设置控制器属性
-controls.enableDamping = true; // 启用阻尼效果，使旋转更加平滑
-controls.dampingFactor = 0.1; // 阻尼系数
-controls.rotateSpeed = 0.5; // 旋转速度
-//controls.zoomSpeed = 1.2; // 缩放速度
-controls.enableZoom = false;
-controls.enablePan = false;
-// controls.update();
-
-const loader = new GLTFLoader();
-const loadModelOrigin = await loader.loadAsync('/models/signpost.gltf');
-const loadModel = loadModelOrigin.scene;
-
-let index = 0;
-let modelLen = 0;
-let list = data.value;
-loadModel.traverse((child) => {
-	const node = child as THREE.Mesh;
-
-	if (child.children && child.type.toLocaleLowerCase() === 'group') {
-		modelLen = child.children.length;
-		let diff = (modelLen > 6 ? 6 : modelLen) - list.length;
-		const diffArr: Array<undefined> = Array.from({ length: diff }).fill(undefined) as Array<undefined>;
-		list = list.concat(diffArr);
-		list = list.reverse();	
-	}
-
-	if (node.isMesh) {
-		let text: string = '······';
-		if (index <= list.length - 1) {
-			let e = list[index];
-
-			node.userData.projectId = e?.id;
-			text = e?.name || '······';
-			index++;
-		}
-		
-    if (node.name !== '路牌1主轴') {
-			let material;
-			if (node.name.includes('_反')) {
-				if (node.name.includes('路牌2_反')) {
-					text = '项目展示路牌'
-					material = createMaterial(text, 400, 70, 400 / 6);
-				} else {
-					material = createMaterial(text, 400, 70, 400 / 6);
-				}
-			} else {
-				material = createMaterial(text, 400, 70);
-			}
-			node.material = material as THREE.Material;
-    } else {
-      node.material = new THREE.MeshStandardMaterial({
-        color: 0xffffff, // 设置颜色为白色
-        metalness: 0.1, // 金属度
-        roughness: 0.1 // 粗糙度
-      });
-    }
-  }
-});
-
-loadModel.position.set(0, -250, 0);
-scene.add(loadModel);
-
-// 射线投射器
-const raycaster = new THREE.Raycaster();
-raycaster.far = 1000;
-const mouse = new THREE.Vector2();
-
 // 监听鼠标点击事件
 function onMouseClick(event: MouseEvent) {	
 	const rect = renderer.domElement.getBoundingClientRect();
@@ -184,7 +191,9 @@ function onMouseClick(event: MouseEvent) {
     const intersectedObject = intersects[0].object;
 
     if (intersectedObject instanceof THREE.Mesh) {
+			
 			if (intersectedObject.userData?.projectId) {
+				intersectedObject.material.color.set(0x1b1b1b);
 				navigateTo({
           path: projectDetailPath + '/view',
           query: {
@@ -192,9 +201,12 @@ function onMouseClick(event: MouseEvent) {
           }
         });
 			} else {
-				$message.show({
-					message: '当前没有项目'
-				})
+				if (!intersectedObject.name.includes('路牌2_反')) {
+					$message.show({
+						message: '当前没有项目'
+					});
+					intersectedObject.material.color.set(0x1b1b1b);
+				}
 			}
     }
   }
@@ -207,16 +219,15 @@ function animate() {
 }
 
 onNuxtReady(() => {
+	initData();
 	if (threeRef.value) {
 		threeRef.value.appendChild(renderer.domElement);
 		threeRef.value.addEventListener('click', onMouseClick);
-		animate();
 	}
 });
-//#endregion
 </script>
 <template>
-  <div class="border213 flex__center mb2" ref="threeRef"></div>
+  <div class="flex__center mb2" ref="threeRef"></div>
 </template>
 <style scoped>
 </style>

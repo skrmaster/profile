@@ -149,12 +149,12 @@ function handleSubmit(val: DetailTitle.Action) {
 }
 
 :deep(.detail__input input) {
-  background-color: var(--readonly-color);
+  background-color: var(--detail-title);
   border-radius: 10px;
   text-indent: 1.5em!important;
 }
 
 :deep(.detail__input) {
-  background-color: var(--readonly-color);
+  background-color: var(--detail-title);
 }
 </style>

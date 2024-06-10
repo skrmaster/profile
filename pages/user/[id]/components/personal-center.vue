@@ -26,7 +26,7 @@ useHead({
 </template>
 <style scoped>
 .background {
-  background-image: radial-gradient(#ffffff 0, var(--background-color) 100%);
+  background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
   background-blend-mode: screen;
   max-width: 100vw;
   width: 100%;

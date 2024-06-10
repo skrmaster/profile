@@ -7,6 +7,8 @@ import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
 import ligthOffSvg from 'assets/svg/light-off.svg';
 import walking from 'assets/json/walkMan.json';
+import type { AddModel } from '~/api/message/model';
+import { apiAdd } from '~/api/message/request';
 
 type Park = {
   ctx: CanvasRenderingContext2D | null;
@@ -23,6 +25,7 @@ const benchData = benchPath.data;
 const roadData = roadPath.data;
 const walkData = walking.data;
 
+const { $message } = useNuxtApp();
 const themeState = useState('theme');
 const theme = computed(() => themeState.value);
 
@@ -35,7 +38,7 @@ const windowWidth = ref(0);
 const formConfig: Array<FormConfig> = [
   {
     require: true,
-    field: 'name',
+    field: 'userName',
     type: 'text',
     rule: '',
     elementConfig: {
@@ -57,7 +60,7 @@ const formConfig: Array<FormConfig> = [
   },
   {
     require: true,
-    field: 'contactWay',
+    field: 'content',
     type: 'textarea',
     rule: '',
     elementConfig: {
@@ -226,6 +229,7 @@ function draw() {
   if (parkCanvas.ctx) {
     ctx = parkCanvas.ctx
   } else {
+    draw();
     return;
   }
 
@@ -545,10 +549,40 @@ function loadResource() {
   }
 }
 
+const formRef = ref();
+const btnLoading = ref(false);
+function handleAddMessage() {
+  formRef.value.vaildForm().then((val: ReturnVaildForm) => {
+    if (val.vaild) {
+      const params: AddModel = {
+        userName: val.data.userName,
+        contactWay: val.data.contactWay,
+        content: val.data.content
+      }
+      btnLoading.value = true;
+      apiAdd(params).then(res => {
+        btnLoading.value = false;
+        if (res.succeeded) {
+          $message.show({
+            message: '提交成功',
+            type: 'success'
+          });
+        } else {
+          $message.show({
+            message: '提交失败',
+            type: 'error'
+          });
+        }
+      }).catch(e => {
+        btnLoading.value = false;
+      });
+    }
+});
+}
+
 onNuxtReady(() => {
   fetchSkillsData();
   scrollBarWidth = getScrollBarWidth();
-
   loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
@@ -593,15 +627,15 @@ onBeforeUnmount(() => {
                 开发、组件二次封装、<span class="font-bold">SSR</span>网站
                 前端开发等等...
               </p>
-              <com-button suffix-icon="profile-arrow" link><span class="fs18" style="color: var(--primary-color);">了解更多</span></com-button>
+              <com-button suffix-icon="profile-arrow" link><NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink></com-button>
             </div>
           </div>
         </div>
         <div v-if="windowWidth > 578 && windowWidth < 992" class="introducion-seat"></div>
       </div>
     </section>
-    <index-skills :skill-name="skillsName" v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
-    <index-skills-small :skills="skillsName" v-else></index-skills-small>
+    <index-skills :skill-name="skillsName" v-show="windowWidth >= 992" :width="windowWidth"></index-skills>
+    <index-skills-small :skills="skillsName" v-show="windowWidth < 992"></index-skills-small>
     <index-projects :width="windowWidth"></index-projects>
     <div class="container">
       <div class="text-center contact__me">
@@ -628,9 +662,9 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <ClientOnly>
-        <com-form class="index__form mx-auto mb4" :model="formConfig">
+        <com-form ref="formRef" class="index__form mx-auto mb4" :model="formConfig">
           <div class="flex__center">
-            <com-button class="submit-btn fs20" is-ripple>提交</com-button>
+            <com-button class="submit-btn fs20" :loading="btnLoading" is-ripple @click="handleAddMessage">提交</com-button>
           </div>
         </com-form>
       </ClientOnly>

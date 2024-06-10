@@ -188,12 +188,12 @@ onNuxtReady(() => {
 }
 
 .form__item-content:not(.verification) {
-  background: var(--readonly-color);
+  background: var(--user-input-bg);
 }
 
 :deep(.form__item-content .form__input-field) {
   border-radius: 10px;
-  background: var(--readonly-color);
+  background: var(--user-input-bg);
 }
 
 :deep(.form__item-content .form__input-box) {

@@ -94,7 +94,7 @@ function getListData() {
       const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
       return {
         isTread: e.isDisLike,
-        imageUrl: imageIds[0]?.fullPath,
+        imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
         describe: e.subtitle ?? e.description,
         ...e
       }
@@ -119,7 +119,7 @@ function handleSearch() {
       const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
       return {
         isTread: e.isDisLike,
-        imageUrl: imageIds[0].fullPath,
+        imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
         describe: e.subtitle ?? e.description,
         ...e
       }

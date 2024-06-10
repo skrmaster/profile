@@ -180,7 +180,7 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-  <div class="container">
+  <div id="skills" class="container">
     <div 
       ref="skillBox"
       class="skills-box flex__center" 

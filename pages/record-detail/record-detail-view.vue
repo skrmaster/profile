@@ -7,7 +7,7 @@ const router = useRouter();
 const { $message, $sanitize } = useNuxtApp();
 const recordId = route.query.id as string;
 const { recordCategory } = options;
-const viewJudgeTime = 3000 || 1000 * 60 * 5;
+const viewJudgeTime = 1000 * 60 * 5;
 let timer: ReturnType<typeof setTimeout> | null;
 const scrollBarWidth = ref(0);
 
@@ -78,7 +78,16 @@ onUnmounted(() => {
 
 </script>
 <template>
-  <NuxtLayout name="header-section-footer" bg-change-color bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(#ffffff 0, var(--background-color) 100%)">
+  <NuxtLayout 
+    name="header-section-footer" 
+    bg-change-color 
+    bg-style-content="
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+    "
+  >
     <div class="container p1 flex1">
       <div class="back__nav mb1 pb1">
         <div class="c-p" @click="goBack">

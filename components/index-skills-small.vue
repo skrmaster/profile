@@ -20,7 +20,7 @@ function handleAddSkill() {
 
 </script>
 <template>
-  <div class="container">
+  <div id="skills" class="container">
     <div class="skills-text" ref="skillCircle">
       <p class="fs36 font-bold">
         <span>技能(SKILLS)</span>

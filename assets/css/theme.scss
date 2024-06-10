@@ -48,6 +48,8 @@
   --input-placeholder-color: #999999;
   --btn-bg-default-color: #0a0b0b;
   --btn-bg-primary-text-color: #ffffff;
+  --user-input-bg: var(--readonly-color);
+  --detail-title: var(--readonly-color);
 }
 
 .dark-theme {
@@ -60,16 +62,49 @@
   --nav-item-active-bg-color: #0a0b0b;
   --nav-small-bg: #1b1b1b;
   --nav-small-item-active-bg: #0a0b0b;
+  --nav-link-hover: #0a0b0b;
+  --nav-item-bg-active: #0a0b0b;
   --gaussian-blur: rgba(248, 248, 248, 0.1);
   --nav-wave-1: rgba(0, 0, 0, 0.6);
   --primary-color: #eef1f5;
-  --primary-border-color: rgba(255, 255, 255, 0.25);
+  --primary-border-color: rgba(101, 94, 94, 0.25);
   --box-shadow: 0px 5px 20px 0px rgba(255, 255, 255, 0.25);
   --box-shadow-small: 0px 2px 4px 0px rgba(255, 255, 255, 0.25);
   --login-box-bg: radial-gradient(circle at center, var(--white-color) 10%, transparent 20%);
   --login-box-border-color: #1b1b1b;
   --btn-bg-default-color: #0a0b0b;
   --btn-bg-primary-text-color: #ffffff;
+  --table-bg-color: #1b1b1b;
+  --table-th-color: var(--primary-color);
+  --table-th-bg-color: #0a0b0b;
+  --table-tr-bg-color-hover: #0a0b0b;
+  --table-tr-border-color: #0a0b0b;
+  --user-input-bg: #1b1b1b;
+  --detail-title: #0a0b0b;
+
+  //#region wangEditor
+  // textarea - css vars
+  --w-e-textarea-bg-color: var(--white-color);
+  --w-e-textarea-color: var(--primary-color);
+  --w-e-textarea-border-color: var(--white-color);
+  --w-e-textarea-slight-border-color: var(--white-color);
+  --w-e-textarea-slight-color: var(--primary-color);
+  --w-e-textarea-slight-bg-color: #0a0b0b;
+  --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
+  --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
+    
+  // toolbar - css vars
+  --w-e-toolbar-color: var(--primary-color);
+  --w-e-toolbar-bg-color: var(--white-color);
+  --w-e-toolbar-active-color: var(--primary-color);
+  --w-e-toolbar-active-bg-color: #0a0b0b;
+  --w-e-toolbar-disabled-color: #999;
+  --w-e-toolbar-border-color: #e8e8e8;
+    
+  // modal - css vars
+  --w-e-modal-button-bg-color: #fafafa;
+  --w-e-modal-button-border-color: #d9d9d9;
+  //#endregion
 }
 
 body {

@@ -189,8 +189,8 @@ export default {
                 category: 0,
                 file: file
               }
-              apiAdd(params).then(res => {
-                insertFn(res.data.fullPath, res.data.id, '');
+              apiAdd(params).then((res) => {
+                insertFn(splicingImageUrl(res.data.fullPath) || '', res.data.id, '');
               }).catch(() => {});
           }
         }

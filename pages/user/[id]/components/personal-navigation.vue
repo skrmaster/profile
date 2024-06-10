@@ -62,6 +62,10 @@ const listMore = ref<Array<LinkType | undefined>>([
     url: routerMap.aphorismsPath
   },
   {
+    name: '留言管理',
+    url: routerMap.userMessagePath
+  },
+  {
     name: '地址导航管理',
     url: routerMap.navigationPath
   }
@@ -181,6 +185,6 @@ aside {
 
 .nav__item.is--active {
   border-radius: 10px;
-  background-color: var(--nav-link-bg);
+  background-color: var(--nav-link-hover);
 }
 </style>

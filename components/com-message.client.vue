@@ -115,6 +115,7 @@ onBeforeUnmount(() => {
   border-color: transparent;
   outline-width: 2px;
   outline-style: solid;
+  color: var(--primary-color);
   /* border-width: 2px; */
 }
 

@@ -8,7 +8,8 @@ const permissonList = [
   routerMap.navigationPath,
   routerMap.aphorismsPath,
   routerMap.projectDetailPath,
-  routerMap.recordDetailPath
+  routerMap.recordDetailPath,
+  routerMap.userMessagePath
 ];
 
 export default defineNuxtRouteMiddleware(async (to, from) => {

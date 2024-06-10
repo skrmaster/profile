@@ -78,9 +78,13 @@ function goBack() {
 <template>
   <com-background 
     name="background-setting"
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="false"
+    bg-change-color 
+    bg-style-content="
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+    "
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
@@ -170,7 +174,7 @@ function goBack() {
 .title__bg {
   position: relative;
   padding: 16px 50px;
-  background: #eeeeee;
+  background: var(--white-color);
   border-radius: 10px;
 }
 

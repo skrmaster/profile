@@ -2,7 +2,7 @@
 import textdata from 'assets/json/constellation.json';
 import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
-import { apiRegister } from '~/api/user/request'
+import { apiRegister, apiUpdateUserInfo } from '~/api/user/request'
 import type { Register, UpdatePwd } from '~/api/user/model';
 import type { StorageSuger as StorageSugerType } from '#imports';
 
@@ -165,7 +165,7 @@ function wheelSetTimeout(updateCallback: (...args: any) => any, resultCallback: 
     if (time === 0) {
       clearTimeout(timer);
       if (resultCallback) {
-        resultCallback();
+        setTimeout(resultCallback, 1000);
       }
     }
   }, 1000);
@@ -174,14 +174,16 @@ function wheelSetTimeout(updateCallback: (...args: any) => any, resultCallback: 
 function drawClock() {
   const canvas = document.getElementById('login-canvas') as HTMLCanvasElement;
   if (!canvas) {
-    throw new Error('canvas element is null!');
+    drawClock();
+    return;
   }
   const w_canvas = canvas.width;
   const h_canvas = canvas.height;
   const ctx = canvas.getContext('2d');
   
   if (!ctx) {
-    throw new Error('canvas context is null!');
+    drawClock();
+    return;
   }
 
   ctx.clearRect(0, 0, w_canvas, h_canvas);
@@ -285,7 +287,7 @@ function handleSubmit() {
   btnLoading.value = true;
   if (form.value) {
     form.value.vaildForm()
-    .then(async (val: ReturnVaildForm) => {
+    .then((val: ReturnVaildForm) => {
       if (val.vaild) {
         if (!isForget.value) {
           const params: Register = {
@@ -295,24 +297,8 @@ function handleSubmit() {
             code: ''
           }
 
-          await apiRegister(params).then(res => {
-            btnLoading.value = false;
-            if (res.succeeded) {
-              $message.show({
-                message: res.data.toString(),
-                type: 'success'
-              });
-              wheelSetTimeout(() => {
-                $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
-              }, () => {
-                navigateTo('/login');
-              });
-            } else {
-              $message.show({
-                message: res.data.toString() || JSON.stringify(res.errors),
-                type: 'error'
-              });
-            }
+          apiRegister(params).then(res => {
+            authComplete(res, '注册成功');
           }).catch(e => {
             btnLoading.value = false;
           }); 
@@ -324,12 +310,35 @@ function handleSubmit() {
             code: ''
           }
 
-          
-
+          apiUpdateUserInfo(params).then(res => {
+            authComplete(res, '修改成功');
+          }).catch(e => {
+            btnLoading.value = false;
+          });
         }
       } else {
         btnLoading.value = false;
       }
+    });
+  }
+}
+
+function authComplete(res: ResponseModel<string | boolean>, resInfo: string) {
+  btnLoading.value = false;
+  if (res.succeeded) {
+    $message.show({
+      message: resInfo,
+      type: 'success'
+    });
+    wheelSetTimeout(() => {
+      $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
+    }, () => {
+      navigateTo('/login');
+    });
+  } else {    
+    $message.show({
+      message: res.data?.toString() || typeof res.errors !== 'string' ? JSON.stringify(res.errors) : res.errors,
+      type: 'error'
     });
   }
 }

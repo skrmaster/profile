@@ -14,6 +14,7 @@ type KeyOfRouter = 'homePath'
 | 'recordMgtPath'
 | 'navigationPath'
 | 'aphorismsPath'
+| 'userMessagePath'
 | 'projectDetailPath'
 | 'recordDetailPath'
 | 'noAuthPath'
@@ -32,6 +33,7 @@ export const routerMap: Record<KeyOfRouter, string> = {
   recordMgtPath: '/user/:id/management-record',
   navigationPath: '/user/:id/management-navigation',
   aphorismsPath: '/user/:id/management-aphorisms',
+  userMessagePath: '/user/:id/management-message',
   projectDetailPath: '/project-detail',
   recordDetailPath: '/record-detail',
   homePath: '/',
@@ -79,6 +81,8 @@ type KeyOfApi = 'loginPath'
 | 'aphorismsAddPath'
 | 'aphorismsEditPath'
 | 'aphorismsDeletePath'
+| 'messageAddPath'
+| 'messageGetList'
 | 'skillStackListPath'
 | 'uploadSingleFilePath'
 | 'deleteSingleFilePath'
@@ -125,5 +129,7 @@ export const apiMap: Record<KeyOfApi, string> = {
   aphorismsDeletePath: '/aphorisms/delete',
   uploadSingleFilePath: '/file/upload',
   deleteSingleFilePath: '/file/delete',
-  recordQueryListPath: '/record/getlistbyquery'
+  recordQueryListPath: '/record/getlistbyquery',
+  messageAddPath: '/usermessage/add',
+  messageGetList: '/usermessage/getlist'
 }
