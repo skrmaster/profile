@@ -115,6 +115,9 @@ function handleEnd() {
   if (isVerified.value) {
     timer = setTimeout(() => {
       emit('verify', isVerified.value);
+      isVerified.value = false;
+      sliderValue.value = 0;
+      noticeVisable.value = false;
       close();
     }, 2000);
   } else {
@@ -184,7 +187,7 @@ defineExpose({
 <template>
   <div class="verify__box">
     <slot />
-    <div @click.self="trackTarget" v-if="visable" ref="verifyRef" class="verify p1">
+    <div v-if="visable" ref="verifyRef" class="verify p1">
       <div class="verify__content">
         <div class="p-r">
           <canvas id="verify"></canvas>
@@ -200,7 +203,13 @@ defineExpose({
           </div>
         </div>
         <div class="">
-          <com-slider v-model="sliderValue" @start="handleStart" @end="handleEnd"></com-slider>
+          <com-slider 
+            v-model="sliderValue" 
+            :p-node="verifyRef"
+            @close="close"
+            @start="handleStart" 
+            @end="handleEnd"
+          ></com-slider>
         </div>
       </div>
     </div>

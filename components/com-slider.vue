@@ -6,6 +6,7 @@ type Prop = {
   min?: number;
   unit?: number;
   blockSize?: number;
+  pNode?: HTMLElement
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -18,6 +19,7 @@ const emit = defineEmits<{
   'update:modelValue': [val: string];
   'start': [];
   'end': [];
+  'close': [];
 }>();
 
 const obj = reactive({
@@ -30,6 +32,7 @@ const boxWidth = ref(0);
 const trackRef = ref();
 const blockOffsetX = ref(0);
 
+const pRef = computed(() => props.pNode);
 const pValue = computed(() => props.modelValue);
 const blockStyle = computed(() => {
   return `translate(${blockOffsetX.value}px, -50%)`;
@@ -58,27 +61,54 @@ function initConfig() {
   }
 }
 
-function handleStart(e: MouseEvent) {
-  if (e.button !== 0) return;
-  startTrack = true;
-  emit('start');
+function handleStart(e: Event) {
+  // if (e.button !== 0) return;
+  const target = e.target as HTMLElement;
+  
+  if (pRef.value && pRef.value.contains(target)) {
+    startTrack = true;
+    emit('start');
+  } else {
+    emit('close');
+  }
 }
 
-function handleEnd(e: MouseEvent) {
-  if (e.button !== 0) return;
+function handleEnd(e: Event) {
+  // if (e.button !== 0) return;
+  if (!(pRef.value && pRef.value.contains(e.target as HTMLElement))) {
+    emit('close');
+  }
+
+  if (!startTrack) {
+    return;
+  }
   startTrack = false;
   emit('end');
 }
 
-function trackMouse(e: MouseEvent) {
+function trackMouse(e: MouseEvent | TouchEvent) {
+  e.preventDefault();
+
   if (!startTrack) {
     return;
   }
-  const sizeInfo = trackRef.value?.getBoundingClientRect();
-  const x = e.pageX - sizeInfo.x;
-  if (x >= obj.min && x <= obj.max) {
-    blockOffsetX.value = x;
-    getValue();
+
+  if (isMouseEvent(e)) {
+    const sizeInfo = trackRef.value?.getBoundingClientRect();
+    const x = e.pageX - sizeInfo.x;
+    if (x >= obj.min && x <= obj.max) {
+      blockOffsetX.value = x;
+      getValue();
+    }
+  }
+
+  if (isTouchEvent(e)) {
+    const sizeInfo = trackRef.value?.getBoundingClientRect();
+    const x = e.touches[0].pageX - sizeInfo.x;
+    if (x >= obj.min && x <= obj.max) {
+      blockOffsetX.value = x;
+      getValue();
+    }
   }
 }
 
@@ -96,6 +126,8 @@ function formatNumberWithUnit(number: number, unit: number): string {
 onNuxtReady(() => {
   document.addEventListener('mouseup', handleEnd);
   document.addEventListener('mousemove', trackMouse);
+  document.addEventListener('touchmove', trackMouse);
+  document.addEventListener('touchend', handleEnd);
   if (sliderBoxRef.value) {
     boxWidth.value = sliderBoxRef.value.offsetWidth;
     initConfig();
@@ -105,6 +137,8 @@ onNuxtReady(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('mouseup', handleEnd);
   document.removeEventListener('mousemove', trackMouse);
+  document.removeEventListener('touchmove', trackMouse);
+  document.removeEventListener('touchend', handleEnd);
 });
 </script>
 <template>
@@ -116,6 +150,7 @@ onBeforeUnmount(() => {
     <div ref="trackRef" class="slider__track"></div>
     <div
       @mousedown.stop="handleStart"
+      @touchstart.stop="handleStart"
       class="slider__block"
       :style="{
         transform: blockStyle,
@@ -134,14 +169,14 @@ onBeforeUnmount(() => {
   border-radius: var(--border-radius);
   height: 10px;
   width: 100%;
-  background: red;
+  background: var(--white-color);
 }
 
 .slider__block {
   width:  var(--block-size);
   height:  var(--block-size);
   border-radius: 50%;
-  background: green;
+  background: var(--primary-color);
   position: absolute;
   top: 50%;
   left: 0;

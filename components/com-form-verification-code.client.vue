@@ -101,7 +101,7 @@ onMounted(() => {
     </div>
     <div class="verification__btn">
       <com-verify ref="verifyRef" @verify="handleGetCode">
-        <com-button plain @click.stop="handleClick" class="nowrap">
+        <com-button plain @click.stop="handleClick" class="code__btn nowrap">
           {{ start ? `${countdown}s` : text }}
         </com-button>
       </com-verify>
@@ -124,5 +124,9 @@ onMounted(() => {
 .verification__btn {
   flex: 1;
   margin-left: 10px;
+}
+
+.code__btn {
+  width: 100px;
 }
 </style>

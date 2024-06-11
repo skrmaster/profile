@@ -42,6 +42,6 @@ function getStorageUserInfo(): UserModel | undefined {
       return;
     }
   } catch(e) {
-    // console.log(e);
+    
   }
 }
