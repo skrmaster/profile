@@ -1,3 +1,5 @@
+import type { UserModel } from "~/api/user/model";
+
 const permissonList = [
   routerMap.followPath,
   routerMap.projectListPath,
@@ -19,7 +21,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   
   if (needAuth) {
     const userPermissions = await getUserPermissions();
-    const auth = hasPermissions(to.fullPath, userPermissions);
+    const auth = hasPermissions(to.fullPath, userPermissions && userPermissions[0]);
     
     if (!auth) {
       return navigateTo({
@@ -50,12 +52,14 @@ export function hasPermissions(path: string, userPermissions?: string): boolean 
   return false;
 }
 
-export async function getUserPermissions(): Promise<string | undefined> {
+export async function getUserPermissions(): Promise<[string, UserModel] | undefined> {
+  console.log("getUserPermissions");
+  
   const userInfo = await useUserInfo();
   
   if (userInfo) {
     const res = userInfo.permission ? JSON.parse(userInfo.permission) : '';
-    return res;
+    return [res, userInfo];
   } else {
     return;
   }

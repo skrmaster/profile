@@ -78,10 +78,23 @@ watchEffect(() => {
 
 auth();
 async function auth() {
+  let userPermissions: [string, UserModel] | undefined;
+  // if (!userInfo.value?.id) {
+  //   userPermissions = await getUserPermissions();
+  //   if (userPermissions) {
+  //     userInfo.value = userPermissions[1];
+  //   }
+  // } else {
+  //   userPermissions = [userInfo.value.permission || "", userInfo.value];
+  // }
+  userPermissions = await getUserPermissions();
+  if (userPermissions) {
+    userInfo.value = userPermissions[1];
+  }
+  
   const items = await Promise.all(
     listMore.value.map(async (item) => {
-      const userPermissions = await getUserPermissions();
-      const auth = item && item.url ? hasPermissions(item.url, userPermissions) : false;
+      const auth = item && item.url ? hasPermissions(item.url, userPermissions && userPermissions[0]) : false;
 
       if (item && item.url && isPathInList(item.url) && auth) {
         return item
@@ -106,7 +119,6 @@ function handleJump(item?: LinkType) {
     item.url = item.url.replace(':id', params.id as string);
     navigateTo(item.url, { replace: true });
   }
-  
 }
 </script>
 <template>
@@ -185,6 +197,6 @@ aside {
 
 .nav__item.is--active {
   border-radius: 10px;
-  background-color: var(--nav-link-hover);
+  background-color: var(--nav-item-bg-active);
 }
 </style>

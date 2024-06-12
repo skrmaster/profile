@@ -54,6 +54,5 @@ function handleClick($event: Event) {
   fill: currentColor;
   overflow: hidden;
   cursor: pointer;
-  color: var(--primary-color)!important;
 }
 </style>

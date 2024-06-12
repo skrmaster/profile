@@ -8,14 +8,16 @@ import verify5 from '~/assets/verify/verify5.jpg';
 import verify6 from '~/assets/verify/verify6.jpg';
 
 const emit = defineEmits<{
-  'verify': [val: boolean]
+  'verify': [val: boolean];
+  'sendMail': []
 }>();
 
 const imageList = [verify1, verify2, verify3, verify4, verify5, verify6];
 const visable = ref(false);
 const sliderValue = ref(0);
 const verifyRef = ref<HTMLElement | undefined>();
-const currentImage = getImage();
+const verifyBoxRef = ref<HTMLElement | undefined>();
+let currentImage: string = '';
 const clipSize = 30;
 const isVerified = ref(false);
 const noticeVisable = ref(false);
@@ -23,6 +25,11 @@ let timer: ReturnType<typeof setTimeout>;
 let counter: ReturnType<typeof setInterval>;
 const time = ref(0);
 let localStorage: StorageSugerType;
+const x = ref(0);
+const y = ref(0);
+const boxStyle = computed(() => {
+  return `position: fixed; z-index: 999; left: ${x.value}px; top: ${y.value}px`
+})
 
 const verifyCanvas: {
   ctx: CanvasRenderingContext2D | null;
@@ -52,13 +59,14 @@ function getClipWidthHeight() {
   const heightRandom = Math.floor(Math.random() * (verifyCanvas.height + 1));
   // verifyCanvas.clipX = widthRandom > 50 ? widthRandom - 50 : widthRandom;
   // verifyCanvas.clipY = heightRandom > 50 ? heightRandom - 50 : heightRandom;
-  verifyCanvas.clipX = 200;
-  verifyCanvas.clipY = 100;
+  verifyCanvas.clipX = getRandomIntInclusive(190, 200);
+  verifyCanvas.clipY = getRandomIntInclusive(90, 100);
 }
 
 function loadImage() {
   verifyCanvas.image = new Image();
   verifyCanvas.image.src = currentImage;
+  verifyCanvas.clipImageData = null;
   verifyCanvas.image.onload = () => {
     drawImage();
   }
@@ -118,6 +126,7 @@ function handleEnd() {
       isVerified.value = false;
       sliderValue.value = 0;
       noticeVisable.value = false;
+      emit('sendMail');
       close();
     }, 2000);
   } else {
@@ -151,6 +160,8 @@ function open() {
   visable.value = true;
   time.value = 0;
   localStorage.removeValue('verifyCode');
+  currentImage = getImage();
+  loadImage();
 
   nextTick(() => {
     if (verifyRef.value) {
@@ -166,12 +177,22 @@ function close() {
   visable.value = false;
 }
 
+function handleNoThingClose() {
+  visable.value = false;
+  emit('sendMail');
+}
+
 function trackTarget(e: MouseEvent) {
   console.log(trackTarget);
 }
 
 onNuxtReady(() => {
   localStorage = new StorageSuger('localStorage');
+  if (verifyBoxRef.value) {
+    const pos = verifyBoxRef.value.getBoundingClientRect();
+    x.value = pos.x + 50;
+    y.value = pos.y;
+  }
   // document.addEventListener('click', trackTarget);
 });
 
@@ -185,9 +206,9 @@ defineExpose({
 });
 </script>
 <template>
-  <div class="verify__box">
+  <div ref="verifyBoxRef" class="verify__box">
     <slot />
-    <div v-if="visable" ref="verifyRef" class="verify p1">
+    <div v-if="visable" ref="verifyRef" class="verify p1" :style="boxStyle">
       <div class="verify__content">
         <div class="p-r">
           <canvas id="verify"></canvas>
@@ -206,7 +227,7 @@ defineExpose({
           <com-slider 
             v-model="sliderValue" 
             :p-node="verifyRef"
-            @close="close"
+            @close="handleNoThingClose"
             @start="handleStart" 
             @end="handleEnd"
           ></com-slider>
@@ -226,6 +247,7 @@ defineExpose({
   top: 0;
   transform: translate(-50%, -105%);
   background: var(--background-color);
+  z-index: 999;
 }
 
 .verify__content {

@@ -1,21 +1,25 @@
 <script lang="ts" setup>
 import PersonalCenter from './components/personal-center.vue';
-import { apiUpdateUserInfo, apiUserLogout } from '~/api/user/request';
+import { apiUpdateUserInfo, apiUserLogout, apiSendMail, apiCheckMailUsed } from '~/api/user/request';
 import { apiAdd as fileApiAdd } from '~/api/upload/request';
 import type { UserModel, UpdateInfo } from '~/api/user/model';
 import type { AddModel as FileAddModel  } from '~/api/upload/model';
+import md5 from 'md5';
 
 const userInfo = useState<UserModel>("userInfo");
 const formData = reactive<UpdateInfo>({
   account: '',
   email: '',
   password: '',
-  code: ''
+  originEmail: '',
+  code: '',
+  codeId: ''
 });
 const { $message } = useNuxtApp();
 const images = ref<Upload.FileInfo[]>([]);
 const fileList = ref<Array<Upload.FileInfo>>([]);
 const canUpload = ref(false);
+const btnLoading = ref(false);
 
 async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
   for await (let item of list) {
@@ -36,11 +40,20 @@ async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
 function handleUpdate() {
   const params: UpdateInfo = {
     ...formData,
-    avatar: JSON.stringify(images.value[0])
+    avatar: JSON.stringify(images.value[0]) || userInfo.value.avatar
   }
 
+  if (!params.codeId) {
+    const localStorage = new StorageSuger("localStorage");
+    params.codeId = localStorage.getValue("UserInfoCodeId") as string;
+  }
+
+  params.password = md5(import.meta.env.VITE_PROJECT_SALT + params.password);
+
+  btnLoading.value = true;
   apiUpdateUserInfo(params).then((res) => {
-    if (res.data) {
+    btnLoading.value = false;
+    if (res.succeeded) {
       $message.show({
         message: '操作成功',
         type: 'success'
@@ -52,29 +65,53 @@ function handleUpdate() {
           getUserInfo();
         }
       });
+    } else {
+      $message.show({
+        message: res.data.toString() || res.errors,
+        type: 'error'
+      });
     }
-  })
+  }).catch(e => {
+    btnLoading.value = false;
+  });
 }
 
 hasUploadAuth();
-function hasUploadAuth() {
-  useUserInfo().then(res => {
-    const userInfo = res;
-    if (userInfo) {
-      canUpload.value = userInfo.permission?.includes('1') ?? false;
-    } else {
-      canUpload.value = false;
+async function hasUploadAuth() {
+  const resultUserInfo = await useUserInfo();
+  if (resultUserInfo) {
+    userInfo.value = resultUserInfo;
+  }
+  
+  if (userInfo.value) {
+    canUpload.value = userInfo.value.permission?.includes('1') ?? false;
+  } else {
+    canUpload.value = false;
+  }
+}
+
+function handleCheckEmail() {
+  const result = vaildTest(formData.email, 'email');
+  if (!result[0]) {
+    return;
+  }
+
+  apiCheckMailUsed(formData.email).then(res => {
+    if (res.data) {
+      $message.show({
+        message: '该邮箱已被使用',
+        type: 'warning'
+      });
     }
-  })
+  }).catch(e => {});
 }
 
 function getUserInfo() {
-  formData.id = userInfo.value.id;
-  formData.account = userInfo.value.account || '';
-  formData.email = userInfo.value.email;
-  formData.avatar = userInfo.value.avatar;
+  formData.account = userInfo.value?.account || '';
+  formData.originEmail = userInfo.value?.email;
+  formData.avatar = userInfo.value?.avatar;
   
-  const imageIds: Upload.FileInfo = userInfo.value.avatar ? JSON.parse(userInfo.value.avatar) : [];
+  const imageIds: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : [];
   
   fileList.value = [imageIds].map(e => {
     return {
@@ -87,7 +124,6 @@ function getUserInfo() {
 function handleLoginout() {
   apiUserLogout().then(async (res) => {
     if (res.succeeded) {
-      clearNuxtState();
       const localStorage = new StorageSuger("localStorage");
       const sectionStorage = new StorageSuger("sessionStorage");
       localStorage.clearAll();
@@ -97,6 +133,32 @@ function handleLoginout() {
       location.reload();
     }
   }).catch(e => {})
+}
+
+function handleSendMail() {
+  if (!formData.email) {
+    $message.show({
+      message: '需要填写新邮箱',
+      type: 'warning'
+    });
+    return;
+  }
+  apiSendMail(formData.email).then(res => {
+    if (res.succeeded) {
+      const localStorage = new StorageSuger("localStorage");
+      localStorage.setValue("UserInfoCodeId", res.data);
+      formData.codeId = res.data;
+      $message.show({
+        message: '邮件已发送注意查看',
+        type: 'success'
+      });
+    } else{
+      $message.show({
+        message: res.data || res.errors,
+        type: 'error'
+      })
+    }
+  }).catch(e => {});
 }
 
 onNuxtReady(() => {
@@ -112,8 +174,8 @@ onNuxtReady(() => {
         <com-upload 
           label="上传头像"
           :data-list="fileList"
-              :limit="1"
-              @file-monuted="handleFileUpload"
+          :limit="1"
+          @file-monuted="handleFileUpload"
           class="form__item-avatar"
         ></com-upload>
       </div>
@@ -127,12 +189,35 @@ onNuxtReady(() => {
         ></com-form-input>
       </div>
       <div class="form__item">
-        <label class="label">邮箱</label>
+        <label class="label">原邮箱</label>
         <com-form-input 
           class="form__item-content" 
           :is-label="false" 
+          placeholder="请输入原邮箱"
           clearable
+          v-model="formData.originEmail"
+        ></com-form-input>
+      </div>
+      <div class="form__item">
+        <label class="label">新邮箱</label>
+        <com-form-input 
+          class="form__item-content" 
+          :is-label="false" 
+          @blur="handleCheckEmail"
+          clearable
+          placeholder="请输入新邮箱"
           v-model="formData.email"
+        ></com-form-input>
+      </div>
+      <div class="form__item">
+        <label class="label">密码</label>
+        <com-form-input 
+          class="form__item-content" 
+          :is-label="false"
+          placeholder="请输入账号密码"
+          clearable
+          v-model="formData.password"
+          type="password"
         ></com-form-input>
       </div>
       <div class="form__item">
@@ -141,11 +226,12 @@ onNuxtReady(() => {
           class="form__item-content"
           :is-label="false" 
           v-model="formData.code"
+          @send-mail="handleSendMail"
         ></com-form-verification-code>
       </div>
       <div class="form__item flex__row">
         <label class="label"></label>
-        <com-button style="width: 100px" @click.stop="handleUpdate">
+        <com-button :loading="btnLoading" style="width: 100px" @click.stop="handleUpdate">
           <span>保存</span>
         </com-button>
         <com-button class="ml1" style="width: 80px; height: 40px" plain @click.stop="handleLoginout">
@@ -175,7 +261,7 @@ onNuxtReady(() => {
 }
 
 .label {
-  max-width: 50px;
+  max-width: 70px;
   width: 100%;
 }
 
@@ -184,7 +270,6 @@ onNuxtReady(() => {
   width: 100%;
   outline: 0;
   border-radius: 10px;
-  
 }
 
 .form__item-content:not(.verification) {
@@ -199,5 +284,6 @@ onNuxtReady(() => {
 :deep(.form__item-content .form__input-box) {
   border-radius: 10px;
   outline: 0;
+  background: var(--user-input-bg);
 }
 </style>

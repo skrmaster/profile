@@ -68,3 +68,15 @@ export function getScrollBarWidth(): number {
   document.body.removeChild(div);
   return scrollbarWidth;
 }
+
+/**
+ * @description 得到一个两数之间的随机整数，包括两个数在内
+ * @param min 
+ * @param max 
+ * @returns 
+ */
+export function getRandomIntInclusive(min: number, max: number): number {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}

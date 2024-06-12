@@ -9,13 +9,14 @@ export type Register = {
   email: string;
   password: string;
   code: string;
+  codeId: string;
 }
 
 export type UpdatePwd = {
   email: string;
-  originPassword: string;
   password: string;
   code: string;
+  codeId: string;
 }
 
 export type UpdateInfo = {
@@ -23,6 +24,8 @@ export type UpdateInfo = {
   email: string;
   password: string;
   code: string;
+  originEmail: string;
+  codeId: string;
 } & Partial<UserModel>
 
 export interface UserModel {

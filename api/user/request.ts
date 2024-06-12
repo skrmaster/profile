@@ -1,7 +1,7 @@
 import type { UserModel, LoginType, Register, UpdateInfo, UpdatePwd } from "./model";
 import { httpClient } from "../index";
 
-const { loginPath, registerPath, userInfoPath, userUpdatePath, userLogoutPath } = apiMap;
+const { loginPath, registerPath, userInfoPath, userUpdatePath, userLogoutPath, sendMailPath, userCheckMailPath } = apiMap;
 
 export async function apiUserInfo() {
   const res = await httpClient<UserModel>(userInfoPath, {
@@ -16,6 +16,26 @@ export async function apiUserLogout() {
 
   const res = await httpClient<boolean>(userLogoutPath, {
     method: 'GET'
+  });
+  return res;
+}
+
+export async function apiSendMail(mail: string) {
+  const res = await httpClient<string>(sendMailPath, {
+    method: 'GET',
+    params: {
+      mail
+    }
+  });
+  return res;
+}
+
+export async function apiCheckMailUsed(mail: string) {
+  const res = await httpClient<boolean>(userCheckMailPath, {
+    method: 'GET',
+    params: {
+      mail
+    }
   });
   return res;
 }

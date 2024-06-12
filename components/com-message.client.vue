@@ -25,13 +25,13 @@ const typeClass = computed(() => `message-${props.type ? props.type : ''}`);
 const iconClass = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'profile-chenggong';
+      return 'profile-fill-success';
     case 'warning':
-      return 'profile-jinggao';
+      return 'profile-fill-warning';
     case 'info':
-      return 'profile-xinxi';
+      return 'profile-fill-info';
     case 'error':
-      return 'profile-shibai';
+      return 'profile-fill-close';
     default:
       return '';
   }
@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
       @mouseenter="clearTimer" 
       @mouseleave="startTimer"
     >
-      <com-icon :icon="iconClass"></com-icon>
+      <com-icon class="prefix__notice" :icon="iconClass"></com-icon>
       <span class="message-content px1">{{ message }}</span>
       <com-icon class="flex__center" width="10px" height="10px" icon="profile-close" @click="close"></com-icon>
     </div>
@@ -124,9 +124,17 @@ onBeforeUnmount(() => {
   outline-color: var(--message-success-color);
 }
 
+.message-success .prefix__notice :deep(.icon) {
+  color: var(--message-success-color)!important;
+}
+
 .message-warning {
   border-color: var(--message-warning-color);
   outline-color: var(--message-warning-color);
+}
+
+.message-warning .prefix__notice :deep(.icon) {
+  color: var(--message-warning-color)!important;
 }
 
 .message-info {
@@ -134,9 +142,17 @@ onBeforeUnmount(() => {
   outline-color: var(--message-info-color);
 }
 
+.message-info .prefix__notice :deep(.icon) {
+  color: var(--message-info-color)!important;
+}
+
 .message-error {
   border-color: var(--message-error-color);
   outline-color: var(--message-error-color);
+}
+
+.message-error .prefix__notice :deep(.icon) {
+  color: var(--message-error-color)!important;
 }
 
 .icon-success,

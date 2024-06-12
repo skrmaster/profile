@@ -90,7 +90,9 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
             message: '请先登录'
           });
 
-          navigateTo({ path: loginPath });
+          setTimeout(() => {
+            navigateTo({ path: loginPath });
+          }, 1000);
         }
         
         // if (response.headers.get('Access-Token')) {

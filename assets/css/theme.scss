@@ -31,7 +31,7 @@
   --tag-border-color: #898989;
   --nav-link-bg: #eeeeee;
   --nav-link-hover: rgba(250, 250, 250, 1);
-  --nav-item-bg-active: #eeeeee;
+  --nav-item-bg-active: #e5e5e5;
   --nav-small-item-active-bg: #dcdcdc;
   --table-bg-color: #f9f9f9;
   --table-th-bg-color: #e5e5e5;
@@ -110,4 +110,8 @@
 
 body {
   color: var(--primary-color);
+}
+
+.dark-theme .icon {
+  color: var(--primary-color)!important;
 }

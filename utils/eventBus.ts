@@ -31,3 +31,5 @@ export default class EventBus implements Bus {
     }
   }
 }
+
+export const commonBus = new EventBus();

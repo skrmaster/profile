@@ -25,7 +25,8 @@ const props = withDefaults(defineProps<Prop>(), {
 });
 
 const emit = defineEmits<{
-  'update:modelValue': [val: string]
+  'update:modelValue': [val: string];
+  'sendMail': []
 }>();
 
 const verifyRef = ref();
@@ -36,6 +37,7 @@ const start = ref(false);
 const countdown = ref(time);
 let counter: ReturnType<typeof setTimeout>;
 const localStorage = new StorageSuger('localStorage');
+let isVerifying = true;
 
 function running() {
   return setTimeout(() => {
@@ -43,6 +45,7 @@ function running() {
     localStorage.setValue('verifyCode', countdown.value);
     if (countdown.value === 0) {
       clearTimeout(counter);
+      isVerifying = true;
       start.value = false;
       countdown.value = time;
       localStorage.removeValue('verifyCode');
@@ -53,6 +56,11 @@ function running() {
 }
 
 function handleClick() {
+  if (!isVerifying || start.value) {
+    return;
+  }
+  
+  isVerifying = false;
   verifyRef.value?.open();
   countdown.value = time;
 }
@@ -64,23 +72,25 @@ function handleGetCode(val: boolean) {
     }
     start.value = true;
     counter = running();
-    fetchCode();
+    emit('sendMail');
   }
-}
-
-function fetchCode() {
-
 }
 
 function handleCodeData() {
   emit('update:modelValue', code.value);
 }
 
+function handleSendMail() {
+  isVerifying = true;
+}
+
 onMounted(() => {
   const existTime = localStorage.getValue('verifyCode');
+  
   if (existTime) {
     countdown.value = parseInt(existTime as string);
-    handleClick();
+    start.value = true;
+    counter = running();
   }
 })
 </script>
@@ -100,7 +110,7 @@ onMounted(() => {
       ></com-form-input>
     </div>
     <div class="verification__btn">
-      <com-verify ref="verifyRef" @verify="handleGetCode">
+      <com-verify ref="verifyRef" @send-mail="handleSendMail" @verify="handleGetCode">
         <com-button plain @click.stop="handleClick" class="code__btn nowrap">
           {{ start ? `${countdown}s` : text }}
         </com-button>

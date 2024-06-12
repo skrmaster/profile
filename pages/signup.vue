@@ -2,7 +2,7 @@
 import textdata from 'assets/json/constellation.json';
 import { apiGetRandom } from '@/api/aphorisms/request';
 import md5 from 'md5';
-import { apiRegister, apiUpdateUserInfo } from '~/api/user/request'
+import { apiRegister, apiUpdateUserInfo, apiSendMail } from '~/api/user/request'
 import type { Register, UpdatePwd } from '~/api/user/model';
 import type { StorageSuger as StorageSugerType } from '#imports';
 
@@ -26,6 +26,7 @@ const dayDate = new DayDate();
 let deg = 0;
 let canvasAnimateSwitch = true;
 const currentTimeRotateDeg = getRotateDeg();
+const emailId = ref('');
 
 const config = ref<Array<FormConfig>>([]);
 
@@ -89,18 +90,6 @@ const forgetPwdConfig: Array<FormConfig> = [
       placeholder: '请输入邮箱',
       clearable: true,
       errorMsg: '请输入正确的邮箱格式'
-    }
-  },
-  {
-    require: true,
-    field: 'oldPassword',
-    type: 'password',
-    rule: 'password',
-    elementConfig: {
-      width: '100%',
-      placeholder: '请输入原来的密码',
-      clearable: false,
-      errorMsg: '请输入8~16位数字,大小写字母的密码'
     }
   },
   {
@@ -289,12 +278,18 @@ function handleSubmit() {
     form.value.vaildForm()
     .then((val: ReturnVaildForm) => {
       if (val.vaild) {
+        const localStorage = new StorageSuger("localStorage");
         if (!isForget.value) {
           const params: Register = {
             account: val.data.account,
             email: val.data.email,
             password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
-            code: ''
+            code: val.data.code,
+            codeId: emailId.value
+          }
+
+          if (!params.codeId) {
+            params.codeId = localStorage.getValue('CodeId') as string;
           }
 
           apiRegister(params).then(res => {
@@ -305,9 +300,13 @@ function handleSubmit() {
         } else {
           const params: UpdatePwd = {
             email: val.data.email,
-            originPassword: md5(import.meta.env.VITE_PROJECT_SALT + val.data.oldPassword),
             password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
-            code: ''
+            code: val.data.code,
+            codeId: emailId.value
+          }
+
+          if (!params.codeId) {
+            params.codeId = localStorage.getValue('CodeId') as string;
           }
 
           apiUpdateUserInfo(params).then(res => {
@@ -321,6 +320,33 @@ function handleSubmit() {
       }
     });
   }
+}
+
+function handleSendMail(data: Record<string, string>) {
+  if (!data.email) {
+    $message.show({
+      message: '需要邮箱',
+      type: 'error'
+    });
+    return;
+  }
+
+  apiSendMail(data.email).then(res => {
+    if (res.succeeded) {
+      emailId.value = res.data;
+      const localStorage = new StorageSuger("localStorage");
+      localStorage.setValue("CodeId", res.data);
+      $message.show({
+        message: '邮件已发送注意查看',
+        type: 'success'
+      });
+    } else{
+      $message.show({
+        message: res.data || res.errors,
+        type: 'error'
+      })
+    }
+  }).catch(e => {});
 }
 
 function authComplete(res: ResponseModel<string | boolean>, resInfo: string) {
@@ -388,7 +414,7 @@ onNuxtReady(() => {
                 :icon="isForget ? 'profile-mima' : 'profile-signup'"
               ></com-icon>
             </div>
-            <com-form ref="form" :model="config">
+            <com-form ref="form" :model="config" @send-mail-code="handleSendMail">
               <div class="w100 mb2">
                 <NuxtLink 
                   to="/login" 
@@ -473,7 +499,7 @@ onNuxtReady(() => {
   position: absolute;
   top: -50px;
   left: 50%;
-  z-index: 999;
+  z-index: 0;
   transform: translate(-50%, 0);
 }
 

@@ -48,6 +48,8 @@ type KeyOfApi = 'loginPath'
 | 'userInfoPath'
 | 'userUpdatePath'
 | 'userLogoutPath'
+| 'userCheckMailPath'
+| 'sendMailPath'
 | 'skillListPath'
 | 'skillAddPath'
 | 'skillEditPath'
@@ -94,6 +96,8 @@ export const apiMap: Record<KeyOfApi, string> = {
   userInfoPath: '/user/getuserinfo',
   userUpdatePath: '/user/update',
   userLogoutPath: '/user/logout',
+  userCheckMailPath: '/user/checkemailhasuse',
+  sendMailPath: '/user/sendmail',
   skillListPath: '/skill/getlist',
   skillAddPath: '/skill/add',
   skillEditPath: '/skill/update',

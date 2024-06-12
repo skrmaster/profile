@@ -1,6 +1,4 @@
 <script lang="tsx" setup>
-import type { RendererNode, RendererElement } from 'vue';
-
 const props = defineProps<{
   model: Array<FormConfig>
 }>();
@@ -8,6 +6,13 @@ const slots = useSlots();
 const model = computed(() => {
   return props.model;
 });
+const emit = defineEmits<{
+  'sendMailCode': [val: Record<string, string>]
+}>();
+
+function handleSendMail(val: Record<string, string>) {
+  emit('sendMailCode', val);
+}
 
 class FormInstance implements Form {
   vnode: VNode;
@@ -49,7 +54,8 @@ class FormInstance implements Form {
       <com-form-verification-code 
         class="mb1"
         v-model={ this.data[config.field] }
-        {...config.elementConfig}
+        { ...config.elementConfig }
+        onSendMail={ () => handleSendMail(this.data) }
       >
       </com-form-verification-code>
     )

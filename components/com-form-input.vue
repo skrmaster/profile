@@ -39,8 +39,9 @@ const props = withDefaults(defineProps<Props>(), {
   textAlign: 'start'
 });
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number | undefined],
-  'change': [value: string | number | undefined]
+  'update:modelValue': [value: string | number | undefined];
+  'change': [value: string | number | undefined];
+  'blur': []
 }>();
 
 const input = ref();
@@ -123,6 +124,7 @@ function handlerFocus() {
 }
 
 function handlerBlur() {
+  emit('blur');
   isInputFocus.value = false;
   autoSetStatusOfPlaceholder();
 }

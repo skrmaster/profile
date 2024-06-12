@@ -32,7 +32,7 @@ const config = ref<Array<FormConfig>>([
     field: 'email',
     type: 'text',
     rule: 'email',
-    data: "zyskr@qq.com",
+    data: "",
     elementConfig: {
       width: '100%',
       placeholder: '请输入邮箱',
@@ -45,7 +45,7 @@ const config = ref<Array<FormConfig>>([
     field: 'password',
     type: 'password',
     rule: 'password',
-    data: "Zhengyang64",
+    data: "",
     elementConfig: {
       width: '100%',
       placeholder: '请输入密码',
@@ -182,10 +182,9 @@ function getTodayNumber(): number {
 }
 
 function handleSubmit() {
-  btnLoading.value = true;
   if (form.value) {
     form.value.vaildForm()
-    .then(async (val: ReturnVaildForm) => {
+    .then((val: ReturnVaildForm) => {
       if (val.vaild) {
         const params: LoginType = {
           email: val.data.email,
@@ -193,7 +192,8 @@ function handleSubmit() {
           isRemember: rememberPassword.value
         }
 
-        await apiLogin(params).then((data) => {
+        btnLoading.value = true;
+        apiLogin(params).then((data) => {
           btnLoading.value = false;
           
           if (data.succeeded) {
