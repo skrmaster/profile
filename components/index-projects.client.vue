@@ -80,7 +80,9 @@ function initData() {
 	}).then(res => {
 		list = res.data.list;
 		init();
-	}).catch(e => {});
+	}).catch(e => {
+		init();
+	});
 }
 
 function loadModel2Sence() {

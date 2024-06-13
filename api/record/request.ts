@@ -10,7 +10,8 @@ const {
   recordRankListPath,
   recordQueryListPath,
   recordCollectionListPath,
-  recordCountPath
+  recordCountPath,
+  recordAnonymousViewPath
 } = apiMap;
 
 export async function apiGetInfo(id: string) {
@@ -60,6 +61,16 @@ export async function apiRecordCount(params: Type.CountParam) {
   const res = await httpClient<boolean>(recordCountPath, {
     method: 'get',
     params
+  });
+  return res;
+}
+
+export async function apiAnonymousRecordCount(recordId: string) {
+  const res = await httpClient<boolean>(recordAnonymousViewPath, {
+    method: 'GET',
+    params: {
+      recordId
+    }
   });
   return res;
 }

@@ -72,6 +72,7 @@ type KeyOfApi = 'loginPath'
 | 'recordDeletePath'
 | 'recordCollectionListPath'
 | 'recordCountPath'
+| 'recordAnonymousViewPath'
 | 'navationGetIconPath'
 | 'navgationListPath'
 | 'navgationAddPath'
@@ -120,6 +121,7 @@ export const apiMap: Record<KeyOfApi, string> = {
   recordCollectionListPath: '/record/getcollectionlist',
   recordCountPath: '/record/recordcount',
   recordDeletePath: '/record/delete',
+  recordAnonymousViewPath: '/record/recordviewcount',
   navationGetIconPath: '/navgation/geticonfromwebsite',
   navgationListPath: '/navgation/getlist',
   navgationAddPath: '/navgation/add',

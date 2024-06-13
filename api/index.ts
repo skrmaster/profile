@@ -1,26 +1,13 @@
 import { MessageManager } from "~/plugins/message.client";
 
 const baseURL: string = import.meta.env.VITE_PROJECT_API + '/api';
-const { loginPath, userInfoPath } = routerMap;
+const { userInfoPath } = apiMap;
 
-function getToken(): string {
-  const localStorage = new StorageSuger("localStorage");
-  const sectionStorage = new StorageSuger("sessionStorage");
-  
-  const token1 = localStorage.getValue("token") as string;
-  const token2 = sectionStorage.getValue("token") as string;
-  const res = token1 
-  ? 'Bearer ' + token1 
-  : token2 
-    ? 'Bearer ' + token2 
-    : 'Bearer';
-
-  return res.replaceAll("\"", "");
-}
-
-function noAuthPath(path: RequestInfo): boolean {
+function noAuthPath(fullPath: string): boolean {
   const noAuth = [userInfoPath];
-  const item = noAuth.find(e => e === path);
+  const parsedUrl = new URL(fullPath);
+  const path = parsedUrl.pathname;
+  const item = noAuth.find(e => ('/api' + e) === path);
   return !!item;
 }
 
@@ -84,14 +71,14 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
         }
       },
       onResponse({ request, response, options }) {
-        if (response.status === 401 && noAuthPath(request)) {
+        if (response.status === 401 && !noAuthPath(request as string)) {
           MessageManager.show({
             type: 'error',
             message: '请先登录'
           });
 
           setTimeout(() => {
-            navigateTo({ path: loginPath });
+            navigateTo({ path: routerMap.loginPath });
           }, 1000);
         }
         

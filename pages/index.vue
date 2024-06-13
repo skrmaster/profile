@@ -6,6 +6,7 @@ import benchPath from 'assets/json/bench.json';
 import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
 import ligthOffSvg from 'assets/svg/light-off.svg';
+import walking1 from 'assets/svg/walking1.svg';
 import walking from 'assets/json/walkMan.json';
 import type { AddModel } from '~/api/message/model';
 import { apiAdd } from '~/api/message/request';
@@ -124,6 +125,7 @@ const man = {
   timeControl: 0,
   walkToSitingWaitTime: 10,
   sitingToWalkToWaitTime: 10,
+  walkStep: 0,
 }
 
 const timer: {
@@ -335,12 +337,17 @@ function draw() {
 function drawWalkingMan(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
   ctx.save();
   ctx.translate(x + offset, y);
-  const path = new Path2D(walkData[0]);
+  const path = new Path2D(walkData[man.walkStep]);
   const p = new Path2D();
   p.addPath(path);
   ctx.fillStyle = '#0a0b0b';
   ctx.fill(p);
   ctx.restore();
+  if ((man.sitingToWalkToWaitTime < 10 && man.sitingToWalkToWaitTime > 0) || (man.walkToSitingWaitTime < 10 && man.walkToSitingWaitTime > 0)) {
+    return;
+  } else {
+    man.walkStep =  man.walkStep === 0 ? 2 : 0;
+  }
 }
 
 function drawSitingMan(ctx: CanvasRenderingContext2D, x: number, y: number) {

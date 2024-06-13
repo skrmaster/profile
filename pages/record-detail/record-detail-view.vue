@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { apiGetInfo, apiRecordCount } from '~/api/record/request';
+import { apiAnonymousRecordCount, apiGetInfo } from '~/api/record/request';
 import type { ListItem, CountParam } from '~/api/record/model';
+import type { UserModel } from '~/api/user/model';
 
 const route = useRoute();
 const router = useRouter();
 const { $message, $sanitize } = useNuxtApp();
 const recordId = route.query.id as string;
 const { recordCategory } = options;
-const viewJudgeTime = 1000 * 60 * 5;
+const viewJudgeTime = 1000 * 60 * 1;
 let timer: ReturnType<typeof setTimeout> | null;
 const scrollBarWidth = ref(0);
 
@@ -53,7 +54,7 @@ function handleViewAdd() {
     recordId
   }
 
-  apiRecordCount(params);
+  apiAnonymousRecordCount(params.recordId);
 }
 
 function viewCountAddAfter5min() {
