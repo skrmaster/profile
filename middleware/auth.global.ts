@@ -53,8 +53,6 @@ export function hasPermissions(path: string, userPermissions?: string): boolean 
 }
 
 export async function getUserPermissions(): Promise<[string, UserModel] | undefined> {
-  console.log("getUserPermissions");
-  
   const userInfo = await useUserInfo();
   
   if (userInfo) {

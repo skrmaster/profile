@@ -33,7 +33,7 @@ const placement = toRef(() => props.placement);
 .tip__box .tip {
   display: none;
   background-color: var(--model-control-bg-color);
-  color: var(--white-color);
+  color: var(--tip-color);
   font-size: 12px;
   border-radius: 4px;
 }

@@ -51,6 +51,7 @@
   --btn-bg-primary-text-color: #ffffff;
   --user-input-bg: var(--readonly-color);
   --detail-title: var(--readonly-color);
+  --tip-color: #FFFFFF;
 }
 
 .dark-theme {
@@ -82,6 +83,7 @@
   --table-tr-border-color: #0a0b0b;
   --user-input-bg: #1b1b1b;
   --detail-title: #0a0b0b;
+  --tip-color: #eef1f5;
 
   //#region wangEditor
   // textarea - css vars

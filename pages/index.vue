@@ -6,7 +6,6 @@ import benchPath from 'assets/json/bench.json';
 import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
 import ligthOffSvg from 'assets/svg/light-off.svg';
-import walking1 from 'assets/svg/walking1.svg';
 import walking from 'assets/json/walkMan.json';
 import type { AddModel } from '~/api/message/model';
 import { apiAdd } from '~/api/message/request';
@@ -126,6 +125,7 @@ const man = {
   walkToSitingWaitTime: 10,
   sitingToWalkToWaitTime: 10,
   walkStep: 0,
+  walkFrameTime: 0,
 }
 
 const timer: {
@@ -144,6 +144,7 @@ const requestTimer: {
   animateTimerTop4: undefined,
   animateTimerTop5: undefined,
   animateTimerTop6: undefined,
+  animateTimerTop7: undefined
 }
 
 let scrollBarWidth: number;
@@ -218,7 +219,7 @@ function initCanvas() {
   man.stepY = parkCanvas.height + 100;
   man.stepYDiff = (parkCanvas.height - man.height - 150 * 2) - man.stepY;
   man.countY = man.walkWidth / 2 / man.stepX;
-  man.y = (parkCanvas.height - man.height - 150 * 2) + (man.stepYDiff / man.countY);
+  man.y = (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
 
   parkCanvas.ctx = canvas.getContext('2d');
   parkCanvas.horizon = canvas.height / 2;
@@ -235,9 +236,10 @@ function draw() {
     return;
   }
 
+  //循环动画第一帧
   if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
-    //循环动画第一帧
     man.timeControl = 0;
+    drawIndex = 0;
     man.sitingTime = 100;
     man.walkToSitingWaitTime = 10;
     man.sitingToWalkToWaitTime = 10;
@@ -247,7 +249,8 @@ function draw() {
     return;
   }
 
-  if (man.timeControl % 100 === 0) {
+  //动画
+  if (man.timeControl % 10 === 0) {
     if (isNull(parkCanvas.ctx)) {
       return; 
     }
@@ -259,14 +262,23 @@ function draw() {
     ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
       parkCanvas.height / 2 - light.smallHeight / 1.5, 
       light.smallWidth, light.smallHeight);
-    if (man.stepX * (man.timeControl / 100 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
+    
+    //从屏幕外进入
+    if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
       if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
+        //离开凳子
         man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
-        drawWalkingMan(
+        // drawWalkingMan(
+        //   ctx, 
+        //   0, 
+        //   man.y, 
+        //   man.stepX * (man.timeControl / 100 - 2)
+        // );
+        drawWalking(
           ctx, 
           0, 
           man.y, 
-          man.stepX * (man.timeControl / 100 - 2)
+          (man.stepX) * (man.timeControl / 50 - 2)
         );
         drawLight(ctx);
         drawRoad(ctx);
@@ -277,12 +289,18 @@ function draw() {
         if (man.sitingTime > 1) {
           drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
         } else {
-          drawWalkingMan(
-            ctx, 
-            0, 
-            man.y, 
-            man.stepX * (man.timeControl / 100 - 2)
-          );
+          // drawWalkingMan(
+          //   ctx, 
+          //   0, 
+          //   man.y, 
+          //   man.stepX * (man.timeControl / 100 - 2)
+          // );
+          drawWalking(
+          ctx, 
+          0, 
+          man.y, 
+          (man.stepX) * (man.timeControl / 50 - 2)
+        );
         }
         drawLight(ctx);
         drawRoad(ctx);
@@ -291,13 +309,20 @@ function draw() {
         return;
       }
     } else {
-      if (man.stepX * (man.timeControl / 100 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+      if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+        //移向凳子
         man.y += ((man.walkToSitingWaitTime - 10) * 2);
-        drawWalkingMan(
+        // drawWalkingMan(
+        //   ctx, 
+        //   0, 
+        //   man.y, 
+        //   man.stepX * (man.timeControl / 100 - 2)
+        // );
+        drawWalking(
           ctx, 
           0, 
           man.y, 
-          man.stepX * (man.timeControl / 100 - 2)
+          (man.stepX) * (man.timeControl / 50 - 2)
         );
         drawLight(ctx);
         drawRoad(ctx);
@@ -305,15 +330,39 @@ function draw() {
         man.walkToSitingWaitTime--;
         return
       } else {
-        drawWalkingMan(
+        // drawWalkingMan(
+        //   ctx, 
+        //   0, 
+        //   man.y, 
+        //   man.stepX * (man.timeControl / 100 - 2)
+        // );
+        drawWalking(
           ctx, 
           0, 
           man.y, 
-          man.stepX * (man.timeControl / 100 - 2)
+          (man.stepX) * (man.timeControl / 50 - 2)
         );
       }
     }
-  } else {
+  } 
+  // else if (man.timeControl % 10 === 0) {
+  //   ctx.clearRect(0, 0, 5000, 5000);
+  //   ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
+  //     parkCanvas.height / 2 - bench.smallHeight / 10, 
+  //     bench.smallWidth, bench.smallHeight);
+    
+  //   ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
+  //     parkCanvas.height / 2 - light.smallHeight / 1.5, 
+  //     light.smallWidth, light.smallHeight);
+
+  //   drawWalking(
+  //     ctx, 
+  //     0, 
+  //     man.y, 
+  //     (man.stepX) * (man.timeControl / 100 - 2)
+  //   );
+  // } 
+  else {
     requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
     man.timeControl++;
     return;
@@ -337,24 +386,34 @@ function draw() {
 function drawWalkingMan(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
   ctx.save();
   ctx.translate(x + offset, y);
-  const path = new Path2D(walkData[man.walkStep]);
+  const path = new Path2D(walkData[1][0]);
   const p = new Path2D();
   p.addPath(path);
   ctx.fillStyle = '#0a0b0b';
   ctx.fill(p);
   ctx.restore();
-  if ((man.sitingToWalkToWaitTime < 10 && man.sitingToWalkToWaitTime > 0) || (man.walkToSitingWaitTime < 10 && man.walkToSitingWaitTime > 0)) {
-    return;
-  } else {
-    man.walkStep =  man.walkStep === 0 ? 2 : 0;
+}
+let drawIndex = 0;
+function drawWalking(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
+  if (drawIndex > 8) {
+    drawIndex = 0;
   }
+  ctx.save();
+  ctx.translate(x + offset, y);
+  const path = new Path2D(walkData[1][drawIndex]);
+  const p = new Path2D();
+  p.addPath(path);
+  ctx.fillStyle = '#0a0b0b';
+  ctx.fill(p);
+  ctx.restore();
+  drawIndex++
 }
 
 function drawSitingMan(ctx: CanvasRenderingContext2D, x: number, y: number) {
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(2, 2);
-  const path = new Path2D(walkData[1]);
+  const path = new Path2D(walkData[0] as string);
   const p = new Path2D();
   p.addPath(path);
   ctx.fillStyle = '#0a0b0b';
