@@ -13,7 +13,7 @@ const visible = ref(false);
 const formRenderType = ref<FormEditAdd>('add');
 const editId = ref();
 const title = computed(() => {
-  return formRenderType.value === 'add' ? '添加标签' : '编辑标签';
+  return formRenderType.value === 'add' ? '添加语录' : '编辑语录';
 });
 
 const formConfig = ref<Array<FormConfig>>([
@@ -73,7 +73,7 @@ function submitData() {
         }
         apiAdd(params).then(res => {
           $message.show({
-            message: res.data,
+            message: "操作成功",
             type: res.succeeded ? 'success' : 'info'
           });
           if (res.succeeded) {

@@ -230,12 +230,12 @@ onNuxtReady(() => {
   const themeString = storage.getValue('theme') as string;
   const currentTheme = themeString ? JSON.parse(themeString) : '';
 
-  if (currentTheme === 'light') {
-    setTheme('light');    
-    themeState.value = 'light';
-  } else {
+  if (currentTheme === 'dark') {
     setTheme('dark');
     themeState.value = 'dark';
+  } else {
+    setTheme('light');    
+    themeState.value = 'light';
   }
 });
 

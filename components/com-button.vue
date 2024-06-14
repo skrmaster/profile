@@ -89,18 +89,9 @@ function handleClick($event: Event) {
     }"
     @click="handleClick"
   >
-    <com-icon 
-      :icon="props.prefixIcon" 
-      :class="{
-        'dark': true,
-        'light': props.type === 'primary',
-      }"
-    ></com-icon>
+    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
     <slot />
-    <com-icon :icon="props.suffixIcon" :class="{
-        'dark': true,
-        'light': props.type === 'primary',
-      }"></com-icon>
+    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
   </button>
   <button v-else
     type="button"
@@ -109,31 +100,15 @@ function handleClick($event: Event) {
     class="btn--link c-p"
     @click="handleClick"
   >
-    <com-icon :icon="props.prefixIcon" :class="{
-        'dark': true,
-        'light': props.type === 'primary',
-      }"></com-icon>
+    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
     <slot />
-    <com-icon :icon="props.suffixIcon" :class="{
-        'dark': true,
-        'light': props.type === 'primary',
-      }"></com-icon>
+    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
   </button>
 </template>
 <style scoped>
 .btn {
   border-radius: 50px;
   padding: 8px 15px;
-}
-
-.dark {
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
-.ligth {
-  color: var(--white-color);
-  font-weight: bold;
 }
 
 .btn.primary {

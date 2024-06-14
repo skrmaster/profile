@@ -107,7 +107,7 @@ function goBack() {
             </div>
           </div>
         </div>
-        <div style="height: 360px; overflow: hidden">
+        <div style="overflow: hidden">
           <com-carousel
             :list="imageList"
           ></com-carousel>

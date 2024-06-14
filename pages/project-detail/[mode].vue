@@ -25,6 +25,7 @@ if (mode === 'add') {
 const list = ref<StackItem[]>([]);
 const images = ref<Upload.FileInfo[]>([]);
 const fileList = ref<Array<Upload.FileInfo>>([]);
+const status = ref<string | number | undefined>();
 
 const formData = reactive<Omit<AddModel, 'name' | 'status'>>({
   playLink: '',
@@ -62,6 +63,10 @@ function initEditData() {
         isChoose: false
       }
     });
+
+    status.value = res.data.status;
+    formData.startTime = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
+    formData.endTime = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
 
     const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
     fileList.value = imageIds.map((e) => {
@@ -174,6 +179,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
   >
     <detail-title 
       :mode="mode"
+      :status="status"
       :title-value="projectName"
       @button-action="handleSubmit"
       class="edit__title"

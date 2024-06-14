@@ -6,7 +6,7 @@ interface Props {
   type?: string;
   width?: string | number;
   clearable?: boolean;
-  disable?: boolean;
+  disabled?: boolean;
   readonly?: boolean;
   isError?: boolean;
   errorMsg?: string;
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   width: '100%',
   clearable: false,
-  disable: false,
+  disabled: false,
   readonly: false,
   isError: false,
   minValue: 0,
@@ -184,6 +184,7 @@ function handlePasswordIcon() {
       :placeholder="props.placeholder"
       :max="props.maxValue"
       :min="props.minValue"
+      :disabled="props.disabled"
       :autocomplete="props.autocomplete"
       :type="isTypePassword ? props.type : showPasswordType"
       v-model="currentInputValue"
@@ -198,6 +199,7 @@ function handlePasswordIcon() {
         'no-label': !props.isLabel
       }"
       :placeholder="props.placeholder"
+      :disabled="props.disabled"
       v-model="currentInputValue"
       :max-length="props.maxLength"
       :min-length="props.minLength"
@@ -216,7 +218,7 @@ function handlePasswordIcon() {
     ></com-icon>
     <com-icon
       class="clear__icon mr1"
-      v-if="canShowClearIcon"
+      v-if="canShowClearIcon && !props.disabled"
       @click.stop="handlerClear"
       icon="profile-circle-close"
     ></com-icon>
@@ -256,6 +258,10 @@ function handlePasswordIcon() {
   flex: 1;
   color: var(--primary-color);
   background: var(--white-color);
+}
+
+input[disabled], textarea[disabled] {
+  cursor: not-allowed;
 }
 
 textarea.form__input-field {

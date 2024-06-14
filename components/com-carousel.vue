@@ -41,10 +41,12 @@ const carouselList = computed(() => {
 });
 const carouselSwitch = ref(false);
 const offset = ref(0);
-
 const rowCount = computed(() => {
   return carousel.rowCount;
 });
+
+const previewList = ref<string[]>([]);
+const previewRef = ref();
 
 const renderCarouselList = computed(() => {
   if (props.isLoop) {
@@ -65,8 +67,29 @@ const carouselStyleList = computed(() => {
   }
 });
 
-function openPreview() {
+function openPreview(item: Carousel.ImageList) {
+  let url: string | undefined;
+  url = item.image;
 
+  if (!url) {
+    $message.show({
+      message: '无法预览无法加载的图片',
+      type: 'error'
+    });
+    return;
+  }
+  previewList.value = [url]
+  previewRef.value.open();
+}
+
+function blobToUrl(item: File): string | undefined {
+  let res: string;
+  try {
+    res = URL.createObjectURL(item);
+    return res;
+  } catch {
+    return;
+  }
 }
 
 function handleLoop(index: number) {
@@ -131,7 +154,7 @@ function next(index: number) {
   carouselSwitch.value = true;
 
   if (currentIndex.value === index) {
-    openPreview();
+    openPreview(carouselList.value[index]);
     carouselSwitch.value = false;
     return
   }
@@ -240,6 +263,10 @@ onBeforeUnmount(() => {
         height="20px"
       ></com-icon>
     </div>
+    <com-preview-image 
+      ref="previewRef" 
+      :image-urls="previewList"
+    ></com-preview-image>
   </div>
 </template>
 <style scoped>
@@ -263,17 +290,20 @@ onBeforeUnmount(() => {
 }
 
 .carousel__item {
+  flex-shrink: 0;
+  flex-grow: 0;
   transition: all var(--item-duration-time) cubic-bezier(0.55, 0, 0.1, 1);
-  min-width: 348px;
-  min-height: 192px;
+  width: 348px;
+  height: 192px;
   margin: 0 11px;
   overflow: hidden;
   user-select: none;
+  text-align: center;
 }
 
 .carousel__item.active {
-  min-width: 629px;
-  min-height: 342px;
+  width: 629px;
+  height: 342px;
 }
 
 .carousel__item img {

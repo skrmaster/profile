@@ -87,7 +87,7 @@ function submitData() {
         }
         apiAdd(params).then(res => {
           $message.show({
-            message: res.data,
+            message: res.data && "操作成功",
             type: res.succeeded ? 'success' : 'info'
           });
           if (res.succeeded) {

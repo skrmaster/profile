@@ -29,6 +29,7 @@ const currentTimeRotateDeg = getRotateDeg();
 const emailId = ref('');
 
 const config = ref<Array<FormConfig>>([]);
+const isFinished = ref(false);
 
 const registerConfig: Array<FormConfig> = [
   {
@@ -289,13 +290,16 @@ function handleSubmit() {
           }
 
           if (!params.codeId) {
-            params.codeId = localStorage.getValue('CodeId') as string;
+            const codeId = localStorage.getValue('CodeId') as string;
+            params.codeId = codeId ? JSON.parse(codeId) : undefined;
           }
 
           apiRegister(params).then(res => {
+            isFinished.value = true;
             authComplete(res, '注册成功');
           }).catch(e => {
             btnLoading.value = false;
+            isFinished.value = false;
           }); 
         } else {
           const params: UpdatePwd = {
@@ -310,9 +314,11 @@ function handleSubmit() {
           }
 
           apiUpdateUserInfo(params).then(res => {
+            isFinished.value = true;
             authComplete(res, '修改成功');
           }).catch(e => {
             btnLoading.value = false;
+            isFinished.value = false;
           });
         }
       } else {
@@ -360,12 +366,14 @@ function authComplete(res: ResponseModel<string | boolean>, resInfo: string) {
       $message.show({message: `${time}秒后，自动跳转到登录页`, type: 'success'})
     }, () => {
       navigateTo('/login');
+      isFinished.value = false;
     });
   } else {    
     $message.show({
-      message: res.data?.toString() || typeof res.errors !== 'string' ? JSON.stringify(res.errors) : res.errors,
+      message: res.data?.toString() || (typeof res.errors !== 'string' ? JSON.stringify(res.errors) : res.errors),
       type: 'error'
     });
+    isFinished.value = false;
   }
 }
 
@@ -376,12 +384,12 @@ onNuxtReady(() => {
   const themeString = storage.getValue('theme') as string;
   const currentTheme = themeString ? JSON.parse(themeString) : '';
 
-  if (currentTheme === 'light') {
-    setTheme('light');    
-    themeState.value = 'light';
-  } else {
+  if (currentTheme === 'dark') {
     setTheme('dark');
     themeState.value = 'dark';
+  } else {
+    setTheme('light');    
+    themeState.value = 'light';
   }
 });
 
@@ -414,7 +422,7 @@ onNuxtReady(() => {
                 :icon="isForget ? 'profile-mima' : 'profile-signup'"
               ></com-icon>
             </div>
-            <com-form ref="form" :model="config" @send-mail-code="handleSendMail">
+            <com-form v-if="!isFinished" ref="form" :model="config" @send-mail-code="handleSendMail">
               <div class="w100 mb2">
                 <NuxtLink 
                   to="/login" 
@@ -426,6 +434,7 @@ onNuxtReady(() => {
                 @click="handleSubmit"
               >{{ isForget ? '找回密码' : '注册' }}</com-button>
             </com-form>
+            <com-empty v-else :info="'等待...'"></com-empty>
           </div>
         </div>
         <canvas 

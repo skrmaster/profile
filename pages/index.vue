@@ -28,6 +28,7 @@ const walkData = walking.data;
 const { $message } = useNuxtApp();
 const themeState = useState('theme');
 const theme = computed(() => themeState.value);
+let cannelAnimate = false;
 
 watch(theme, (val) => {
   if (val) {
@@ -110,7 +111,7 @@ const grass = {
   gap: 110,
 }
 
-const man = {
+let man = {
   x: 0,
   y: 0,
   width: 0,
@@ -153,7 +154,6 @@ let lightImg: HTMLImageElement;
 
 
 const skillsName = ref<Skill.SkillName[]>([]);
-const skills = ref<Array<Skill.Skill>>([]);
 function fetchSkillsData() {
   const params: Omit<Pagination, 'total'> = {
     page: 1,
@@ -186,20 +186,44 @@ function clearAnimate() {
 }
 
 function initCanvas() {
+  clearAnimate();
+
+  man = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    stepX: 0,
+    stepY: 0,
+    stepYDiff: 0,
+    countY: 0,
+    sitingTime: 100,
+    walkWidth: 0,
+    timeControl: 0,
+    walkToSitingWaitTime: 10,
+    sitingToWalkToWaitTime: 10,
+    walkStep: 0,
+    walkFrameTime: 0,
+  }
+
+  man.timeControl = 0;
+  drawIndex = 0;
+  man.sitingTime = 100;
+  man.walkToSitingWaitTime = 10;
+  man.sitingToWalkToWaitTime = 10;
+
   windowWidth.value = window.innerWidth;
   man.width = 110;
   man.height = 200;
   man.stepX = 110;
 
-  clearAnimate();
-
   const canvas = document.getElementById('park') as HTMLCanvasElement;
   if (!canvas) {
     return;
   }
-
-  if (window.innerWidth <= 992) {
-    let reallyWidth = window.innerWidth;
+  
+  if (windowWidth.value <= 992) {
+    let reallyWidth = windowWidth.value;
     let w = 992;
     parkScale.value = reallyWidth / w;
 
@@ -207,27 +231,32 @@ function initCanvas() {
     canvas.height = 1006;
   } else {
     parkScale.value = 1;
-    canvas.width = window.innerWidth - scrollBarWidth - 1;
+    canvas.width = windowWidth.value - scrollBarWidth - 1;
     canvas.height = 1006;
   }
   
   parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
-  road.count = Math.ceil((window.innerWidth + 50) / road.width);
-  grass.count = Math.ceil(window.innerWidth / grass.width);
-  man.walkWidth = window.innerWidth;
+  road.count = Math.ceil((windowWidth.value + 50) / road.width);
+  grass.count = Math.ceil(windowWidth.value / grass.width);
+
+  man.walkWidth = canvas.width;
   man.stepY = parkCanvas.height + 100;
   man.stepYDiff = (parkCanvas.height - man.height - 150 * 2) - man.stepY;
   man.countY = man.walkWidth / 2 / man.stepX;
   man.y = (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
 
   parkCanvas.ctx = canvas.getContext('2d');
-  parkCanvas.horizon = canvas.height / 2;
+  parkCanvas.horizon = (canvas.height * parkScale.value) / 2;
 
   requestTimer.animateTimerTop = window.requestAnimationFrame(draw);
 }
 
 function draw() {
+  if (cannelAnimate) {
+    return;
+  }
+
   let ctx: CanvasRenderingContext2D ;
   if (parkCanvas.ctx) {
     ctx = parkCanvas.ctx
@@ -468,16 +497,15 @@ function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
 function changeLight(val: string) {
   if (lightImg && lightImg.src) {
     lightImg.src = val === 'light' ? ligthOffSvg : ligthOnSvg;
+    lightImg.onload = () => {
+      initCanvas();
+    }
   }
 }
 
 function loadResource() {
   img = new Image();
   img.src = benchSvg;
-
-  man.width = 110;
-  man.height = 200;
-  man.stepX = 110;
 
   img.onload = () => {
     lightImg = new Image();

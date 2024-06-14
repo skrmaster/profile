@@ -84,6 +84,11 @@ function handleSendMail() {
   isVerifying = true;
 }
 
+function clearTimeCount() {
+  clearTimeout(counter);
+  start.value = false;
+}
+
 onMounted(() => {
   const existTime = localStorage.getValue('verifyCode');
   
@@ -92,7 +97,11 @@ onMounted(() => {
     start.value = true;
     counter = running();
   }
-})
+});
+
+defineExpose({
+  clearTimeCount
+});
 </script>
 <template>
   <div class="verification">

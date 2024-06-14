@@ -189,6 +189,10 @@ onBeforeUnmount(() => {
   border: 1px solid var(--primary-border-color);
 }
 
+:deep(.cannel__btn .icon) {
+  color: var(--primary-color)!important;
+}
+
 .confirm__btn { 
   max-width: 100px;
   min-width: 50px;

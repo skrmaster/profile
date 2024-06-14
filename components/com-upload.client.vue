@@ -24,6 +24,7 @@ const slotsVue = useSlots();
 const previewRef = ref();
 
 const { $message } = useNuxtApp();
+const cacheDataList = computed(() => props.dataList);
 const fileList = ref<File[] & Upload.FileInfo[]>([]);
 const outDatalist = ref<Upload.FileInfo[]>([]);
 const fileInput = ref<HTMLInputElement>();
@@ -36,15 +37,16 @@ const showAddArea = computed(() => {
   return fileList.value.length < props.limit;
 });
 
-watch(() => props.dataList, (val) => {
+watch(cacheDataList, (val) => {
+  console.log(val);
+  
   const really = val.flatMap(e => {
     if (e.fullPath && e.id) {
       return e;
     } else {
       return [];
     }
-  });
-  
+  });  
   outDatalist.value = really;
   fileList.value = [];
   fileList.value.splice(0, 0, ...really);

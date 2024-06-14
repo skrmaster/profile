@@ -127,6 +127,12 @@ function handleGetIcons() {
         type: res.data ? 'success' : 'warning'
       });
       getTableDataByPagination();
+    } else {
+      $message.show({
+        message: res.errors,
+        type: 'error'
+      });
+      btnLoadingIcon.value = false;
     }
   }).catch(e => { 
     btnLoadingIcon.value = false;
