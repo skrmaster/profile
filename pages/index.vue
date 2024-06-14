@@ -268,12 +268,6 @@ function draw() {
       if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
         //离开凳子
         man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
-        // drawWalkingMan(
-        //   ctx, 
-        //   0, 
-        //   man.y, 
-        //   man.stepX * (man.timeControl / 100 - 2)
-        // );
         drawWalking(
           ctx, 
           0, 
@@ -289,12 +283,6 @@ function draw() {
         if (man.sitingTime > 1) {
           drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
         } else {
-          // drawWalkingMan(
-          //   ctx, 
-          //   0, 
-          //   man.y, 
-          //   man.stepX * (man.timeControl / 100 - 2)
-          // );
           drawWalking(
           ctx, 
           0, 
@@ -312,12 +300,6 @@ function draw() {
       if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
         //移向凳子
         man.y += ((man.walkToSitingWaitTime - 10) * 2);
-        // drawWalkingMan(
-        //   ctx, 
-        //   0, 
-        //   man.y, 
-        //   man.stepX * (man.timeControl / 100 - 2)
-        // );
         drawWalking(
           ctx, 
           0, 
@@ -330,12 +312,6 @@ function draw() {
         man.walkToSitingWaitTime--;
         return
       } else {
-        // drawWalkingMan(
-        //   ctx, 
-        //   0, 
-        //   man.y, 
-        //   man.stepX * (man.timeControl / 100 - 2)
-        // );
         drawWalking(
           ctx, 
           0, 
@@ -345,23 +321,6 @@ function draw() {
       }
     }
   } 
-  // else if (man.timeControl % 10 === 0) {
-  //   ctx.clearRect(0, 0, 5000, 5000);
-  //   ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-  //     parkCanvas.height / 2 - bench.smallHeight / 10, 
-  //     bench.smallWidth, bench.smallHeight);
-    
-  //   ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-  //     parkCanvas.height / 2 - light.smallHeight / 1.5, 
-  //     light.smallWidth, light.smallHeight);
-
-  //   drawWalking(
-  //     ctx, 
-  //     0, 
-  //     man.y, 
-  //     (man.stepX) * (man.timeControl / 100 - 2)
-  //   );
-  // } 
   else {
     requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
     man.timeControl++;
@@ -370,29 +329,11 @@ function draw() {
   
   man.timeControl++;
 
-  // ctx.save();
-  // const x = parkCanvas.width / 2 - bench.width / 2 ;
-  // const y = parkCanvas.height / 2 - bench.height / 2;
-  // ctx.translate(x, y);
-  // ctx.scale(0.8, 0.8);
-  // drawBench(ctx, benchData);
-  // ctx.restore();
-
   drawLight(ctx);
   drawRoad(ctx);
   requestTimer.animateTimerTop1 = window.requestAnimationFrame(draw);
 }
 
-function drawWalkingMan(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
-  ctx.save();
-  ctx.translate(x + offset, y);
-  const path = new Path2D(walkData[1][0]);
-  const p = new Path2D();
-  p.addPath(path);
-  ctx.fillStyle = '#0a0b0b';
-  ctx.fill(p);
-  ctx.restore();
-}
 let drawIndex = 0;
 function drawWalking(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
   if (drawIndex > 8) {
@@ -438,8 +379,7 @@ function drawRoad(ctx: CanvasRenderingContext2D) {
     ctx.moveTo(0, parkCanvas.horizon);
     ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.horizon - 100, 
       parkCanvas.width, parkCanvas.horizon);
-    ctx.moveTo(parkCanvas.width, parkCanvas.height - 200)
-    // ctx.lineTo(parkCanvas.width, parkCanvas.height - 200);
+    ctx.moveTo(parkCanvas.width, parkCanvas.height - 200);
     ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 300, 
       0, parkCanvas.height - 200);
     ctx.stroke();
@@ -507,72 +447,6 @@ function clearYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number, r
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, 2 * Math.PI);
   ctx.fill();
-}
-
-function drawBench(ctx: CanvasRenderingContext2D, arr: typeof benchData) {
-  const p = new Path2D();
-  for (let i = 0; i < arr.length; i++) {
-    arr[i].forEach(e => {
-      if (e[1] === 'path') {
-        ctx.save();
-        ctx.beginPath();
-        if (Array.isArray(e[0])) {
-          e[0].forEach(item => {
-            const res = item.split(':');
-            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
-          });
-        }
-        const p1 = new Path2D(e[2] as string);
-        p.addPath(p1);
-        ctx.fill(p);
-        ctx.restore();
-      } else if (e[1] === 'polygon') {
-        ctx.save();
-        if (Array.isArray(e[0])) {
-          e[0].forEach(item => {
-            const res = item.split(':');
-            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
-          });
-        }
-        const polygonPoint = (e[2] as string).split(' ');
-        drawPolygon(ctx, polygonPoint.map(e => parseFloat(e) * 1));
-        ctx.restore();
-      } else if (e[1] === 'rect') {
-        ctx.save();
-        if (Array.isArray(e[0])) {
-          e[0].forEach(item => {
-            const res = item.split(':');
-            (ctx as any)[styleMap[res[0]]] = res[1].replace('px', '');
-          });
-        }
-        if (Array.isArray(e[2])) {
-          let x = parseFloat(e[2][0]);
-          let y = parseFloat(e[2][1]);
-          let w = parseFloat(e[2][2]);
-          let h = parseFloat(e[2][3]);
-          ctx.fillRect(x, y, w, h);
-        }
-        ctx.restore();
-      }
-    });
-  }
-}
-
-function drawPolygon(ctx: CanvasRenderingContext2D, arr: number[]) {
-  const len = arr.length;
-  
-  for (let i = 0; i < len; i++) {
-    if (i % 2 !== 0) {
-      continue
-    } else {
-      if (i === 0) {
-        ctx.moveTo(arr[i], arr[i + 1]);
-      } else {
-        ctx.lineTo(arr[i], arr[i + 1]);
-      }
-    }
-  }
-  ctx.stroke();
 }
 
 function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
