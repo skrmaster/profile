@@ -145,6 +145,8 @@ function createMaterial(text: string, width = 400, height = 70, widthOffset = wi
 	// 获取2D绘图上下文
 	const drawingContext = canvas.getContext('2d');
 
+	const textLen = text.length || 0
+
 	if (isNull(drawingContext)) {
 		return;
 	}
@@ -154,10 +156,10 @@ function createMaterial(text: string, width = 400, height = 70, widthOffset = wi
 	drawingContext.fillStyle = '#ffffff';
 	drawingContext.fillRect(0, 0, width, height);
 	drawingContext.fillStyle = '#000000';
-	drawingContext.font = 'Bold 30px Arial';
+	drawingContext.font = textLen >= 8 ? 'Bold 20px Arial' : 'Bold 30px Arial';
 
 	//绘制文字
-	drawingContext.fillText(text, width / 2 - widthOffset, height / 2 + heightOffset);
+	drawingContext.fillText(text, textLen >= 10 ? 50 : textLen >= 8 ? 80 : width / 2 - widthOffset, height / 2 + heightOffset);
 
 	// 创建纹理
 	const texture = new THREE.CanvasTexture(canvas);
