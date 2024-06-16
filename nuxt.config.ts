@@ -33,7 +33,7 @@ export default defineNuxtConfig({
           src: '/js/iconfont.js'
         }
       ]
-    }
+    },
   },
   plugins: [],
   typescript: {

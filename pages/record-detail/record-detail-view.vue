@@ -26,7 +26,12 @@ function init() {
     data.createTime = timeNullFormat(data.createTime);
     data.updateTime = timeNullFormat(data.updateTime);
     status.value = getListLabel(data.category, recordCategory);
-    useHead({ title: data.title });
+    useHead({ title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`, meta: [
+      {
+        name: 'description',
+        content: data.description?.slice(0, 150)
+      }
+    ] });
   }).catch(e => {
 
   });
@@ -81,13 +86,8 @@ onUnmounted(() => {
 <template>
   <NuxtLayout 
     name="header-section-footer" 
-    bg-change-color 
-    bg-style-content="
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
-    "
+    bg-change-color="true"
+    bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);"
   >
     <div class="container p1 flex1">
       <div class="back__nav mb1 pb1">

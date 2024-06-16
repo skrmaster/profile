@@ -26,7 +26,17 @@ const categoryList = [
 ];
 
 useHead({
-  title: '地址导航'
+  title: '地址导航-供个人使用的一个网站地址导航页面',
+  meta: [
+    {
+      name: "description",
+      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
+    },
+    {
+      name: "description",
+      content: "供个人使用的一个网站地址导航页面"
+    }
+  ]
 });
 
 const { $dayjs } = useNuxtApp();
@@ -53,13 +63,8 @@ fetchData();
 <template>
   <NuxtLayout 
     name="header-section-footer" 
-    bg-change-color 
-    bg-style-content="
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
-    "
+    bg-change-color="true"
+    bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);"
   >
     <section class="flex1" style="color: var(--primary-color)">
       <div class="container overflow-hidden">

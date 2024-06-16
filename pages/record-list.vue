@@ -10,7 +10,17 @@ type RankItem = {
 }
 
 useHead({
-  title: "个人纪录"
+  title: "个人纪录-博客列表方便查看各种坑",
+  meta: [
+    {
+      name: "description",
+      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
+    },
+    {
+      name: "description",
+      content: "供他人查看项目的个人所写的博客列表页面"
+    }
+  ]
 });
 
 const router = useRouter();
@@ -57,6 +67,7 @@ function redirectToCurrentWithQuery (query?: Record<string, string>) {
 function initRank() {
   rankLoading.value = true;
   apiGetRankList(5).then(res => {
+    let titleLen = 24;
     rank.value = res.data.map((e, i) => {
       if (i < 3) {
         return {
@@ -95,7 +106,7 @@ function getListData() {
       return {
         isTread: e.isDisLike,
         imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
-        describe: e.subtitle ?? e.description,
+        describe: e.subtitle || e.description,
         ...e
       }
     });
@@ -295,7 +306,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
             <div v-if="rank.length > 0" v-loading="rankLoading">
               <div v-for="(item, index) in rank" 
                 :key="index"
-                class="rank__item c-p"
+                class="rank__item c-p flex__row"
                 :class="`fs${item.fontSize} 
                 ${(item.isBold ? 'font-bold' : '')}`"
                 @click="handleRecordDetail(item.id)"
@@ -315,7 +326,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
                     {{ index + 1 }}
                   </span>
                 </div>
-                <span style="display: inline-block">{{ item.name }}</span>
+                <div class="line1__ellipsis">{{ item.name }}</div>
               </div>
             </div>
             <com-empty v-else></com-empty>
@@ -402,11 +413,6 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
 
 .rank__item {
   padding: 18px 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .rank__item:not(:last-child) {

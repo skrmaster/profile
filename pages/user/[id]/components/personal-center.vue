@@ -21,8 +21,8 @@ useHead({
         </div>
       </div>
     </section>
-    <com-footer></com-footer>
   </div>
+  <com-footer></com-footer>
 </template>
 <style scoped>
 .background {

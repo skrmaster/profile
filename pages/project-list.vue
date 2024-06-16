@@ -3,7 +3,17 @@ import { apiGetList }  from '~/api/project/request';
 import type { ListType, ListItem }  from '~/api/project/model';
 
 useHead({
-  title: "项目列表"
+  title: "项目列表-开发项目列表页面",
+  meta: [
+    {
+      name: "description",
+      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
+    },
+    {
+      name: "description",
+      content: "供他人查看项目的已做开发项目列表页面"
+    }
+  ]
 });
 
 const paginationRef = ref();
@@ -57,9 +67,11 @@ function getDataByPagination() {
 </script>
 <template>
   <com-background
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="true"
+    bg-change-color
+    :bg-style-content="`display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);`"
   >
     <div class="h100 flex__column">
       <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
@@ -68,7 +80,7 @@ function getDataByPagination() {
         <div class="container">
           <div style="color: var(--primary-color)">
             <p class="py3 fs24">项目列表</p>
-            <div class="project-gird pb1" v-if="data.length > 0">
+            <div class="project-gird pb2" v-if="data.length > 0">
               <div class="project__item" 
                 v-for="(item, index) in data" 
                 :key="index"
@@ -92,9 +104,9 @@ function getDataByPagination() {
         @page-size-change="getDataByPagination"
         @current-page-change="getData"
       ></com-pagination>
-      <com-footer></com-footer>
     </div>
   </com-background>
+  <com-footer></com-footer>
 </template>
 <style scoped>
 .project-gird {

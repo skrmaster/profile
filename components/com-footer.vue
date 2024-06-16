@@ -111,7 +111,8 @@ const otherList = ref([
 </template>
 <style scoped>
 footer {
-  border-top: 1px solid var(--primary-border-color)
+  border-top: 1px solid var(--primary-border-color);
+  background: var(--footer-bg);
 }
 
 .footer__box {
@@ -129,7 +130,7 @@ footer {
 }
 
 .thanks {
-  padding: 0 20px 30px 20px;
+  padding: 10px 20px 30px 20px;
 }
 
 .thanks__box {

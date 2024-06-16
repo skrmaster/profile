@@ -182,7 +182,6 @@ function handleEditorText(text: string) {
         ></wang-editor>
       </div>
     </section>
-    <com-footer></com-footer>
   </div>
   <record-detail-view v-else></record-detail-view>
 </template>

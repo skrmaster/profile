@@ -26,16 +26,14 @@ const detailList = ref([
 ]);
 const startTime = ref('');
 const endTime = ref('');
-
-useHead({
-  title
-});
+const content = ref('');
 
 init();
 function init() {
   apiGetInfo(props.projectId)
   .then(res => {
     title.value = res.data.name;
+    content.value = res.data.summary?.slice(0, 100) || '';
 
     detailList.value = ['summary', 'description', 'department'].map((e, i) => {
       const item = {
@@ -66,6 +64,16 @@ function init() {
 
     startTime.value = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
     endTime.value = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
+
+    useHead({
+      title,
+      meta: [
+        {
+          name: 'description',
+          content: content.value
+        }
+      ]
+    });
   }).catch((e) => {
     console.log(e);
   });

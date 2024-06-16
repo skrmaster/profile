@@ -18,7 +18,13 @@ type Park = {
 }
 
 useHead({
-  title: "首页"
+  title: "首页-skrmaster.fun一个记录个人技术成长的网站",
+  meta: [
+    {
+      name: "description",
+      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
+    }
+  ]
 });
 
 const benchData = benchPath.data;
@@ -630,7 +636,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <ClientOnly>
-        <com-form ref="formRef" class="index__form mx-auto mb4" :model="formConfig">
+        <com-form ref="formRef" class="index__form mx-auto pb4" :model="formConfig">
           <div class="flex__center">
             <com-button class="submit-btn fs20" :loading="btnLoading" is-ripple @click="handleAddMessage">提交</com-button>
           </div>
