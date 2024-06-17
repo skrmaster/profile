@@ -58,6 +58,11 @@ export function getAvatar(item: Upload.FileInfo): string | undefined {
   return splicingImageUrl(item.fullPath);
 }
 
+
+/**
+ * @deprecated 获取滚动条宽度
+ * @returns 
+ */
 export function getScrollBarWidth(): number {
   const div = document.createElement('div');
   div.style.overflowY = 'scroll';
@@ -79,4 +84,16 @@ export function getRandomIntInclusive(min: number, max: number): number {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
+
+export function formatUploadUrl(url?: string): string | undefined {
+  if (!url) {
+    return url;
+  }
+  try {
+    const newUrl = new URL(url);
+    return newUrl.pathname.slice(1);
+  } catch(e) {
+    return url;
+  }
 }

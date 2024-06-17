@@ -106,7 +106,7 @@ function loadModel2Sence() {
 				text = e?.name || '······';
 				index++;
 			}
-
+		
     if (node.name !== '路牌1主轴') {
 				let material;
 				if (node.name.includes('_反')) {
@@ -205,7 +205,7 @@ function onMouseClick(event: MouseEvent) {
           }
         });
 			} else {
-				if (!intersectedObject.name.includes('路牌2_反')) {
+				if (!intersectedObject.name.includes('路牌2_反') && !intersectedObject.name.includes('路牌1主轴')) {
 					$message.show({
 						message: '当前没有项目'
 					});

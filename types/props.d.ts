@@ -36,6 +36,7 @@ declare namespace Skill {
     originX: number;
     originY: number;
     class: string;
+    originClass: string;
     id: string;
   }
   

@@ -28,6 +28,7 @@ const skillCircle = ref<HTMLElement>();
 const skillsName = computed(() => props.skillName);
 const skills = ref<Array<Skill.Skill>>([]);
 let elementResize: null | ResizeObserver = null;
+let functionId;
   
 let widthGap = 0;
 let heightGap = 0;
@@ -51,8 +52,10 @@ function active($event: MouseEvent) {
     e.x = Math.ceil(e.originX + moveX);
     e.y = Math.ceil(e.originY + moveY);
 
+    e.class = ''
+
     return e;
-  })  
+  });
 }
 
 function inactive() {
@@ -106,7 +109,8 @@ function mountedSkills() {
       moveVector: 20,
       originX: xCount * widthGap,
       originY: yCount * heightGap,
-      class: `skills-animate-${Math.floor(Math.random() * 3) + 1}`
+      class: `skills-animate-${Math.floor(Math.random() * 3) + 1}`,
+      originClass: `skills-animate-${Math.floor(Math.random() * 3) + 1}`,
     }
   });
 
@@ -184,7 +188,7 @@ onBeforeUnmount(() => {
     <div 
       ref="skillBox"
       class="skills-box flex__center" 
-      @mouseover="active" 
+      @mousemove="active" 
       @mouseout="inactive"
     >
       <div 
@@ -214,9 +218,8 @@ onBeforeUnmount(() => {
         class="skills__item"
         :class="`fs${item.mastery} ${item.class}`"
         :style="{
-          'position': 'absolute',
-          'left': `${item.x}px`,
-          'top': `${item.y}px`
+          '--animate-params-': `translate(${item.x}px, ${item.y}px)`,
+          'transform': `translate(${item.x}px, ${item.y}px)`
         }"
       >
         {{ item.name }}
@@ -268,6 +271,9 @@ onBeforeUnmount(() => {
 }
 
 .skills__item {
+  position: absolute;
+  top: 0;
+  left: 0;
   transform-origin: center center;
   transition: all .2s ease-in-out;
   color: var(--primary-color);
@@ -305,5 +311,23 @@ onBeforeUnmount(() => {
   top: 0;
   transform: translateY(-100%);
   transition: all .1s ease;
+}
+
+@keyframes slowFloatX {
+  0% { transform: var(--animate-params-) translateX(0); }
+  50% { transform: var(--animate-params-) translateX(10px); }
+  100% { transform: var(--animate-params-) translateX(0); }
+}
+
+@keyframes slowFloatY {
+  0% { transform: var(--animate-params-) translateY(0); }
+  50% { transform: var(--animate-params-) translateY(10px); }
+  100% { transform: var(--animate-params-) translateY(0); }
+}
+
+@keyframes slowFloatXY {
+  0% { transform: var(--animate-params-) translate(0, 0); }
+  50% { transform: var(--animate-params-) translate(10px, 10px); }
+  100% { transform: var(--animate-params-) translate(0, 0); }
 }
 </style>

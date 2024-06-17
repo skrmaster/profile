@@ -2,7 +2,7 @@
 const cookieAuth = useCookie("s-auth-cookie", {
   maxAge: 60 * 60 * 24 * 365 * 10,
   path: '/',
-  secure: true,
+  secure: false,
   sameSite: 'strict'
 });
 

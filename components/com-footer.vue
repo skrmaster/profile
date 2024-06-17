@@ -70,9 +70,6 @@ const otherList = ref([
   <footer>
     <div class="container">
       <div class="footer__box">
-        <div class="copyright flex__row">
-          <p>Copyright<span class="copy">©</span>2024 skrmaster. All Rights Reserved</p>
-        </div>
         <div class="thanks">
           <p class="mb1">特别感谢</p>
           <div class="thanks__box pl1">
@@ -105,6 +102,9 @@ const otherList = ref([
             </ul>
           </div>
         </div>
+        <div class="copyright flex__row">
+          <p>Copyright<span class="copy">©</span>2024 skrmaster. All Rights Reserved</p>
+        </div>
       </div>
     </div>
   </footer>
@@ -130,7 +130,7 @@ footer {
 }
 
 .thanks {
-  padding: 10px 20px 30px 20px;
+  padding: 40px 20px 0 20px;
 }
 
 .thanks__box {

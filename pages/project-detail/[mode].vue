@@ -118,12 +118,19 @@ async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
 }
 
 function handleSubmit(val: DetailTitle.Action, title: string) {
+  const formatImagesList = images.value.map(e => {
+    return {
+      id: e.id,
+      fullPath: formatUploadUrl(e.fullPath)
+    }
+  });
+
   let isEdit = false;
   const params: AddModel = {
     status: 0,
     ...formData,
     name: title,
-    imageIds: JSON.stringify(unref(images)),
+    imageIds: JSON.stringify(unref(formatImagesList)),
     stackIds: JSON.stringify(unref(list).map(e => e.name)),
   }
 
@@ -165,7 +172,6 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       }
     }).catch(e => {});
   }
-  
 }
 
 </script>

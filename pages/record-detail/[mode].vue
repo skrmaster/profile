@@ -55,12 +55,19 @@ function init() {
 }
 
 function handleSubmit(val: DetailTitle.Action, title: string) {
+  const formatImagesList = images.value.map(e => {
+    return {
+      id: e.id,
+      fullPath: formatUploadUrl(e.fullPath)
+    }
+  });
+
   let isEdit = false;
   const params: AddModel = {
     title,
     category: radioValue.value,
     content: $sanitize(content.value),
-    coverImageUrl: JSON.stringify(images.value),
+    coverImageUrl: JSON.stringify(formatImagesList),
     subtitle: userSubtitle.value,
     description: subtitle
   }

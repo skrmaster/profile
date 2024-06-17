@@ -22,7 +22,7 @@
   100% { width: 0; }
 }
 
-@keyframes slowFloatX {
+/* @keyframes slowFloatX {
   0% { transform: translateX(0); }
   50% { transform: translateX(10px); }
   100% { transform: translateX(0); }
@@ -38,7 +38,7 @@
   0% { transform: translate(0, 0); }
   50% { transform: translate(10px, 10px); }
   100% { transform: translate(0, 0); }
-}
+} */
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
