@@ -74,6 +74,7 @@ const formConfig: Array<FormConfig> = [
       width: '100%',
       placeholder: '内容',
       clearable: false,
+      maxLength: 200,
       rows: 8,
     }
   }
@@ -346,7 +347,12 @@ function initCanvas() {
   man.countY = man.walkWidth / 2 / man.stepX;
   man.y = (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
   walkingImage.walkWidth = windowWidth.value;
-  walkingImage.y = man.y;  
+   
+  if (windowWidth.value <= 992) {
+    walkingImage.y = (canvas.height * parkScale.value) / 2 - 450 / 4; 
+  } else {
+    walkingImage.y = man.y;
+  }
 
   parkCanvas.ctx = canvas.getContext('2d');
   parkCanvas.horizon = (canvas.height * parkScale.value) / 2;
@@ -368,7 +374,6 @@ function draw() {
     draw();
     return;
   }
-  ctx.clearRect(0, 0, 5000, 5000);
 
   //循环动画第一帧
   // if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
@@ -462,6 +467,7 @@ function draw() {
   // }
   
   // man.timeControl++;
+  ctx.clearRect(0, 0, 5000, 5000);
   ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
     parkCanvas.height / 2 - bench.smallHeight / 10, 
     bench.smallWidth, bench.smallHeight);

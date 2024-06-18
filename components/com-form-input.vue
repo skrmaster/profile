@@ -36,7 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
   isError: false,
   minValue: 0,
   rowsValue: 2,
-  textAlign: 'start'
+  textAlign: 'start',
+  maxLength: undefined
 });
 const emit = defineEmits<{
   'update:modelValue': [value: string | number | undefined];
@@ -54,6 +55,9 @@ const positionOfPlaceholder = ref(10);
 const showPasswordType = ref('password');
 const inputValue = toRef(() => props.modelValue);
 const currentInputValue = ref<string | number | undefined>();
+const currentInputValueLen = computed(() => {
+  return currentInputValue.value?.toString().length;
+});
 
 const isTypePassword = computed((): boolean => {
   return props.type !== 'password';
@@ -192,24 +196,26 @@ function handlePasswordIcon() {
       @focus="handlerFocus"
       @blur="handlerBlur"
     />
-    <textarea v-else
-      ref="input"
-      class="form__input-field"
-      :class="{
-        'no-label': !props.isLabel
-      }"
-      :placeholder="props.placeholder"
-      :disabled="props.disabled"
-      v-model="currentInputValue"
-      :max-length="props.maxLength"
-      :min-length="props.minLength"
-      :rows="`${props.rows}`"
-      @input="handlerContent"
-      @focus="handlerFocus"
-      @blur="handlerBlur"
-    >
-
-    </textarea>
+    <div v-else class="p-r wh100">
+      <textarea
+        ref="input"
+        class="form__input-field"
+        :class="{
+          'no-label': !props.isLabel
+        }"
+        :placeholder="props.placeholder"
+        :disabled="props.disabled"
+        v-model="currentInputValue"
+        :maxlength="props.maxLength"
+        :minlength="props.minLength"
+        :rows="`${props.rows}`"
+        @input="handlerContent"
+        @focus="handlerFocus"
+        @blur="handlerBlur"
+      >
+      </textarea>
+      <span v-if="props.maxLength" class="textarea__notice">{{ currentInputValueLen || 0 }}/ {{ props.maxLength }}</span>
+    </div>
     <com-icon
       class="mr1"
       v-if="props.type === 'password' && (currentInputValue && currentInputValue.toString().length > 0)"
@@ -265,10 +271,16 @@ input[disabled], textarea[disabled] {
 }
 
 textarea.form__input-field {
-  padding: 10px 0;
+  padding: 10px 0 20px 0;
   text-indent: 0.5em;
   background: transparent;
   height: auto;
+}
+
+.textarea__notice {
+  position: absolute;
+  right: 10px;
+  bottom: 2px;
 }
 
 .form__input-field:not(.no-label)::placeholder {

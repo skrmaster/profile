@@ -1,29 +1,22 @@
 <script lang="ts" setup>
-const cookieAuth = useCookie('s-auth-cookie');
+const cookieAuth = useCookie("s-auth-cookie", {
+  maxAge: 60 * 60 * 24 * 365 * 10,
+  path: '/',
+  secure: false,
+  sameSite: 'strict'
+});
 
 const emit = defineEmits<{
   'close': []
 }>();
 
 function handleAccept() {
-  const cookie = useCookie("s-auth-cookie", {
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: '/',
-    secure: true,
-    sameSite: 'strict'
-  })
-  cookie.value = 'true';
+  cookieAuth.value = 'true';
   close();
 }
 
 function handleDenial() {
-  const cookie = useCookie("s-auth-cookie", {
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: '/',
-    secure: true,
-    sameSite: 'strict'
-  })
-  cookie.value = 'false';
+  cookieAuth.value = 'false';
   close();
 }
 
