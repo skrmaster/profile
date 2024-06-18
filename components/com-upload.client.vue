@@ -38,8 +38,6 @@ const showAddArea = computed(() => {
 });
 
 watch(cacheDataList, (val) => {
-  console.log(val);
-  
   const really = val.flatMap(e => {
     if (e.fullPath && e.id) {
       return e;

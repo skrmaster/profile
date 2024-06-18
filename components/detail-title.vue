@@ -122,6 +122,9 @@ function handleSubmit(val: DetailTitle.Action) {
 .detail__title {
   height: 80px;
   background-color: var(--white-color);
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
 
 .btn {
