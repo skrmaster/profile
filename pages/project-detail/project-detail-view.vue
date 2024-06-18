@@ -27,6 +27,7 @@ const detailList = ref([
 const startTime = ref('');
 const endTime = ref('');
 const content = ref('');
+const playLink = ref('');
 
 init();
 function init() {
@@ -34,6 +35,7 @@ function init() {
   .then(res => {
     title.value = res.data.name;
     content.value = res.data.summary?.slice(0, 100) || '';
+    playLink.value = res.data.playLink as string;
 
     detailList.value = ['summary', 'description', 'department'].map((e, i) => {
       const item = {
@@ -119,6 +121,13 @@ function goBack() {
           <com-carousel
             :list="imageList"
           ></com-carousel>
+        </div>
+        <div>
+          <label>演示地址</label>
+          <p class="mt1">
+            <NuxtLink v-if="isUrl(playLink)" class="playlink" target="_blank" :to="playLink">{{ playLink }}</NuxtLink>
+            <span v-else>{{ playLink }}</span>
+          </p>
         </div>
         <div class="project__scope my1">
           <label>参与开发项目时间</label>
@@ -233,5 +242,14 @@ function goBack() {
   position: relative;
   z-index: 10;
   border: 1px solid transparent;
+}
+
+.playlink {
+  text-decoration: underline;
+  padding: 5px;
+  background: var(--white-color);
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: var(--border-radius);
 }
 </style>

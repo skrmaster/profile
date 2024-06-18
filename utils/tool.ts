@@ -60,7 +60,7 @@ export function getAvatar(item: Upload.FileInfo): string | undefined {
 
 
 /**
- * @deprecated 获取滚动条宽度
+ * @description 获取滚动条宽度
  * @returns 
  */
 export function getScrollBarWidth(): number {
@@ -95,5 +95,17 @@ export function formatUploadUrl(url?: string): string | undefined {
     return newUrl.pathname.slice(1);
   } catch(e) {
     return url;
+  }
+}
+
+export function isUrl(url?: string): boolean {
+  if (!url) {
+    return false;
+  }
+  try {
+    const curUrl = new URL(url);
+    return true;
+  } catch(e) {
+    return false;
   }
 }

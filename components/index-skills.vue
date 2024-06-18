@@ -28,7 +28,7 @@ const skillCircle = ref<HTMLElement>();
 const skillsName = computed(() => props.skillName);
 const skills = ref<Array<Skill.Skill>>([]);
 let elementResize: null | ResizeObserver = null;
-let functionId;
+let functionId: ReturnType<typeof setTimeout>;
   
 let widthGap = 0;
 let heightGap = 0;
@@ -56,6 +56,13 @@ function active($event: MouseEvent) {
 
     return e;
   });
+
+  clearTimeout(functionId);
+  functionId = setTimeout(() => {
+    skills.value.forEach((e, i) => {
+      skills.value[i].class = e.originClass;
+    });
+  }, 1000);
 }
 
 function inactive() {
