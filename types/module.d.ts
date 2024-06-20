@@ -6,6 +6,7 @@ declare module '#app' {
     $message: MessageManager;
     $confirm: MessageConfirm;
     $sanitize: DOMPurify.DOMPurifyI.sanitize;
+    $worker: () => Worker;
   }
 }
 declare module '@wangeditor/editor-for-vue' {

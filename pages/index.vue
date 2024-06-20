@@ -30,11 +30,11 @@ useHead({
 
 const roadData = roadPath.data;
 const walkData = walking.data;
-const { $message } = useNuxtApp();
+const { $message, $worker } = useNuxtApp();
+let worker: Worker;
 const themeState = useState('theme');
 const theme = computed(() => themeState.value);
 const startAnimate = ref(false);
-let cannelAnimate = false;
 
 watch(theme, (val) => {
   if (val) {
@@ -119,7 +119,7 @@ const grass = {
 }
 
 let offscreenCtx: CanvasRenderingContext2D | null;
-let offscreenCanvas: HTMLCanvasElement | null;
+let tmpCanvas: HTMLCanvasElement | null;
 
 let man = {
   x: 0,
@@ -173,7 +173,6 @@ let scrollBarWidth: number;
 let img: HTMLImageElement;
 let lightImg: HTMLImageElement;
 
-
 const skillsName = ref<Skill.SkillName[]>([]);
 function fetchSkillsData() {
   const params: Omit<Pagination, 'total'> = {
@@ -204,19 +203,6 @@ function clearAnimate() {
       window.cancelAnimationFrame(requestTimer[item] as number);
     }
   }
-}
-
-function initializeOffscreenCanvas() {
-  if (isNull(offscreenCtx) || isNull(offscreenCanvas)) {
-    return;
-  }
-  offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-  offscreenCtx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-      parkCanvas.height / 2 - bench.smallHeight / 10, 
-      bench.smallWidth, bench.smallHeight);
-  offscreenCtx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-      parkCanvas.height / 2 - light.smallHeight / 1.5, 
-      light.smallWidth, light.smallHeight);
 }
 
 function drawImageWalking() {
@@ -272,9 +258,11 @@ function drawImageWalking() {
   window.requestAnimationFrame(drawImageWalking);
 }
 
-function initCanvas() {
+async function initCanvas() {
   scrollBarWidth = getScrollBarWidth();
   clearAnimate();
+  worker?.terminate();
+  worker = $worker();
 
   man = {
     x: 0,
@@ -318,6 +306,13 @@ function initCanvas() {
     return;
   }
   
+  
+  // offscreenCanvas = document.createElement('canvas');
+  // offscreenCtx = offscreenCanvas.getContext('2d');
+  // offscreenCanvas.width = parkCanvas.width;
+  // offscreenCanvas.height = parkCanvas.height;
+
+
   // offscreenCanvas = document.createElement('canvas');
   // offscreenCtx = offscreenCanvas.getContext('2d');
   // offscreenCanvas.width = parkCanvas.width;
@@ -357,16 +352,67 @@ function initCanvas() {
   parkCanvas.ctx = canvas.getContext('2d');
   parkCanvas.horizon = (canvas.height * parkScale.value) / 2;
 
-  // initializeOffscreenCanvas();
+  parkCanvas.ctx?.clearRect(0, 0, 5000, 5000);
+  // parkCanvas.ctx?.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
+  //   parkCanvas.height / 2 - bench.smallHeight / 10, 
+  //   bench.smallWidth, bench.smallHeight);
+    
+  // parkCanvas.ctx?.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
+  //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
+  //   light.smallWidth, light.smallHeight);
 
-  requestTimer.animateTimerTop = window.requestAnimationFrame(draw);
+  // requestTimer.animateTimerTop = window.requestAnimationFrame(draw);
+  worker.onmessage = (event: MessageEvent) => {
+    const imageBitmap = event.data as ImageBitmap;
+    parkCanvas.ctx?.clearRect(0, 0, 5000, 5000);
+    parkCanvas.ctx?.drawImage(imageBitmap, 0, 0);
+  };
+    
+  tmpCanvas = document.createElement('canvas');
+  const offscreenCanvas = tmpCanvas.transferControlToOffscreen();
+  // offscreenCtx = offscreenCanvas.getContext('2d');
+  // offscreenCanvas.width = parkCanvas.width;
+  // offscreenCanvas.height = parkCanvas.height;
+
+
+  // const imgCanvas = document.createElement('canvas');
+  // imgCanvas.width = img.width;
+  // imgCanvas.height = img.height;
+  // const imgCanvasCtx = imgCanvas.getContext('2d')!;
+  // imgCanvasCtx.drawImage(img, 0, 0);
+  // const imgData = imgCanvasCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
+  const imgData = await createImageBitmap(img, 0, 0, img.width, img.height);
+
+  // const lightImgCanvas = document.createElement('canvas');
+  // lightImgCanvas.width = lightImg.width;
+  // lightImgCanvas.height = lightImg.height;
+  // const lightImgCanvasCtx = lightImgCanvas.getContext('2d')!;
+  // lightImgCanvasCtx.drawImage(lightImg, 0, 0);
+  // const lightImgData = imgCanvasCtx.getImageData(0, 0, lightImgCanvas.width, lightImgCanvas.height);
+  const lightImgData = await createImageBitmap(lightImg, 0, 0, lightImg.width, lightImg.height);
+
+  const parkCloneCanvas = {
+    ...parkCanvas,
+    ctx: offscreenCanvas
+  }
+
+  const themeType = theme.value;
+
+  worker.postMessage({
+    parkCloneCanvas,
+    man,
+    timer,
+    requestTimer,
+    bench,
+    walkData,
+    roadData,
+    imgData,
+    lightImgData,
+    themeType
+  }, [parkCloneCanvas.ctx]);
 }
 
 function draw() {
-  if (cannelAnimate) {
-    return;
-  }
-
   let ctx: CanvasRenderingContext2D ;
   if (parkCanvas.ctx) {
     ctx = parkCanvas.ctx
@@ -376,105 +422,106 @@ function draw() {
   }
 
   //循环动画第一帧
-  // if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
-  //   man.timeControl = 0;
-  //   drawIndex = 0;
-  //   man.sitingTime = 100;
-  //   man.walkToSitingWaitTime = 10;
-  //   man.sitingToWalkToWaitTime = 10;
-  //   timer.lastFrameTimer = setTimeout(() => {
-  //     requestTimer.animateTimerTop6 = window.requestAnimationFrame(draw);
-  //   }, 5000);
-  //   return;
-  // }
+  if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
+    man.timeControl = 0;
+    drawIndex = 0;
+    man.sitingTime = 100;
+    man.walkToSitingWaitTime = 10;
+    man.sitingToWalkToWaitTime = 10;
+    timer.lastFrameTimer = setTimeout(() => {
+      requestTimer.animateTimerTop6 = window.requestAnimationFrame(draw);
+    }, 5000);
+    return;
+  }
 
   //动画
-  // if (man.timeControl % 10 === 0) {
-  //   if (isNull(parkCanvas.ctx)) {
-  //     return; 
-  //   }
-  //   ctx.clearRect(0, 0, 5000, 5000);
-  //   ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-  //     parkCanvas.height / 2 - bench.smallHeight / 10, 
-  //     bench.smallWidth, bench.smallHeight);
+  if (man.timeControl % 10 === 0) {
+    if (isNull(parkCanvas.ctx)) {
+      return; 
+    }
+    // ctx.clearRect(0, 0, 5000, 5000);
+    // ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
+    //   parkCanvas.height / 2 - bench.smallHeight / 10, 
+    //   bench.smallWidth, bench.smallHeight);
     
-  //   ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-  //     parkCanvas.height / 2 - light.smallHeight / 1.5, 
-  //     light.smallWidth, light.smallHeight);
+    // ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
+    //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
+    //   light.smallWidth, light.smallHeight);
     
-  //   //从屏幕外进入
-  //   if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
-  //     if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
-  //       //离开凳子
-  //       man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
-  //       drawWalking(
-  //         ctx, 
-  //         0, 
-  //         man.y, 
-  //         (man.stepX) * (man.timeControl / 50 - 2)
-  //       );
-  //       drawLight(ctx);
-  //       drawRoad(ctx);
-  //       requestTimer.animateTimerTop2 = window.requestAnimationFrame(draw);
-  //       man.sitingToWalkToWaitTime--;
-  //       return
-  //     } else {
-  //       if (man.sitingTime > 1) {
-  //         drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
-  //       } else {
-  //         drawWalking(
-  //         ctx, 
-  //         0, 
-  //         man.y, 
-  //         (man.stepX) * (man.timeControl / 50 - 2)
-  //       );
-  //       }
-  //       drawLight(ctx);
-  //       drawRoad(ctx);
-  //       man.sitingTime--;
-  //       requestTimer.animateTimerTop3 = window.requestAnimationFrame(draw);
-  //       return;
-  //     }
-  //   } else {
-  //     if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
-  //       //移向凳子
-  //       man.y += ((man.walkToSitingWaitTime - 10) * 2);
-  //       drawWalking(
-  //         ctx, 
-  //         0, 
-  //         man.y, 
-  //         (man.stepX) * (man.timeControl / 50 - 2)
-  //       );
-  //       drawLight(ctx);
-  //       drawRoad(ctx);
-  //       requestTimer.animateTimerTop4 = window.requestAnimationFrame(draw);
-  //       man.walkToSitingWaitTime--;
-  //       return
-  //     } else {
-  //       drawWalking(
-  //         ctx, 
-  //         0, 
-  //         man.y, 
-  //         (man.stepX) * (man.timeControl / 50 - 2)
-  //       );
-  //     }
-  //   }
-  // } 
-  // else {
-  //   requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
-  //   man.timeControl++;
-  //   return;
-  // }
+    //从屏幕外进入
+    if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
+      if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
+        //离开凳子
+        man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
+        drawWalking(
+          ctx, 
+          0, 
+          man.y, 
+          (man.stepX) * (man.timeControl / 50 - 2)
+        );
+        drawLight(ctx);
+        drawRoad(ctx);
+        requestTimer.animateTimerTop2 = window.requestAnimationFrame(draw);
+        man.sitingToWalkToWaitTime--;
+        return
+      } else {
+        if (man.sitingTime > 1) {
+          drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
+        } else {
+          drawWalking(
+          ctx, 
+          0, 
+          man.y, 
+          (man.stepX) * (man.timeControl / 50 - 2)
+        );
+        }
+        drawLight(ctx);
+        drawRoad(ctx);
+        man.sitingTime--;
+        requestTimer.animateTimerTop3 = window.requestAnimationFrame(draw);
+        return;
+      }
+    } else {
+      if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+        //移向凳子
+        man.y += ((man.walkToSitingWaitTime - 10) * 2);
+        drawWalking(
+          ctx, 
+          0, 
+          man.y, 
+          (man.stepX) * (man.timeControl / 50 - 2)
+        );
+        drawLight(ctx);
+        drawRoad(ctx);
+        requestTimer.animateTimerTop4 = window.requestAnimationFrame(draw);
+        man.walkToSitingWaitTime--;
+        return
+      } else {
+        drawWalking(
+          ctx, 
+          0, 
+          man.y, 
+          (man.stepX) * (man.timeControl / 50 - 2)
+        );
+      }
+    }
+  } 
+  else {
+    requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
+    man.timeControl++;
+    return;
+  }
   
-  // man.timeControl++;
-  ctx.clearRect(0, 0, 5000, 5000);
-  ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-    parkCanvas.height / 2 - bench.smallHeight / 10, 
-    bench.smallWidth, bench.smallHeight);
+  man.timeControl++;
+
+  // ctx.clearRect(0, 0, 5000, 5000);
+  // ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
+  //   parkCanvas.height / 2 - bench.smallHeight / 10, 
+  //   bench.smallWidth, bench.smallHeight);
       
-  ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-    parkCanvas.height / 2 - light.smallHeight / 1.5, 
-    light.smallWidth, light.smallHeight);
+  // ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
+  //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
+  //   light.smallWidth, light.smallHeight);
 
   drawLight(ctx);
   drawRoad(ctx);
@@ -671,7 +718,7 @@ onNuxtReady(() => {
   loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
-  drawImageWalking();
+  // drawImageWalking();
 });
 
 onBeforeUnmount(() => {

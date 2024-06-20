@@ -49,6 +49,7 @@ export default defineNuxtConfig({
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "jsx": "preserve",
+        "lib": ["dom", "dom.iterable", "esnext", "webworker"],
         "jsxImportSource": "vue",
         "noImplicitThis": true,
         "strict": true,
@@ -76,5 +77,12 @@ export default defineNuxtConfig({
     }
   },
   vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          format: 'esm',
+        },
+      },
+    },
   }
 });
