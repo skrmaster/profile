@@ -727,7 +727,9 @@ onNuxtReady(() => {
   fetchSkillsData();
   // loadResource();
   const resizeHandler = debounce(initCanvas, 500);
-  window.addEventListener('resize', resizeHandler);
+  window.addEventListener('resize', () => {
+    resizeHandler();
+  });
   // drawImageWalking();
 });
 
@@ -782,7 +784,7 @@ onBeforeUnmount(() => {
                 </p>
                 <com-button suffix-icon="profile-arrow" link><NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink></com-button>
               </div>
-              <div v-if="theme !== 'dark'" class="introduction__bg"></div>
+              <div v-if="theme !== 'dark' && windowWidth > 1252" class="introduction__bg"></div>
             </div>
           </div>
         </div>

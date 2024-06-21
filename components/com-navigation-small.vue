@@ -76,7 +76,7 @@ function handleAvatarJump() {
       <div class="mr1" @click="handleAvatarJump">
         <com-avatar 
           :avatar-url="tempUserInfo?.avatar" 
-          :nickname="tempUserInfo?.account || '未知'">
+          :nickname="tempUserInfo?.account ? tempUserInfo?.account : tempUserInfo?.id ? '未知' : '登录'">
         </com-avatar>
       </div>
       <nav class="flex1 flex__row--between">

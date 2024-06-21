@@ -89,9 +89,9 @@ function handleClick($event: Event) {
     }"
     @click="handleClick"
   >
-    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
+    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? 'var(--primary-color)' : 'inherit'"></com-icon>
     <slot />
-    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
+    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? 'var(--primary-color)' : 'inherit'"></com-icon>
   </button>
   <button v-else
     type="button"
@@ -100,9 +100,9 @@ function handleClick($event: Event) {
     class="btn--link c-p"
     @click="handleClick"
   >
-    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
+    <com-icon :icon="props.prefixIcon" :color="props.type === 'primary' ? 'var(--primary-color)' : 'inherit'"></com-icon>
     <slot />
-    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? '#ffffff' : 'inherit'"></com-icon>
+    <com-icon :icon="props.suffixIcon" :color="props.type === 'primary' ? 'var(--primary-color)' : 'inherit'"></com-icon>
   </button>
 </template>
 <style scoped>
