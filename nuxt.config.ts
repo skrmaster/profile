@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const cssDir = path.resolve(__dirname, 'assets/css')
-const cssFiles = fs.readdirSync(cssDir).filter(file => file.endsWith('.css'))
+const cssDir = path.resolve(__dirname, 'assets/css');
+const cssFiles = fs.readdirSync(cssDir).filter(file => file.endsWith('.css'));
 const mode = process.env.NODE_ENV;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config

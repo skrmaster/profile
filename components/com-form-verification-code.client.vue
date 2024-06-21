@@ -30,7 +30,7 @@ const emit = defineEmits<{
 }>();
 
 const verifyRef = ref();
-const time = 10;
+const time = 60;
 const code = ref('');
 const text = '发送验证码';
 const start = ref(false);

@@ -1,8 +1,12 @@
 <script lang="ts" setup>
+const isDev = computed(() => {
+  return import.meta.env.MODE === 'development';
+});
+
 const cookieAuth = useCookie("s-auth-cookie", {
   maxAge: 60 * 60 * 24 * 365 * 10,
   path: '/',
-  secure: false,
+  secure: isDev ? false : true,
   sameSite: 'strict'
 });
 

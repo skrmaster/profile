@@ -761,14 +761,17 @@ onBeforeUnmount(() => {
                 <!-- <img src="" alt="avatar" /> -->
               </div>
             </div>
-            <div>
-              <p class="fs18">介绍</p>
-              <p class="detail fs24 my2">
-                专注于使用<span class="font-bold">Vuejs</span>进行中后台系统
-                开发、组件二次封装、<span class="font-bold">SSR</span>网站
-                前端开发等等...
-              </p>
-              <com-button suffix-icon="profile-arrow" link><NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink></com-button>
+            <div class="p-r p1">
+              <div>
+                <p class="fs18">介绍</p>
+                <p class="detail fs24 my2">
+                  专注于使用<span class="font-bold">Vuejs</span>进行中后台系统
+                  开发、组件二次封装、<span class="font-bold">SSR</span>网站
+                  前端开发等等...
+                </p>
+                <com-button suffix-icon="profile-arrow" link><NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink></com-button>
+              </div>
+              <div v-if="theme !== 'dark'" class="introduction__bg"></div>
             </div>
           </div>
         </div>
@@ -836,6 +839,18 @@ onBeforeUnmount(() => {
 .introduciton-text-height {
   height: 550px;
   color: var(--primary-color);
+}
+
+.introduction__bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--white-color);
+  opacity: 0.4;
+  filter: blur(10px); 
+  z-index: -1;
 }
 
 .section__avatar {

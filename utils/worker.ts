@@ -77,9 +77,10 @@ self.onmessage = (event: MessageEvent) => {
       }, 5000);
       return;
     }
+    const moveRate = (man.timeControl / 15 - 2);
   
     //动画
-    if (man.timeControl % 10 === 0) {
+    if (man.timeControl % 8 === 0) {
       ctx.clearRect(0, 0, 5000, 5000);
       ctx.drawImage(imgData, parkCanvas.width / 2 - bench.smallWidth / 2, 
         parkCanvas.height / 2 - bench.smallHeight / 10, 
@@ -89,7 +90,7 @@ self.onmessage = (event: MessageEvent) => {
       parkCanvas.height / 2 - light.smallHeight / 1.5, 
       light.smallWidth, light.smallHeight);
       //从屏幕外进入
-      if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
+      if (man.stepX * moveRate >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
         if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
           //离开凳子
           man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
@@ -97,7 +98,7 @@ self.onmessage = (event: MessageEvent) => {
             ctx, 
             0, 
             man.y, 
-            (man.stepX) * (man.timeControl / 50 - 2),
+            (man.stepX) * moveRate,
             walkData
           );
           drawLight(ctx, parkCanvas, themeType);
@@ -119,7 +120,7 @@ self.onmessage = (event: MessageEvent) => {
             ctx, 
             0, 
             man.y, 
-            (man.stepX) * (man.timeControl / 50 - 2),
+            (man.stepX) * moveRate,
             walkData
           );
           }
@@ -136,14 +137,14 @@ self.onmessage = (event: MessageEvent) => {
           return;
         }
       } else {
-        if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
+        if (man.stepX * moveRate >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
           //移向凳子
           man.y += ((man.walkToSitingWaitTime - 10) * 2);
           drawWalking(
             ctx, 
             0, 
             man.y, 
-            (man.stepX) * (man.timeControl / 50 - 2),
+            (man.stepX) * moveRate,
             walkData
           );
           drawLight(ctx, parkCanvas, themeType);
@@ -162,7 +163,7 @@ self.onmessage = (event: MessageEvent) => {
             ctx, 
             0, 
             man.y, 
-            (man.stepX) * (man.timeControl / 50 - 2),
+            (man.stepX) * moveRate,
             walkData
           );
         }
@@ -182,7 +183,6 @@ self.onmessage = (event: MessageEvent) => {
     }
     
     man.timeControl++;
-
   
     drawLight(ctx, parkCanvas, themeType);
     drawRoad(ctx, parkCanvas, roadData);
