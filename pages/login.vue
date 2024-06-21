@@ -248,7 +248,9 @@ onNuxtReady(() => {
   >
     <div class="container flex__center">
       <div class="login-box row">
-        <NuxtLink class="gohome c-p underline" to="/">返回首页</NuxtLink>
+        <NuxtLink class="gohome c-p underline" to="/">
+          <com-icon icon="profile-home1"></com-icon>
+        </NuxtLink>
         <div class="notice-box p1 z-index9">
           <div class="notic-box--resize">
             <a 

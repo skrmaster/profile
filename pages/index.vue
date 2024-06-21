@@ -272,6 +272,7 @@ async function initCanvas() {
   clearAnimate();
   worker?.terminate();
   worker = $worker();
+  worker.postMessage({ command: 'clear' });
 
   man = {
     x: 0,
@@ -348,7 +349,7 @@ async function initCanvas() {
   man.stepY = parkCanvas.height + 100;
   man.stepYDiff = (parkCanvas.height - man.height - 150 * 2) - man.stepY;
   man.countY = man.walkWidth / 2 / man.stepX;
-  man.y = (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
+  man.y = windowWidth.value <= 992 ? (parkCanvas.height - man.height - 280) + (man.stepYDiff / man.countY) : (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
   walkingImage.walkWidth = windowWidth.value;
    
   if (windowWidth.value <= 992) {

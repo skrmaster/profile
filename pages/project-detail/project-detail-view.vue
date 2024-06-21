@@ -164,6 +164,7 @@ function goBack() {
     </section>
     <com-footer></com-footer>
   </com-background>
+  <div style="height: 120px;" class="display-5-none display-4-none display-3-none"></div>
 </template>
 <style scoped>
 .background {

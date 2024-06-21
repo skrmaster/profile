@@ -119,7 +119,7 @@ onUnmounted(() => {
           </p>
         </div>
       </div>
-      <p class="my1">
+      <p class="my1" style="line-height: 2;">
         <span class="mr1 stack__item">{{ status }}</span>
         <span class="mr1">创建时间：{{ data.createTime }}</span>
         <span class="mr1">创建人：{{ data.author?.account || '未知' }}</span>

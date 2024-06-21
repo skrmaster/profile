@@ -44,7 +44,7 @@ onUnmounted(() => {
   <div ref="cookieRef">
     <Transition name="bottom2top">
       <com-cookie v-if="showCookie && !smallCookie" @close="showCookie = false"></com-cookie>
-      <com-cookie-small v-else-if="showCookie && smallCookie"></com-cookie-small>
+      <com-cookie-small v-else-if="showCookie && smallCookie" @close="showCookie = false"></com-cookie-small>
     </Transition>
   </div>
 </template>
