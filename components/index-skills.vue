@@ -35,7 +35,7 @@ let elementResize: null | ResizeObserver = null;
 let functionId: ReturnType<typeof setTimeout>;
 let once = false;
 
-watch(skillBox, (val) => {
+watch(() => props.skillName, (val) => {
   if (!once && skillBox.value) {
     elementResize = resize(skillBox.value, (wh) => {
       minWidth = skillCircle.value!.offsetLeft;

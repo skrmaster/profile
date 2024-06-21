@@ -109,3 +109,10 @@ export function isUrl(url?: string): boolean {
     return false;
   }
 }
+
+export function isMobile() {
+  const userAgent = navigator.userAgent;
+  const isMobileUserAgent = /android|webOS|iPhone|iPad|iPod|blackberry|iemobile|opera mini/i.test(userAgent);
+  
+  return isMobileUserAgent;
+}

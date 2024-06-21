@@ -13,6 +13,8 @@ const props = withDefaults(defineProps<Prop>(), {
 	width: 0
 });
 
+
+const isMoveDevice = isMobile();
 const { $message } = useNuxtApp();
 const { projectDetailPath } = routerMap;
 const windowWidth = computed(() => props.width);
@@ -42,7 +44,14 @@ scene.add(directionalLight);
 
 //渲染器
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize( window.innerWidth - 50, window.innerHeight );
+
+
+if (isMoveDevice) {
+	renderer.setSize( window.innerWidth - 100, window.innerHeight );
+} else {
+	renderer.setSize( window.innerWidth - 50, window.innerHeight );
+}
+
 renderer.setClearColor("#FFFFFF", 0);
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -217,6 +226,11 @@ function onMouseClick(event: MouseEvent) {
 }
 
 function animate() {
+	if (isMoveDevice) {
+		renderer.setSize( window.innerWidth - 100, window.innerHeight );
+	} else {
+		renderer.setSize( window.innerWidth - 50, window.innerHeight );
+	}
 	requestAnimationFrame(animate);
 	controls.update();
 	renderer.render(scene, camera);
