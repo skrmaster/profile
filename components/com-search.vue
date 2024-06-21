@@ -70,7 +70,7 @@ function ininCanvas() {
   searchCanvas.ctx = searchCanvas.element?.getContext('2d');
   img = new Image();
   img.src = cityImage;
-  searchCanvas.element.width = window.innerWidth - scrollBarWidth;
+  searchCanvas.element.width = window.innerWidth - scrollBarWidth - 1;
   searchCanvas.element.height = 250;
 
   img.onload = () => {
