@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { UserModel, UpdateInfo } from '~/api/user/model';
+
 type Prop = {
 	width?: number;
   skillName: Skill.SkillName[];
@@ -22,6 +24,8 @@ const proficiencyMap: Record<number, string> = {
   70: '18',
 }
 
+const userInfo = useState<UserModel | undefined>("userInfo");
+const isAuth = computed(() => userInfo.value?.permission?.includes('1') || false);
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
@@ -29,6 +33,21 @@ const skillsName = computed(() => props.skillName);
 const skills = ref<Array<Skill.Skill>>([]);
 let elementResize: null | ResizeObserver = null;
 let functionId: ReturnType<typeof setTimeout>;
+let once = false;
+
+watch(skillBox, (val) => {
+  if (!once && skillBox.value) {
+    elementResize = resize(skillBox.value, (wh) => {
+      minWidth = skillCircle.value!.offsetLeft;
+      minHeight = skillCircle.value!.offsetTop;
+      maxWidth = minWidth + 250;
+      maxHeight = minHeight + 250;
+          
+      heightGap = skillBox.value!.clientHeight / 5;
+      debounceMoutedskills();
+    });
+  }
+})
   
 let widthGap = 0;
 let heightGap = 0;
@@ -79,6 +98,7 @@ function handleAddSkill() {
 
 const debounceMoutedskills = debounce(mountedSkills, 500);
 function mountedSkills() {
+  once = true;
   skills.value = skillsName.value.map((e, i: number) => {
     let xCount = 0;
     let yCount = 0;
@@ -170,17 +190,7 @@ function mountedSkills() {
 }
 
 onMounted(() => {
-  if (skillBox.value) {
-    elementResize = resize(skillBox.value, (wh) => {
-      minWidth = skillCircle.value!.offsetLeft;
-      minHeight = skillCircle.value!.offsetTop;
-      maxWidth = minWidth + 250;
-      maxHeight = minHeight + 250;
-          
-      heightGap = skillBox.value!.clientHeight / 5;
-      debounceMoutedskills();
-    });
-  }
+  once = false;
 });
 
 onBeforeUnmount(() => {
@@ -211,7 +221,7 @@ onBeforeUnmount(() => {
           <span class="fs36 font-bold mx1">SKILLS</span>
           <span></span>
         </p>
-        <div v-if="skills.length === 0" class="add__skill">
+        <div v-if="isAuth && skills.length === 0" class="add__skill">
           <div class="flex__center wh100" @click="handleAddSkill">
             <com-icon icon="profile-close" style="transform: rotate(45deg);"></com-icon>
             <span class="ml1">添加新技能</span>

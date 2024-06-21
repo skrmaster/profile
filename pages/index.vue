@@ -35,12 +35,21 @@ let worker: Worker;
 const themeState = useState('theme');
 const theme = computed(() => themeState.value);
 const startAnimate = ref(false);
+const parkCanvasRef = ref();
+let once = false;
 
 watch(theme, (val) => {
   if (val) {
     changeLight(val as string);
   }
 });
+
+watch(parkCanvasRef, () => {
+  if (!once && parkCanvasRef.value) {
+    loadResource();
+  }
+});
+
 const windowWidth = ref(0);
 const formConfig: Array<FormConfig> = [
   {
@@ -305,7 +314,6 @@ async function initCanvas() {
   if (!canvas) {
     return;
   }
-  
   
   // offscreenCanvas = document.createElement('canvas');
   // offscreenCtx = offscreenCanvas.getContext('2d');
@@ -671,6 +679,7 @@ function changeLight(val: string) {
 function loadResource() {
   img = new Image();
   img.src = benchSvg;
+  once = true;
 
   img.onload = () => {
     lightImg = new Image();
@@ -715,7 +724,7 @@ function handleAddMessage() {
 
 onNuxtReady(() => {
   fetchSkillsData();
-  loadResource();
+  // loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', resizeHandler);
   // drawImageWalking();
@@ -738,6 +747,7 @@ onBeforeUnmount(() => {
         }"
       >
       <canvas 
+        ref="parkCanvasRef"
         :style="{
           'transform-origin': 'top left',
           'transform': parkTransform

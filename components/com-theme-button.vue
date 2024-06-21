@@ -30,7 +30,7 @@ function setCurrentTheme() {
   }
 }
 
-onNuxtReady(() => {
+onMounted(() => {
   storage = new StorageSuger('localStorage');
   const themeString = storage.getValue('theme') as string;
   const currentTheme = themeString ? JSON.parse(themeString) : '';

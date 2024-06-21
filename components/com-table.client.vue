@@ -128,7 +128,7 @@ function handleScroll() {
   }
 }
 
-onNuxtReady(() => {
+onMounted(() => {
   for (const item of theadList.value) {
     if (item.fixed) {
       layout.add(item.fixed);

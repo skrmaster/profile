@@ -1,4 +1,6 @@
 <script lang="ts" setup> 
+import type { UserModel, UpdateInfo } from '~/api/user/model';
+
 type Prop = {
 	width?: number;
   skills: Array<Skill.SkillName>;
@@ -9,6 +11,8 @@ const props = withDefaults(defineProps<Prop>(), {
   skills: () => []
 });
 
+const userInfo = useState<UserModel | undefined>("userInfo");
+const isAuth = computed(() => userInfo.value?.permission?.includes('1') || false);
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
@@ -25,7 +29,7 @@ function handleAddSkill() {
       <p class="fs36 font-bold">
         <span>技能(SKILLS)</span>
         <com-icon 
-          v-if="skills.length === 0"
+          v-if="isAuth && skills.length === 0"
           class="ml1"
           @click="handleAddSkill"
           icon="profile-add"

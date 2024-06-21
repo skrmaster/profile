@@ -25,6 +25,7 @@ const pagination = reactive({
   pageSize: 20
 });
 const data = ref<ListType>([]);
+const listLoading = ref(false);
 
 init();
 function init() {
@@ -36,8 +37,9 @@ function getData() {
     page: pagination.page,
     pageSize: pagination.pageSize
   }
-
+  listLoading.value = true;
   apiGetList(params).then(res => {
+    listLoading.value = false;
     Object.assign(pagination ,res.data.pagination);
     data.value = res.data.list.map(e => {
       const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
@@ -47,7 +49,9 @@ function getData() {
         imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
       };
     });
-  }).catch(() => {});
+  }).catch(() => {
+    listLoading.value = false;
+  });
 }
 
 function handleViewProject(item: ListItem) {
@@ -80,8 +84,11 @@ function getDataByPagination() {
         <div class="container">
           <div style="color: var(--primary-color)">
             <p class="py3 fs24">项目列表</p>
-            <div class="project-gird pb2" v-if="data.length > 0">
-              <div class="project__item" 
+            <div class="project-gird pb2" 
+              v-loading="listLoading"
+              :style="data.length === 0 ? `min-height: 200px;` : ''"
+            >
+              <div class="project__item"
                 v-for="(item, index) in data" 
                 :key="index"
                 @click="handleViewProject(item)"
@@ -92,7 +99,7 @@ function getDataByPagination() {
                 <p class="text-center my1">{{ item.name }}</p>
               </div>
             </div>
-            <com-empty v-else></com-empty>
+            <com-empty v-if="!listLoading && data.length === 0"></com-empty>
           </div>
         </div>
       </section>

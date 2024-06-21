@@ -105,8 +105,8 @@ const otherList = ref([
         <div class="copyright">
           <p class="mt1">Copyright<span class="copy">©</span>2024 skrmaster.fun All Rights Reserved</p>
           <p class="gov flex__row">
-            <img class="gov__img mr1" src="assets/images/gov.png" />
-            <NuxtLink class="gov__link" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号</NuxtLink>
+            <img class="gov__img" src="assets/images/gov.png" />
+            <NuxtLink class="gov__link fs14" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号</NuxtLink>
           </p>
         </div>
       </div>
@@ -158,6 +158,7 @@ footer {
 
 .gov__img {
   width: 20px;
+  margin-right: 5px;
 }
 
 .gov__link {

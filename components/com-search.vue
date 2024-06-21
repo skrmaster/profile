@@ -28,8 +28,6 @@ const search = computed({
 });
 
 function handleLayout(e: UIEvent, wh?: Resize[]) {
-  console.log(e);
-  
   if (searchCanvas.element) {
     const item = wh ? wh[0] : null;
     

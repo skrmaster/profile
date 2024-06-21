@@ -123,7 +123,7 @@ function formatNumberWithUnit(number: number, unit: number): string {
   return parseFloat(formattedNumber).toString();
 }
 
-onNuxtReady(() => {
+onMounted(() => {
   document.addEventListener('mouseup', handleEnd);
   document.addEventListener('mousemove', trackMouse);
   document.addEventListener('touchmove', trackMouse);

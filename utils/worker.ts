@@ -80,7 +80,7 @@ self.onmessage = (event: MessageEvent) => {
     const moveRate = (man.timeControl / 15 - 2);
   
     //动画
-    if (man.timeControl % 8 === 0) {
+    if (man.timeControl % 4 === 0) {
       ctx.clearRect(0, 0, 5000, 5000);
       ctx.drawImage(imgData, parkCanvas.width / 2 - bench.smallWidth / 2, 
         parkCanvas.height / 2 - bench.smallHeight / 10, 
@@ -334,9 +334,9 @@ function clearAnimate() {
     clearTimeout(timer[item]);
   }
 
-  for (const item in requestTimer) {
-    if (requestTimer[item] !== undefined) {
-      cancelAnimationFrame(requestTimer[item] as number);
+  for (const item1 in requestTimer) {
+    if (requestTimer[item1] !== undefined) {
+      cancelAnimationFrame(requestTimer[item1] as number);
     }
   }
 }

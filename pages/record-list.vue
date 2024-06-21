@@ -224,7 +224,11 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
     <section class="pb5 flex1">
       <div class="container">
         <div class="flex content">
-          <div class="blog p1 flex__column overflow-auto" v-if="blogList.length > 0" v-loading="listLoading">
+          <div 
+            class="blog p1 flex__column overflow-auto" 
+            v-loading="listLoading"
+            :style="blogList.length === 0 ? `min-height: 200px;` : ''"
+          >
             <div 
               v-for="(item, index) in blogList" 
               :key="index"
@@ -300,10 +304,10 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
               @current-page-change="getData"
             ></com-pagination>
           </div>
-          <com-empty v-else></com-empty>
+          <com-empty v-if="!listLoading && blogList.length === 0"></com-empty>
           <div class="rank ml1 mt1 display-2-none display-1-none display-0-none">
             <p class="font-bold fs24">点击排行榜</p>
-            <div v-if="rank.length > 0" v-loading="rankLoading">
+            <div v-loading="rankLoading" >
               <div v-for="(item, index) in rank" 
                 :key="index"
                 class="rank__item c-p flex__row"
@@ -329,7 +333,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
                 <div class="line1__ellipsis">{{ item.name }}</div>
               </div>
             </div>
-            <com-empty v-else></com-empty>
+            <com-empty v-if="!listLoading && rank.length === 0"></com-empty>
           </div>
         </div>
       </div>

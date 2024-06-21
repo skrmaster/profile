@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:worker": "tsc utils/worker.ts --outDir utils",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",

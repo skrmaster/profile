@@ -186,7 +186,7 @@ function trackTarget(e: MouseEvent) {
   console.log(trackTarget);
 }
 
-onNuxtReady(() => {
+onMounted(() => {
   localStorage = new StorageSuger('localStorage');
   if (verifyBoxRef.value) {
     const pos = verifyBoxRef.value.getBoundingClientRect();

@@ -77,12 +77,5 @@ export default defineNuxtConfig({
     }
   },
   vite: {
-    build: {
-      rollupOptions: {
-        output: {
-          format: 'esm',
-        },
-      },
-    },
   }
 });
