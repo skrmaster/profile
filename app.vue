@@ -2,8 +2,9 @@
 import type { UserModel } from './api/user/model';
 const userInfo = useState<UserModel | undefined>('userInfo');
 
-onNuxtReady(() => {
+onMounted(() => {
   const cookie = useCookie("s-getu");
+  console.log(cookie.value, userInfo.value);
   
   if (cookie.value && (cookie.value?.toString() !== false.toString()) && !userInfo.value?.id) {
     useUserInfo().then(res => {

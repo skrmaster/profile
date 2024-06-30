@@ -57,6 +57,14 @@ const config = ref<Array<FormConfig>>([
 const userInfo = useState<UserModel | undefined>('userInfo');
 const rememberPassword = ref(false);
 
+const cookieGetUserInfo = useCookie("s-getu", {
+  maxAge: 60 * 60 * 24 * 365 * 10,
+  path: '/',
+  secure: true,
+  sameSite: 'strict'
+});
+
+
 init();
 function init() {
   getRandomAphorisms();
@@ -197,8 +205,7 @@ function handleSubmit() {
           btnLoading.value = false;
           
           if (data.succeeded) {
-            const cookie = useCookie("s-getu");
-            cookie.value = true.toString();
+            cookieGetUserInfo.value = true.toString();
 
             const storageStr: StorageFrom = 'localStorage';
             const storage = new StorageSuger(storageStr);
@@ -208,6 +215,7 @@ function handleSubmit() {
             userInfo.value = { ...userInfoObj };
             navigateTo('/');
           } else {
+            cookieGetUserInfo.value = false.toString();
             $message.show({
               message: data.errors,
               type: 'error'

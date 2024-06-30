@@ -7,31 +7,31 @@ export async function useUserInfo(): Promise<UserModel | undefined> {
     return;
   }
   const userInfoState = useState<UserModel | undefined>('userInfo');
-    const authCookie = useCookie('s-auth-cookie');
-    const canUse = authCookie.value ? JSON.parse(authCookie.value) : false;
-    const userInfo = getStorageUserInfo();
-  
-    if (userInfoState.value?.id) {
-      return userInfoState.value;
-    }
-  
-    if (canUse) {
-      if (userInfo) {
-        userInfoState.value = userInfo;
-        return new Promise((resolve) => resolve(userInfo));
-      } else {
-        const result = await getUserInfo();
-        userInfoState.value = result;
-        return result;
-      }
+  const authCookie = useCookie('s-auth-cookie');
+  const canUse = authCookie.value ? JSON.parse(authCookie.value) : false;
+  const userInfo = getStorageUserInfo();
+
+  if (userInfoState.value?.id) {
+    return userInfoState.value;
+  }
+    
+  if (canUse) {
+    if (userInfo) {
+      userInfoState.value = userInfo;
+      return new Promise((resolve) => resolve(userInfo));
     } else {
-      if (userInfo) {
-        userInfoState.value = userInfo;
-        return new Promise((resolve) => resolve(userInfo));
-      } else {
-        return new Promise((resolve) => resolve(undefined));
-      }
+      const result = await getUserInfo();
+      userInfoState.value = result;
+      return result;
     }
+  } else {
+    if (userInfo) {
+      userInfoState.value = userInfo;
+      return new Promise((resolve) => resolve(userInfo));
+    } else {
+      return new Promise((resolve) => resolve(undefined));
+    }
+  }
 }
 
 async function getUserInfo(): Promise<UserModel> {
@@ -55,6 +55,7 @@ function getStorageUserInfo(): UserModel | undefined {
       return;
     }
   } catch(e) {
-    
+    console.log(e, 'getStorageUserInfo');
+    return;
   }
 }
