@@ -145,8 +145,8 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button prefixIcon="profile-add" class="mr1" @click="handleAdd">新增导航地址</com-button>
-        <com-button prefixIcon="profile-arrow" :loading="btnLoadingIcon" @click="handleGetIcons">获取icon</com-button>
+        <com-button prefix-icon="profile-add" class="mr1" @click="handleAdd">新增导航地址</com-button>
+        <com-button prefix-icon="profile-arrow" :loading="btnLoadingIcon" @click="handleGetIcons">获取icon</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">

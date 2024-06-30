@@ -112,7 +112,7 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAddSkill">新增技能</com-button>
+        <com-button prefix-icon="profile-add" @click="handleAddSkill">新增技能</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick"></com-table>

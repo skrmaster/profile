@@ -111,7 +111,7 @@ getTableData();
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button icon="profileadd" @click="handleAdd">新增语录</com-button>
+        <com-button prefix-icon="profile-add" @click="handleAdd">新增语录</com-button>
       </div>
       <div class="flex1 overflow-auto" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">

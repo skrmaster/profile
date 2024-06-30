@@ -196,6 +196,15 @@ onMounted(() => {
   // document.addEventListener('click', trackTarget);
 });
 
+onUpdated(() => {
+  localStorage = new StorageSuger('localStorage');
+  if (verifyBoxRef.value) {
+    const pos = verifyBoxRef.value.getBoundingClientRect();
+    x.value = pos.x + 50;
+    y.value = pos.y;
+  }
+});
+
 onBeforeUnmount(() => {
   clearTimeout(timer);
   // document.removeEventListener('click', trackTarget);
@@ -248,6 +257,7 @@ defineExpose({
   transform: translate(-50%, -105%);
   background: var(--background-color);
   z-index: 999;
+  box-shadow: var(--box-shadow);
 }
 
 .verify__content {

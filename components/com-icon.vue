@@ -47,6 +47,7 @@ function handleClick($event: Event) {
 <style scoped>
 .icon__box {
   text-align: center;
+  color: inherit;
 }
 
 .icon {
