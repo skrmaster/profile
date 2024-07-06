@@ -203,11 +203,9 @@ function handleSubmit() {
         btnLoading.value = true;
         apiLogin(params).then((data) => {
           btnLoading.value = false;
-          
+          cookieGetUserInfo.value = rememberPassword.value ? true.toString() : false.toString();
           if (data.succeeded) {
-            cookieGetUserInfo.value = true.toString();
-
-            const storageStr: StorageFrom = 'localStorage';
+            const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
             const storage = new StorageSuger(storageStr);
             storage.setValue('userInfo', data.data);
             const userInfoString = aesDecrypt(data.data);

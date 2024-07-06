@@ -86,7 +86,7 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
     if (e.flex < 1 && e.flex > 0) {
       e.flex *= 10;
     }
-  })
+  });
 
   return argCopy;
 }
@@ -94,7 +94,7 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
 async function handleLink(url?: string) {
   await navigateTo({
     path: url
-  })
+  });
 }
 
 function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
@@ -121,7 +121,7 @@ async function loginout() {
       await navigateTo('/');
       location.reload();
     }
-  }).catch(e => {})
+  }).catch(e => {});
 }
 
 function personalCenter() {

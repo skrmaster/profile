@@ -48,7 +48,7 @@ function getStorageUserInfo(): UserModel | undefined {
     const userInfo1 = storage1.getValue('userInfo');
 
     if (userInfo || userInfo1) {
-      const user = aesDecrypt(JSON.parse(userInfo as string) || JSON.parse(userInfo1 as string));
+      const user = userInfo ? aesDecrypt(JSON.parse(userInfo as string)) : aesDecrypt(JSON.parse(userInfo1 as string));
       const info: UserModel = JSON.parse(user);
       return info;
     } else {
