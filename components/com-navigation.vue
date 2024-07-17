@@ -32,7 +32,7 @@ const navList: Array<NavItemType> = [
   },
   {
     link: recordPagePath,
-    name: '纪录',
+    name: '问题记录',
     type: 'link'
   },
   {
