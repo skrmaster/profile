@@ -47,7 +47,6 @@ npm run dev
     ┖--use-userInfo.ts                             #获取用户信息
   |--layouts                                      #页面布局
     |--default.vue                                 #默认布局
-    |--error.vue                                   #错误页面布局
     ┖--header-section-footer.vue                   #头-内容-页脚布局
   |--middleware                                   #中间处理
     ┖--auth.global.ts                              #权限
@@ -84,12 +83,13 @@ npm run dev
     ┖--worker.ts                                   #首页动画worker
   |--.babelrc                                     |
   |--.eslintrc.json                               |
-  |--.gitignore                                   |
+  |--.gitignore                                   |--一些配置
   |--.hintrc                                      |
   |--app.vue                                      |
-  |--nuxt.config.ts                               |--一些配置
+  |--error.vue                                    #错误页面
+  |--nuxt.config.ts                               |
   |--package-lock.json                            |
-  |--package.json                                 |
+  |--package.json                                 |--一些配置
   |--profile.code-workspace                       |
   |--README.md                                    |
   ┖--tsconfig.json                                |
