@@ -18,9 +18,11 @@ export default defineNuxtConfig({
     ],
     'dayjs-nuxt'
   ],
+
   css: cssFiles.map(file => `~/assets/css/${file}`),
   alias: {},
   devtools: { enabled: mode === 'development' },
+
   app: {
     head: {
       htmlAttrs: {
@@ -35,7 +37,9 @@ export default defineNuxtConfig({
       ]
     },
   },
+
   plugins: [],
+
   typescript: {
     builder: 'vite',
     typeCheck: true,
@@ -76,6 +80,10 @@ export default defineNuxtConfig({
       "exclude": ["node_modules"],
     }
   },
-  vite: {
-  }
+  
+  nitro: {
+    preset: 'node-server'
+  },
+
+  compatibilityDate: "2024-07-18"
 });

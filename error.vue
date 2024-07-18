@@ -1,36 +1,46 @@
 <script lang="ts" setup>
-const error = useError();
+import type { NuxtError } from '#app'
+
+const props = defineProps({
+  error: Object as () => NuxtError
+})
+
 const isPageNotFound = computed(() => {
-  return (error && error.value) ? error.value.statusCode === 404 : false;
+  return props.error ? props.error.statusCode === 404 : false;
 });
 
 function gohome() {
   navigateTo('/');
 }
 
+function errorLogger(e: any) {
+  console.log(e); 
+}
+
 </script>
 <template>
-  <com-background
-    bg-change-color 
-    bg-style-content="
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
-    "
-  >
-    <div class="error-page flex__center">
-      <div class="error__box" v-if="isPageNotFound">
-        <div class="not-found">404</div>
-        <p class="my1">未找到该页面</p>
-        <div>
-          <com-button @click="gohome">返回首页</com-button>
+  <NuxtErrorBoundary @error="errorLogger">
+    <div class="page--config">
+      <div class="error-page flex__center">
+        <div class="error__box" v-if="isPageNotFound">
+          <div class="not-found">404</div>
+          <p class="my1">未找到该页面</p>
+          <div>
+            <com-button @click="gohome">返回首页</com-button>
+          </div>
         </div>
       </div>
     </div>
-  </com-background>
+  </NuxtErrorBoundary>
 </template>
 <style scoped>
+.page--config {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+}
+
 .error-page {
   flex: 1;
 }
