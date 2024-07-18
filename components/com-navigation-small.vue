@@ -21,12 +21,12 @@ const navList = ref([
     link: projectPagePath,
   },
   {
-    name: '问题记录',
+    name: '记录',
     icon: 'profile-blogs',
     link: recordPagePath,
   },
   {
-    name: '地址',
+    name: '导航',
     icon: 'profile-address',
     link: addressListPath,
   },

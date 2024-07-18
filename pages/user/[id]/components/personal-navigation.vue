@@ -54,7 +54,7 @@ const listMore = ref<Array<LinkType | undefined>>([
     url: routerMap.projectMgtPath
   },
   {
-    name: '博客管理',
+    name: '记录管理',
     url: routerMap.recordMgtPath
   },
   {
@@ -66,7 +66,7 @@ const listMore = ref<Array<LinkType | undefined>>([
     url: routerMap.userMessagePath
   },
   {
-    name: '地址导航管理',
+    name: '导航管理',
     url: routerMap.navigationPath
   }
 ]);

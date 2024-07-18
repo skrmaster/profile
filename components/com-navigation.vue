@@ -37,7 +37,7 @@ const navList: Array<NavItemType> = [
   },
   {
     link: addressListPath,
-    name: '地址导航',
+    name: '快速导航',
     type: 'link'
   },
   {
