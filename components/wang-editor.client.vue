@@ -5,7 +5,7 @@ import { DomEditor } from '@wangeditor/editor';
 import { apiAdd } from '~/api/upload/request';
 import type { AddModel } from '~/api/upload/model';
  
-type InsertFnType = (url: string, alt: string, href: string) => void
+type InsertFnType = (url: string, alt: string, href: string) => void;
 
 export default {
   props: {
@@ -223,7 +223,7 @@ export default {
     },
     valueHtml(newVal) {
       this.$emit('update:modelValue', newVal);
-      const text = this.editorRef.getText();
+      const text = this.editorRef.getHtml();
       this.$emit('getText', text);
     }
   }

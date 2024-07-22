@@ -38,7 +38,9 @@ export default defineNuxtConfig({
     },
   },
 
-  plugins: [],
+  plugins: [
+    '~/plugins/prism.ts' // 引入插件
+  ],
 
   typescript: {
     builder: 'vite',

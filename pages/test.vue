@@ -22,6 +22,31 @@ function drop(e: DragEvent) {
 function dragover(e: DragEvent) {
   e.preventDefault();
 }
+
+const stringStr = `<code class="language-javascript">function fn(a) {
+        "let anything: any;
+anything = 123;
+anything = "hello";
+anything = true;
+anything = { key: "value" };    
+
+function logAnything(value: any) {
+  console.log(value);
+}"</code>`
+const stringRef = ref('')
+function getString() {
+  setTimeout(() => {
+    stringRef.value = stringStr;
+    
+    nextTick(() => {
+      window.Prism?.highlightAll();
+    })
+  }, 1000)
+}
+
+onNuxtReady(() => {
+  getString();
+});
 </script>
 <template>
   <div style="width: 100%;display: flex;flex-flow: column; justify-content: center;align-items: center;">
@@ -32,6 +57,9 @@ function dragover(e: DragEvent) {
       <li id="li4" draggable="true" @drop="drop" @dragstart="dragstart">4</li>
       <li id="li5" draggable="true" @drop="drop" @dragstart="dragstart">5</li>
     </ul>
+    <div class="w-e-text-container">
+        <div v-html="stringRef" class="view__editor" data-slate-editor></div>
+      </div>
   </div>
 </template>
 <style scoped>

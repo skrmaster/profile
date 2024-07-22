@@ -13,6 +13,7 @@ let timer: ReturnType<typeof setTimeout> | null;
 const scrollBarWidth = ref(0);
 
 const editorRef = ref();
+const { $prism } = useNuxtApp();
 const data = reactive<Partial<ListItem>>({
   content: '',
   title: ''
@@ -23,6 +24,9 @@ function init() {
   apiGetInfo(recordId).then(res => {
     Object.assign(data, res.data);
     data.content = $sanitize(res.data.content) ?? '';
+    nextTick(() => {
+      $prism.highlightAll();
+    });
     data.createTime = timeNullFormat(data.createTime);
     data.updateTime = timeNullFormat(data.updateTime);
     status.value = getListLabel(data.category, recordCategory);
@@ -142,6 +146,25 @@ onUnmounted(() => {
 :deep(.background) {
   display: flex;
   flex-direction: column;
+}
+
+:deep(.w-e-text-container [data-slate-editor] pre) {
+  border-radius: 4px;
+  /* color: var(--white-color); */
+}
+
+:deep(.w-e-text-container [data-slate-editor] pre>code) {
+  text-shadow: none;
+  background-color: var(--code-bg-color)!important;
+  border: 0;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+:deep(pre[class*=language-]) {
+  padding: 0;
+  margin: 0;
+  background-color: var(--code-bg-color);
 }
 
 .back__nav {
