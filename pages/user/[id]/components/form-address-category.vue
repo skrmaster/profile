@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import type { AddModel, EditModel } from '~/api/address/model';
-import { apiAdd, apiUpdate } from '~/api/address/request';
-import { apiGetCategoryOptions } from '~/api/address-category/request';
+import type { AddModel, EditModel } from '~/api/address-category/model';
+import { apiAdd, apiUpdate } from '~/api/address-category/request';
 
-const addressNavigationList = ref<LabelValue[]>([]);
+const { addressNavigationList } = options;
 const { $message } = useNuxtApp();
 const formRef = ref();
 
@@ -14,7 +13,7 @@ const visible = ref(false);
 const formRenderType = ref<FormEditAdd>('add');
 const editId = ref();
 const title = computed(() => {
-  return formRenderType.value === 'add' ? '添加导航地址' : '编辑导航地址';
+  return formRenderType.value === 'add' ? '添加导航分类' : '编辑导航分类';
 });
 
 let deleteFormConfigItem: FormConfig | null = null;
@@ -27,60 +26,30 @@ const formConfig = ref<Array<FormConfig>>([
     data: '',
     elementConfig: {
       width: '100%',
-      placeholder: '请输入导航地址名称',
+      placeholder: '请输入导航分类名称',
       clearable: true,
     }
   },
   {
     require: false,
-    field: 'link',
-    type: 'text',
+    field: 'sort',
+    type: 'number',
     rule: '',
     data: '',
     elementConfig: {
       width: '100%',
-      placeholder: '请输入导航地址',
+      placeholder: '请输排序',
       clearable: true,
-    }
-  },
-  {
-    require: true,
-    field: 'category',
-    type: 'select',
-    rule: '',
-    data: '',
-    elementConfig: {
-      width: '100%',
-      placeholder: '导航地址分类',
-      clearable: false,
-      optionList: []
     }
   }
 ]);
-
-function getOptions() {
-  apiGetCategoryOptions().then(res => {
-    addressNavigationList.value = res.data.map(e => {
-      return {
-        value: e.id,
-        label: e.name
-      }
-    });
-    const index = formConfig.value.findIndex(e => e.type === 'select');
-    if (index > -1) {
-      formConfig.value[index].elementConfig.optionList = addressNavigationList.value;
-    }
-  }).catch((e) => {
-    console.log(e);
-  });
-}
 
 function setFormData(data: EditModel) {
   formConfig.value = formConfig.value.map(e => {
     if (Object.hasOwn(data, e.field)) {
       e.data = data[e.field].toString();
       if (e.type === 'select') {
-        e.data = getListValue(e.data, addressNavigationList.value);
+        e.data = getListValue(e.data, addressNavigationList);
       }
     }
     return e;
@@ -100,8 +69,8 @@ function submitData() {
     if (val.vaild) {
       if (formRenderType.value === 'add') {
         const params: AddModel = {
-          link: val.data.link,
-          categoryId: val.data.category
+          name: val.data.name,
+          sort: val.data.sort
         }
         apiAdd(params).then(res => {
           $message.show({
@@ -117,8 +86,7 @@ function submitData() {
         const params: EditModel = {
           id: editId.value,
           name: val.data.name,
-          link: val.data.link,
-          categoryId: val.data.category
+          sort: val.data.sort
         }
         apiUpdate(params).then(res => {
           $message.show({
@@ -153,9 +121,6 @@ function open(formData?: EditModel) {
     formRenderType.value = 'add';
     editId.value = undefined;
     clearFormData();
-    if (deleteItem) {
-      formConfig.value.splice(0, 1);
-    }
   }
 }
 
@@ -163,7 +128,6 @@ function close() {
   visible.value = false;
 }
 
-getOptions();
 
 defineExpose({
   open,

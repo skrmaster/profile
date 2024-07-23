@@ -66,6 +66,10 @@ const listMore = ref<Array<LinkType | undefined>>([
     url: routerMap.userMessagePath
   },
   {
+    name: '导航分类',
+    url: routerMap.navigationCategoryPath
+  },
+  {
     name: '导航管理',
     url: routerMap.navigationPath
   }

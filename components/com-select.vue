@@ -50,7 +50,7 @@ onUpdated(() => {
     
     for (let i = 0; i < children.length; i++) {
       const item = children[i] as HTMLOptionElement;
-      if (item.value === props.modelValue) {
+      if (item.value == props.modelValue) {
         item.selected = true;
       }
     }

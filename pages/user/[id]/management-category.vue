@@ -1,37 +1,23 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/address/model';
+import type { ListType } from '~/api/address-category/model';
 import PersonalCenter from './components/personal-center.vue';
-import Form from './components/form-address.vue';
-import { apiGetCategoryOptions } from '~/api/address-category/request';
-import { apiGetList, apiDelete, apiGetIcons } from '~/api/address/request';
+import { apiGetList, apiDelete } from '~/api/address-category/request';
+import Form from './components/form-address-category.vue';
 
 const { $dayjs, $confirm, $message } = useNuxtApp();
-let addressNavigationList: LabelValue[] = [];
 const formRef = ref();
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
   {
-    name: '名称',
+    name: '分类名称',
     field: 'name',
     width: '180px'
   },
   {
-    name: '链接',
-    width: '250px',
-    field: 'link',
-  },
-  {
-    name: '分类',
-    width: '100px',
-    field: 'category',
-  },
-  {
-    name: '图标icon',
-    width: '150px',
-    field: 'iconUrl',
-    type: 'div',
-    slotName: 'image'
+    name: '排序',
+    width: '200px',
+    field: 'sort'
   },
   {
     name: '创建时间',
@@ -48,7 +34,6 @@ const tableHead = ref<TableHead[]>([
   }
 ]);
 const tableData = ref<ListType>([]);
-const btnLoadingIcon = ref(false);
 const pagination = reactive({
   total: 0,
   page: 1,
@@ -59,29 +44,30 @@ function handleAdd() {
   formRef.value.open();
 }
 
-function handleEdit(item: Record<string, any>) {
-  formRef.value.open(item);
+function handleTableClick(type: TableCell, data: Record<string, any>) {
+  switch (type) {
+    case 'edit':
+      handleEdit(data);
+      break;
+    case 'delete':
+      handleDelete(data);
+      break;
+    case 'cell':
+      break;
+    default:
+      break;
+  }
 }
 
-function getOptions() {
-  apiGetCategoryOptions().then(res => {
-    addressNavigationList = res.data.map(e => {
-      return {
-        value: e.id,
-        label: e.name
-      }
-    });
-    getTableData();
-  }).catch((e) => {
-    console.log(e);
-  });
+function handleEdit(item: Record<string, any>) {
+  formRef.value.open(item);
 }
 
 function handleDelete(item: Record<string, any>) {
   $confirm.confirm({
     message: '请确认，这将会删除该条数据'
   }).then(() => {
-    apiDelete(item.id).then(_ => {
+    apiDelete(item.id).then(() => {
       $message.show({
         type: 'success',
         message: '操作成功'
@@ -103,29 +89,12 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
-      e.category = getListLabel(e.categoryId, addressNavigationList) || '';
       return e;
     });
     loading.value = false;
-  }).catch((e) => {
+  }).catch(() => {
     loading.value = false;
-    console.log(e);
   });
-}
-
-function handleTableClick(type: TableCell, data: Record<string, any>) {
-  switch (type) {
-    case 'edit':
-      handleEdit(data);
-      break;
-    case 'delete':
-      handleDelete(data);
-      break;
-    case 'cell':
-      break;
-    default:
-      break;
-  }
 }
 
 function getTableDataByPagination() {
@@ -133,42 +102,19 @@ function getTableDataByPagination() {
   getTableData();
 }
 
-function handleGetIcons() {
-  btnLoadingIcon.value = true;
-  apiGetIcons().then(res => {
-    btnLoadingIcon.value = false;
-    if (res.succeeded) {
-      $message.show({
-        message: res.data || res.errors,
-        type: res.data ? 'success' : 'warning'
-      });
-      getTableDataByPagination();
-    } else {
-      $message.show({
-        message: res.errors,
-        type: 'error'
-      });
-      btnLoadingIcon.value = false;
-    }
-  }).catch(e => { 
-    btnLoadingIcon.value = false;
-  });
-}
-
-getOptions();
+getTableData();
 </script>
 <template>
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="mb1">
-        <com-button prefix-icon="profile-add" class="mr1" @click="handleAdd">新增导航地址</com-button>
-        <com-button prefix-icon="profile-arrow" :loading="btnLoadingIcon" @click="handleGetIcons">获取icon</com-button>
+        <com-button prefix-icon="profile-add" class="mr1" @click="handleAdd">新增导航分类</com-button>
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" @click="handleTableClick">
           <template #image="{ data }">
-            <div class="table__cell overflow-hidden">
-              <img class="table__image" :src="data.iconUrl" :alt="data.name" />
+            <div class="table__cell">
+              <img class="table__image" :src="data.icon" :alt="data.name" />
             </div>
           </template>
         </com-table>

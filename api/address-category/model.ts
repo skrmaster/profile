@@ -1,8 +1,6 @@
 export type AddModel = {
-  name?: string;
-  iconUrl?: string;
-  categoryId: string;
-  link: string;
+  name: string;
+  sort: number;
 }
 
 export type EditModel = AddModel & {
@@ -15,10 +13,7 @@ export type ListType = Array<EditModel & {
   updateTime?: string;
 }>
 
-export type ListByCategory = {
-  category: {
-    name: string;
-    id: number;
-  }
-  list: ListType;
-}[];
+export type Option = {
+  name: string;
+  id: string;
+}

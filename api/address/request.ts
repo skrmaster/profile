@@ -2,16 +2,16 @@ import type * as Type from "./model";
 import { httpClient } from "../index";
 
 const { 
-  navgationListPath,
-  navgationAddPath,
-  navgationEditPath,
-  navgationDeletePath,
-  navgationListCategoryPath,
-  navationGetIconPath
+  navigationListPath,
+  navigationAddPath,
+  navigationEditPath,
+  navigationDeletePath,
+  navigationListCategoryPath,
+  navigationGetIconPath: navationGetIconPath
 } = apiMap;
 
 export async function apiGetList(params: Omit<Pagination, 'total'>) {
-  const res = await httpClient<ResponsePagination<Type.ListType>>(navgationListPath, {
+  const res = await httpClient<ResponsePagination<Type.ListType>>(navigationListPath, {
     method: 'get',
     params
   });
@@ -26,14 +26,14 @@ export async function apiGetIcons() {
 }
 
 export async function apiGetListByCategory() {
-  const res = await httpClient<Type.ListByCategory>(navgationListCategoryPath, {
+  const res = await httpClient<Type.ListByCategory>(navigationListCategoryPath, {
     method: 'get'
   });
   return res;
 }
 
 export async function apiAdd(params: Type.AddModel) {
-  const res = await httpClient<string>(navgationAddPath, {
+  const res = await httpClient<string>(navigationAddPath, {
     method: 'post',
     body: params
   });
@@ -41,7 +41,7 @@ export async function apiAdd(params: Type.AddModel) {
 }
 
 export async function apiUpdate(params: Type.EditModel) {
-  const updateUrl = navgationEditPath + `/${params.id}`
+  const updateUrl = navigationEditPath + `/${params.id}`
   const res = await httpClient<string>(updateUrl, {
     method: 'put',
     body: params
@@ -50,7 +50,7 @@ export async function apiUpdate(params: Type.EditModel) {
 }
 
 export async function apiDelete(id: number) {
-  const deleteUrl = navgationDeletePath + `/${id}`
+  const deleteUrl = navigationDeletePath + `/${id}`
   const res = await httpClient<string>(deleteUrl, {
     method: 'delete'
   });

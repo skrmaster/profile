@@ -29,6 +29,7 @@ class FormInstance implements Form {
     }
   }
   generateSelect(config: FormConfig): VNode {
+    console.log(config, "config");
     return (
       <com-select
         v-model={ this.data[config.field] }
@@ -37,7 +38,7 @@ class FormInstance implements Form {
       </com-select>
     )
   }
-  generateTextInput(config: FormConfig): VNode {    
+  generateTextInput(config: FormConfig): VNode {
     return (
       <com-form-input
         class="mb1"
@@ -49,7 +50,6 @@ class FormInstance implements Form {
     )
   }
   generateVerificationCode(config: FormConfig): VNode {
-
     return (
       <com-form-verification-code 
         class="mb1"

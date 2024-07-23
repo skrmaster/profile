@@ -38,6 +38,12 @@ const styleList = computed(() => {
   };
 });
 
+watch(visiable, (val: boolean) => {
+  if (!val) {
+    handleReset();
+  }
+});
+
 function openModel() {
   visiable.value = true;
   nextTick(() => {

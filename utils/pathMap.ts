@@ -13,6 +13,7 @@ type KeyOfRouter = 'homePath'
 | 'projectMgtPath' 
 | 'recordMgtPath'
 | 'navigationPath'
+| 'navigationCategoryPath'
 | 'aphorismsPath'
 | 'userMessagePath'
 | 'projectDetailPath'
@@ -32,6 +33,7 @@ export const routerMap: Record<KeyOfRouter, string> = {
   projectMgtPath: '/user/:id/management-project',
   recordMgtPath: '/user/:id/management-record',
   navigationPath: '/user/:id/management-navigation',
+  navigationCategoryPath: '/user/:id/management-category',
   aphorismsPath: '/user/:id/management-aphorisms',
   userMessagePath: '/user/:id/management-message',
   projectDetailPath: '/project-detail',
@@ -73,12 +75,17 @@ type KeyOfApi = 'loginPath'
 | 'recordCollectionListPath'
 | 'recordCountPath'
 | 'recordAnonymousViewPath'
-| 'navationGetIconPath'
-| 'navgationListPath'
-| 'navgationAddPath'
-| 'navgationEditPath'
-| 'navgationDeletePath'
-| 'navgationListCategoryPath'
+| 'navigationGetIconPath'
+| 'navigationListPath'
+| 'navigationAddPath'
+| 'navigationEditPath'
+| 'navigationDeletePath'
+| 'navigationListCategoryPath'
+| 'navigationCategoryAddPath'
+| 'navigationCategoryOptionPath'
+| 'navigationCategoryUpdatePath'
+| 'navigationCategoryDeletePath'
+| 'navigationCategoryListPath'
 | 'aphorismsListPath'
 | 'aphorismsRandomPath'
 | 'aphorismsAddPath'
@@ -122,12 +129,17 @@ export const apiMap: Record<KeyOfApi, string> = {
   recordCountPath: '/record/recordcount',
   recordDeletePath: '/record/delete',
   recordAnonymousViewPath: '/record/recordviewcount',
-  navationGetIconPath: '/navgation/geticonfromwebsite',
-  navgationListPath: '/navgation/getlist',
-  navgationAddPath: '/navgation/add',
-  navgationEditPath: '/navgation/update',
-  navgationDeletePath: '/navgation/delete',
-  navgationListCategoryPath: '/navgation/getallcategorylist',
+  navigationGetIconPath: '/navgation/geticonfromwebsite',
+  navigationListPath: '/navgation/getlist',
+  navigationAddPath: '/navgation/add',
+  navigationEditPath: '/navgation/update',
+  navigationDeletePath: '/navgation/delete',
+  navigationListCategoryPath: '/navgation/getallcategorylist',
+  navigationCategoryAddPath: '/category/add',
+  navigationCategoryOptionPath: '/category/options',
+  navigationCategoryUpdatePath: '/category/update',
+  navigationCategoryDeletePath: '/category/delete',
+  navigationCategoryListPath: '/category/getpaginationlist',
   aphorismsListPath: '/aphorisms/getlist',
   aphorismsRandomPath: '/aphorisms/getrandomaphorisms',
   aphorismsAddPath: '/aphorisms/add',
