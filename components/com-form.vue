@@ -29,7 +29,6 @@ class FormInstance implements Form {
     }
   }
   generateSelect(config: FormConfig): VNode {
-    console.log(config, "config");
     return (
       <com-select
         v-model={ this.data[config.field] }

@@ -65,12 +65,21 @@ function getTableDataByPagination() {
 }
 
 getTableData();
+
+const operateRef = ref<HTMLElement | undefined>();
+const tableHeight = ref<string>('');
+onNuxtReady(() => {
+  const info = operateRef.value?.getBoundingClientRect();
+  if (info) {
+    tableHeight.value = `${window.innerHeight - info.height - 80 - 80 - 40 - 20 - 68 - 16}px`;
+  }
+});
 </script>
 <template>
   <personal-center>
     <div class="main__content flex__column nowrap">
       <div class="flex1" v-loading="loading">
-        <com-table :head="tableHead" :data="tableData">
+        <com-table :head="tableHead" :data="tableData" :height="tableHeight">
           <template #image="{ data }">
             <div class="table__cell">
               <img class="table__image" :src="data.icon" :alt="data.name" />

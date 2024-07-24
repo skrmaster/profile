@@ -14,7 +14,7 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<Prop>(), {
   head: () => [],
   data: () => [],
-  height: '250px'
+  height: '100%',
 });
 
 const tableRef = ref<HTMLElement>();
@@ -31,6 +31,10 @@ const layout: Set<Position> = new Set();
 
 const tabelLen = computed(() => {
   return tableData.value.length;
+});
+
+const tableHeight = computed(() => {
+  return props.height;
 });
 
 watch(tableWidth, () => {
@@ -174,6 +178,9 @@ onMounted(() => {
         </table>
       </div>
       <div class="table__body"
+        :style="{
+          height: tableHeight
+        }"
         :class="{
           'flex1 flex__center': tabelLen === 0
         }"

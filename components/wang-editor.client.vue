@@ -232,11 +232,12 @@ export default {
 <template>
   <div class="flex__column">
     <Toolbar class="wangeditor__toolbar" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
-    <Editor class="wangeditor__editor flex__column" 
-      v-model="valueHtml" 
-      :defaultConfig="editorConfig" 
+    <Editor 
+      class="wangeditor__editor flex__column"
+      v-model="valueHtml"
+      :defaultConfig="editorConfig"
       :mode="mode"
-      @onCreated="handleCreated" 
+      @onCreated="handleCreated"
       @maxLength="handleMaxLength"
     />
   </div>
@@ -244,6 +245,10 @@ export default {
 <style scoped>
 .wangeditor__toolbar {
   border-bottom: 1px solid var(--background-color);
+}
+
+.w-e-full-screen-container {
+  z-index: 1000;
 }
 
 .wangeditor__editor {

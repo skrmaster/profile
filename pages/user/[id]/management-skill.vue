@@ -45,6 +45,9 @@ const pagination = reactive({
 });
 const loading = ref(false);
 
+const operateRef = ref<HTMLElement | undefined>();
+const tableHeight = ref<string>('');
+
 function handleAddSkill() {
   formRef.value.open();
 }
@@ -107,15 +110,27 @@ function getTableDataByPagination() {
 }
 
 getTableData();
+
+onNuxtReady(() => {
+  const info = operateRef.value?.getBoundingClientRect();
+  if (info) {
+    tableHeight.value = `${window.innerHeight - info.height - 80 - 80 - 40 - 20 - 68 - 16}px`;
+  }
+});
 </script>
 <template>
   <personal-center>
     <div class="main__content flex__column nowrap">
-      <div class="mb1">
+      <div class="mb1" ref="operateRef">
         <com-button prefix-icon="profile-add" @click="handleAddSkill">新增技能</com-button>
       </div>
       <div class="flex1" v-loading="loading">
-        <com-table :head="tableHead" :data="tableData" @click="handleTableClick"></com-table>
+        <com-table 
+          :head="tableHead" 
+          :data="tableData" 
+          @click="handleTableClick"
+          :height="tableHeight"
+        ></com-table>
       </div>
       <div>
         <com-pagination
@@ -133,7 +148,6 @@ getTableData();
 </template>
 <style scoped>
 .main__content {
-  flex: 1;
   background: var(--white-color);
   border-radius: 10px;
   padding: 20px 16px;
