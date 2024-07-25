@@ -75,7 +75,7 @@ fetchData();
             v-show="item.list.length > 0"
           >
             <h3 class="address__title mt1">
-              <com-icon :icon="categoryList[index].icon"></com-icon>
+              <com-icon v-if="index < categoryList.length" :icon="categoryList[index].icon"></com-icon>
               {{ item.category.name }}
             </h3>
             <div class="address__gird my1">
@@ -128,6 +128,7 @@ fetchData();
   border-color: var(--primary-border-color);
   box-shadow: var(--box-shadow-small);
   transform: translateY(-5px) scale(1.05);
+  border-width: 2px;
 }
 
 .link__image {
