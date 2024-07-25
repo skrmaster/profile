@@ -79,13 +79,13 @@ export default defineNuxtConfig({
         "src/*.d.ts",
         "src/**/*.d.ts"
       ],
-      "exclude": ["node_modules"],
+      "exclude": ["node_modules", ".nuxt", ".output"],
     }
   },
-  
+
   nitro: {
     preset: 'node-server'
   },
 
-  compatibilityDate: "2024-07-18"
+  compatibilityDate: "2024-07-25"
 });

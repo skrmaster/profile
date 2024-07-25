@@ -291,6 +291,12 @@ table .table-data__tr:not(:last-child) .table__td {
   border-bottom: 1px solid var(--table-tr-border-color);
 }
 
+.table__header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
 .table__cell {
   padding: 5px 8px;
 }
