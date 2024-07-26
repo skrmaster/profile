@@ -3,6 +3,7 @@ export type AddModel = {
   iconUrl?: string;
   categoryId: string;
   link: string;
+  needUpdate: number;
 }
 
 export type EditModel = AddModel & {

@@ -77,7 +77,7 @@ const listMore = ref<Array<LinkType | undefined>>([
 
 watchEffect(() => {
   const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
-  tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
+  tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
 });
 
 auth();

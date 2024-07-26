@@ -88,7 +88,7 @@ fetchData();
               >
                 <div class="flex__row">
                   <div class="link__image flex__center">
-                    <img :src="i.iconUrl" :alt="i.name?.slice(0, 3) || 'icon'" />
+                    <img :src="getImageHref(i.iconUrl)" :alt="i.name?.slice(0, 3) || 'icon'" />
                   </div>
                   <p class="link__title line2__ellipsis"><strong>{{ i.name }}</strong></p>
                 </div>

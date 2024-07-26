@@ -223,7 +223,7 @@ function handlePasswordIcon() {
       :icon="showPasswordType !== 'password' ? 'profile-see' : 'profile-no-see'"
     ></com-icon>
     <com-icon
-      class="clear__icon mr1"
+      class="clear__icon"
       v-if="canShowClearIcon && !props.disabled"
       @click.stop="handlerClear"
       icon="profile-circle-close"
@@ -327,5 +327,9 @@ textarea.form__input-field {
 
 .form__input-box:hover .clear__icon{
   display: block;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 </style>

@@ -99,6 +99,7 @@ function getTableData() {
   }
 
   apiGetList(params).then(res => {
+    loading.value = false;
     Object.assign(pagination ,res.data.pagination);
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
@@ -106,7 +107,6 @@ function getTableData() {
       e.category = getListLabel(e.categoryId, addressNavigationList) || '';
       return e;
     });
-    loading.value = false;
   }).catch((e) => {
     loading.value = false;
     console.log(e);
@@ -145,10 +145,10 @@ function handleGetIcons() {
       getTableDataByPagination();
     } else {
       $message.show({
-        message: res.errors,
+        message: res.data || res.errors,
         type: 'error'
       });
-      btnLoadingIcon.value = false;
+      getTableDataByPagination();
     }
   }).catch(e => { 
     btnLoadingIcon.value = false;
@@ -177,7 +177,7 @@ onNuxtReady(() => {
         <com-table :head="tableHead" :data="tableData" :height="tableHeight" @click="handleTableClick">
           <template #image="{ data }">
             <div class="table__cell overflow-hidden">
-              <img class="table__image" :src="data.iconUrl" :alt="data.name" />
+              <img class="table__image" :src="getImageHref(data.iconUrl)" :alt="data.name" />
             </div>
           </template>
         </com-table>

@@ -50,7 +50,7 @@ export function splicingImageUrl(raw: string): string | undefined {
   return url.toString();
 }
 
-export function getAvatar(item: Upload.FileInfo): string | undefined {
+export function getImageUrl(item: Upload.FileInfo): string | undefined {
   if (!item) {
     return;
   }
@@ -115,4 +115,26 @@ export function isMobile() {
   const isMobileUserAgent = /android|webOS|iPhone|iPad|iPod|blackberry|iemobile|opera mini/i.test(userAgent);
   
   return isMobileUserAgent;
+}
+
+export function getDomainNameFromUrl(url: string): string {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.hostname;
+  } catch (error) {
+    console.log('Invalid URL:', error);
+    return '';
+  }
+}
+
+export function getImageHref(url: string | undefined): string {
+  if (!url) {
+    return '';
+  }
+
+  if (url.includes("http")) {
+    return url;
+  } else {
+    return new URL(url, imagePrefix).toString();
+  }
 }

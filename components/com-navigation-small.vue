@@ -41,7 +41,7 @@ const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
 
 watchEffect(() => {
   const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
-  tempUserInfo.value = { ...currentUserInfo.value, avatar: getAvatar(avatar) };
+  tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
 });
 
 function isCurrentRoute(item: string) {

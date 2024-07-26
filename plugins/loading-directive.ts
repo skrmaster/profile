@@ -10,7 +10,7 @@ type ElementType = HTMLElement & VueExtends;
 const loadingCircleClass = 'loading-spinner';
 const loadingMaskClass = 'loading-mask';
 const minElapsed = 200;
-const minDisplayTime = 50;
+const minDisplayTime = 150;
 
 function createLoading(el: HTMLElement) {
   if (!el.querySelector(`.${loadingCircleClass}`)) {
@@ -50,42 +50,55 @@ export default defineNuxtPlugin(nuxtApp => {
     mounted(el: ElementType, binding) {
       if (binding.value) {
         el._loadingStartTime = Date.now();
+        
+        clearTimeout(el._loadingTimerMounted);
         el._loadingTimerMounted = setTimeout(() => {
-          createLoading(el);
           el._loadingDisplayStartTime = Date.now();
+          createLoading(el);
         }, minElapsed); 
       }
     },
     updated(el: ElementType, binding) {
+      //异步完成时间
       const now = Date.now();
       if (binding.value) {
         if (!el.querySelector(`.${loadingCircleClass}`)) {
           el._loadingStartTime = now;
+          clearTimeout(el._loadingTimerUpdate);
           el._loadingTimerUpdate = setTimeout(() => {
-            createLoading(el);
             el._loadingDisplayStartTime = Date.now();
+            createLoading(el);
           }, minElapsed); 
         }
       } else {
+        //异步时间
         const elapsedTime = now - (el._loadingStartTime || 0);
+
+        //最小异步时间 - 异步时间
         const remainTime = minElapsed - elapsedTime;
-        const displayTime = now - (el._loadingDisplayStartTime || 0);
-        
         if (remainTime > 0) {
+          //不用触发loading动画
           clearTimeout(el._loadingTimerMounted);
           clearTimeout(el._loadingTimerUpdate);
+          removeLoading(el);
+          return;
         }
 
+        //需要触发loading动画
+        //异步完成时间 - 最小loading动画时间
+        const displayTime = now - (el._loadingDisplayStartTime || 0);
         if (displayTime < minDisplayTime) {
+          //展示剩余loading动画时间
           setTimeout(() => {
             removeLoading(el);
           }, minDisplayTime - displayTime);
         } else {
+          //直接展示
           removeLoading(el);
         }
       }
     },
-    unmounted(el) {
+    beforeUnmount(el) {
       clearTimeout(el._loadingTimerMounted);
       clearTimeout(el._loadingTimerUpdate);
     }

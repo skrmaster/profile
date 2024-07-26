@@ -150,7 +150,6 @@ onUnmounted(() => {
 
 :deep(.w-e-text-container [data-slate-editor] pre) {
   border-radius: 4px;
-  /* color: var(--white-color); */
 }
 
 :deep(.w-e-text-container [data-slate-editor] pre>code) {
@@ -159,6 +158,7 @@ onUnmounted(() => {
   border: 0;
   font-weight: 500;
   letter-spacing: 1px;
+  color: var(--white-color);
 }
 
 :deep(pre[class*=language-]) {

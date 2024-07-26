@@ -1,10 +1,13 @@
 type FormConfig = {
   require?: boolean;
   field: string;
-  type: 'select' | 'verification-code' | 'checkbox' | 'text' | 'textarea' | 'password' | 'number';
+  type: 'select' | 'verification-code' | 'checkbox' | 'text' | 'textarea' | 'password' | 'number' | 'switch' | 'radio' | 'upload';
   rule?: RegExp | string;
   data?: any;
   elementConfig: {
+    layout?: 'column' | 'inline';
+    activeLabel?: string;
+    inActiveLabel?: string;
     modelValue?: string;
     placeholder?: string;
     autocomplete?: string;
@@ -20,6 +23,8 @@ type FormConfig = {
     minLength?: number;
     rows?: number;
     optionList?: Array<LabelValue>;
+    fileList?: Array<Upload.FileInfo>;
+    limit?: number;
   }
 }
 
@@ -33,6 +38,8 @@ interface Form {
   generateCheckBox(config: FormConfig): VNode;
   generateRadioBox(config: FormConfig): VNode;
   generateSelect(config: FormConfig): VNode;
+  generateSwitch(config: FormConfig): VNode;
+  generateUploadFile(config: FormConfig): VNode;
   vaildForm(): boolean;
 }
 

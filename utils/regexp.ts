@@ -18,7 +18,7 @@ export function vaildTest(val: string, rule: string | RegExp | undefined): [bool
       }
     }
   } else {
-    result = Boolean(val.toString());
+    result = val != '0' || Boolean(val);
   }
   
   if (!val) {

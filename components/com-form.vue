@@ -7,11 +7,16 @@ const model = computed(() => {
   return props.model;
 });
 const emit = defineEmits<{
-  'sendMailCode': [val: Record<string, string>]
+  'sendMailCode': [val: Record<string, string>];
+  'uploadFile': [val: Array<Upload.FileInfo | File>];
 }>();
 
 function handleSendMail(val: Record<string, string>) {
   emit('sendMailCode', val);
+}
+
+function handleFileUpload(list: Array<Upload.FileInfo | File>) {
+  emit('uploadFile', list);
 }
 
 class FormInstance implements Form {
@@ -29,13 +34,28 @@ class FormInstance implements Form {
     }
   }
   generateSelect(config: FormConfig): VNode {
-    return (
-      <com-select
-        v-model={ this.data[config.field] }
-        { ...config.elementConfig }
-      >
-      </com-select>
-    )
+
+    if (config.elementConfig?.layout && config.elementConfig.layout == 'column') {
+      return (
+        <div class="mb1 w100">
+          <com-select
+            v-model={ this.data[config.field] }
+            { ...config.elementConfig }
+          >
+          </com-select>
+        </div>
+      )
+    } else {
+      return (
+        <>
+          <com-select
+            v-model={ this.data[config.field] }
+            { ...config.elementConfig }
+          >
+          </com-select>
+        </>
+      )
+    }
   }
   generateTextInput(config: FormConfig): VNode {
     return (
@@ -59,11 +79,44 @@ class FormInstance implements Form {
       </com-form-verification-code>
     )
   }
+  generateSwitch(config: FormConfig): VNode{
+    if (config.elementConfig?.layout && config.elementConfig.layout == 'column') {
+      return (
+        <div class="mb1 w100">
+          <com-switch
+            v-model={ this.data[config.field] }
+            { ...config.elementConfig }
+          ></com-switch>
+        </div>
+      )
+    } else {
+      return (
+        <>
+          <com-switch
+            class="mb1"
+            v-model={ this.data[config.field] }
+            { ...config.elementConfig }
+          ></com-switch>
+        </>
+      )
+    }
+  }
   generateNumberInput(config: FormConfig): VNode {
     return (<></>)
   }
   generateRateInput(config: FormConfig): VNode {
     return (<></>)
+  }
+  generateUploadFile(config: FormConfig): VNode {
+    return (
+      <com-upload 
+        label={ config.elementConfig.label }
+        data-list={ config.elementConfig.fileList }
+        limit={ config.elementConfig.limit }
+        onFileMonuted={ handleFileUpload }
+        class="mb1"
+      ></com-upload>
+    )
   }
   generateCheckBox(config: FormConfig): VNode {
     return (
@@ -88,7 +141,11 @@ class FormInstance implements Form {
               return this.generateCheckBox(e);
             } else if (e.type === 'select') {
               return this.generateSelect(e);
-            } else {
+            } else if (e.type === 'switch') {
+              return this.generateSwitch(e);
+            } else if (e.type === 'upload') {
+              return this.generateUploadFile(e);
+            } {
               return this.generateTextInput(e);
             }
           }) 
