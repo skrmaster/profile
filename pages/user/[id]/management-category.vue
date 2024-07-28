@@ -16,8 +16,15 @@ const tableHead = ref<TableHead[]>([
   },
   {
     name: '排序',
-    width: '200px',
+    width: '50px',
     field: 'sort'
+  },
+  {
+    name: '图标',
+    width: '60px',
+    field: 'iconClass',
+    type: 'div',
+    slotName: 'icon'
   },
   {
     name: '创建时间',
@@ -121,10 +128,8 @@ onNuxtReady(() => {
       </div>
       <div class="flex1" v-loading="loading">
         <com-table :head="tableHead" :data="tableData" :height="tableHeight" @click="handleTableClick">
-          <template #image="{ data }">
-            <div class="table__cell">
-              <img class="table__image" :src="data.icon" :alt="data.name" />
-            </div>
+          <template #icon="{ data }">
+            <com-icon :icon="`profile-${data.iconClass}`"></com-icon>
           </template>
         </com-table>
       </div>

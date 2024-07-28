@@ -1,6 +1,7 @@
 export type AddModel = {
   name: string;
   sort: number;
+  iconClass: string;
 }
 
 export type EditModel = AddModel & {

@@ -20,6 +20,7 @@ export type ListByCategory = {
   category: {
     name: string;
     id: number;
+    iconClass: string;
   }
   list: ListType;
 }[];

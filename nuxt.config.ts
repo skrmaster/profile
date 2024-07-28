@@ -32,7 +32,7 @@ export default defineNuxtConfig({
       script: [
         {
           type: 'module',
-          src: '/js/iconfont.js'
+          src: '/iconfont/iconfont.js'
         }
       ]
     },

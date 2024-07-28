@@ -41,6 +41,17 @@ const formConfig = ref<Array<FormConfig>>([
       placeholder: '请输排序',
       clearable: true,
     }
+  },
+  {
+    require: false,
+    field: 'iconClass',
+    type: 'icon-choose',
+    rule: '',
+    data: '',
+    elementConfig: {
+      width: '100%',
+      placeholder: '请选择图标'
+    }
   }
 ]);
 
@@ -70,7 +81,8 @@ function submitData() {
       if (formRenderType.value === 'add') {
         const params: AddModel = {
           name: val.data.name,
-          sort: val.data.sort
+          sort: val.data.sort,
+          iconClass: val.data.iconClass
         }
         apiAdd(params).then(res => {
           $message.show({
@@ -86,7 +98,8 @@ function submitData() {
         const params: EditModel = {
           id: editId.value,
           name: val.data.name,
-          sort: val.data.sort
+          sort: val.data.sort,
+          iconClass: val.data.iconClass
         }
         apiUpdate(params).then(res => {
           $message.show({
@@ -127,7 +140,6 @@ function open(formData?: EditModel) {
 function close() {
   visible.value = false;
 }
-
 
 defineExpose({
   open,

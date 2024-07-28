@@ -185,6 +185,7 @@ function handlePasswordIcon() {
         textAlign: props.textAlign,
         textIndent: props.textAlign === 'start' ? '0.5em' : 'auto'
       }"
+      :readonly="props.readonly"
       :placeholder="props.placeholder"
       :max="props.maxValue"
       :min="props.minValue"
@@ -203,6 +204,7 @@ function handlePasswordIcon() {
         :class="{
           'no-label': !props.isLabel
         }"
+        :readonly="props.readonly"
         :placeholder="props.placeholder"
         :disabled="props.disabled"
         v-model="currentInputValue"

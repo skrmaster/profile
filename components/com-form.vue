@@ -130,6 +130,14 @@ class FormInstance implements Form {
   generateRadioBox(config: FormConfig): VNode {
     return (<></>)
   }
+  generateIconList(config: FormConfig): VNode {
+    return (<>
+      <com-icon-list 
+        v-model={ this.data[config.field] }
+        { ...config.elementConfig }
+      ></com-icon-list>
+    </>)
+  }
   renderForm(): VNode {
     return (
       <form>
@@ -145,7 +153,10 @@ class FormInstance implements Form {
               return this.generateSwitch(e);
             } else if (e.type === 'upload') {
               return this.generateUploadFile(e);
-            } {
+            } else if (e.type === 'icon-choose') {
+              return this.generateIconList(e);
+            }
+            else {
               return this.generateTextInput(e);
             }
           }) 

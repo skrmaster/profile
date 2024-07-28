@@ -1,7 +1,7 @@
 type FormConfig = {
   require?: boolean;
   field: string;
-  type: 'select' | 'verification-code' | 'checkbox' | 'text' | 'textarea' | 'password' | 'number' | 'switch' | 'radio' | 'upload';
+  type: 'select' | 'verification-code' | 'checkbox' | 'text' | 'textarea' | 'password' | 'number' | 'switch' | 'radio' | 'upload' | 'icon-choose';
   rule?: RegExp | string;
   data?: any;
   elementConfig: {
@@ -40,6 +40,7 @@ interface Form {
   generateSelect(config: FormConfig): VNode;
   generateSwitch(config: FormConfig): VNode;
   generateUploadFile(config: FormConfig): VNode;
+  generateIconList(config: FormConfig): VNode;
   vaildForm(): boolean;
 }
 

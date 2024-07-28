@@ -2,29 +2,6 @@
 import type { ListByCategory } from '~/api/address/model';
 import { apiGetListByCategory } from '~/api/address/request';
 
-const categoryList = [
-  {
-    name: '动漫',
-    icon: 'profile-dongman1'
-  }, 
-  {
-    name: '漫画',
-    icon: 'profile-Icon_manhuaB'
-  },
-  {
-    name: '影视',
-    icon: 'profile-dongman'
-  },
-  {
-    name: '小说',
-    icon: 'profile-xiaoshuo'
-  },
-  {
-    name: '游戏',
-    icon: 'profile-youxi'
-  }
-];
-
 useHead({
   title: '地址导航-供个人使用的一个网站地址导航页面',
   meta: [
@@ -75,7 +52,7 @@ fetchData();
             v-show="item.list.length > 0"
           >
             <h3 class="address__title mt1">
-              <com-icon v-if="index < categoryList.length" :icon="categoryList[index].icon"></com-icon>
+              <com-icon v-show="item.category.iconClass" :icon="`profile-${item.category.iconClass}`"></com-icon>
               {{ item.category.name }}
             </h3>
             <div class="address__gird my1">
