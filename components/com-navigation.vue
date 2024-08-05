@@ -5,6 +5,7 @@ import { apiUserLogout } from '~/api/user/request';
 type NavItemType = {
   link?: string;
   name?: string;
+  query?: Record<string, string | number>,
   type: 'link' | 'button' | 'theme';
   button?: Array<NavItemType>;
   flex?: number;
@@ -26,12 +27,18 @@ const navList: Array<NavItemType> = [
     type: 'link'
   },
   {
-    link: projectPagePath,
+    link: '/project-list/1',
     name: '项目列表',
-    type: 'link'
+    type: 'link',
+    query: {
+      pageSize: 20
+    },
   },
   {
-    link: recordPagePath,
+    link: '/record-list/1',
+    query: {
+      pageSize: 10
+    },
     name: '问题记录',
     type: 'link'
   },
@@ -91,9 +98,10 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   return argCopy;
 }
 
-async function handleLink(url?: string) {
+async function handleLink(url?: string, query?: Record<string, string | number>) {
   await navigateTo({
-    path: url
+    path: url,
+    query
   });
 }
 
@@ -148,7 +156,7 @@ function personalCenter() {
           <div 
             v-if="item.type === 'link'"
             class="item__box c-p flex__center"
-            @click="handleLink(item.link)"
+            @click="handleLink(item.link, item.query)"
             :class="{
               line: getLine(navList[index+1], item)
             }"

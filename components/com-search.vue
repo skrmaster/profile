@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
         v-model="search"
         :is-label="false"
         :width="1000"
-        clearable
+        :clearable="false"
         @keydown.enter="handleSearch"
       >
         <template #prepend>

@@ -19,26 +19,28 @@ const data = reactive<Partial<ListItem>>({
   title: ''
 });
 const status = ref();
+const { data: recordData } = await useAsyncData(`record-detail-${recordId}`, () => apiGetInfo(recordId));
 
 function init() {
-  apiGetInfo(recordId).then(res => {
-    Object.assign(data, res.data);
-    data.content = $sanitize(res.data.content) ?? '';
-    nextTick(() => {
-      $prism.highlightAll();
-    });
-    data.createTime = timeNullFormat(data.createTime);
-    data.updateTime = timeNullFormat(data.updateTime);
-    status.value = getListLabel(data.category, recordCategory);
-    useHead({ title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`, meta: [
-      {
-        name: 'description',
-        content: data.description?.slice(0, 150)
-      }
-    ] });
-  }).catch(e => {
+  const res = recordData.value;
+  if (!res) {
+    return;
+  }
 
+  Object.assign(data, res.data);
+  data.content = $sanitize(res.data.content) ?? '';
+  nextTick(() => {
+    $prism.highlightAll();
   });
+  data.createTime = timeNullFormat(data.createTime);
+  data.updateTime = timeNullFormat(data.updateTime);
+  status.value = getListLabel(data.category, recordCategory);
+  useHead({ title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`, meta: [
+    {
+      name: 'description',
+      content: data.description?.slice(0, 150)
+    }
+  ] });
 }
 
 function goBack() {

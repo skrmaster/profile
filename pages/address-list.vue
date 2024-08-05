@@ -2,37 +2,33 @@
 import type { ListByCategory } from '~/api/address/model';
 import { apiGetListByCategory } from '~/api/address/request';
 
-useHead({
-  title: '地址导航-供个人使用的一个网站地址导航页面',
-  meta: [
-    {
-      name: "description",
-      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
-    },
-    {
-      name: "description",
-      content: "供个人使用的一个网站地址导航页面"
-    }
-  ]
+useSeoMeta({
+  title: `快速导航-供个人使用的一个网站地址导航页面`,
+  description: `快速导航,${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站，供个人使用的一个网站地址导航页面`,
+  keywords: 'skrmaster,快速导航,导航,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
 });
 
 const { $dayjs } = useNuxtApp();
 const data = ref<ListByCategory>([]);
 
-function fetchData() {
-  
-  apiGetListByCategory()
-  .then(res => {
-    data.value = res.data.map((e) => {
-      e.list = e.list.map(item => {
-        item.createTime = $dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
-        item.updateTime = $dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
-        return item;
-      })
+const { data: listData } = await useAsyncData('address-list-data', () => apiGetListByCategory());
 
-      return e;
-    });
-  }).catch(() => {});
+function fetchData() {
+  const res = listData.value;
+
+  if (!res) {
+    return;
+  }
+  
+  data.value = res.data.map((e) => {
+    e.list = e.list.map(item => {
+      item.createTime = $dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
+      item.updateTime = $dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
+      return item;
+    })
+      
+    return e;
+  });
 }
 
 fetchData();

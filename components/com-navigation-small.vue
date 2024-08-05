@@ -18,12 +18,18 @@ const navList = ref([
   {
     name: '项目',
     icon: 'profile-projects',
-    link: projectPagePath,
+    link: '/project-list/1',
+    query: {
+      pageSize: 20
+    },
   },
   {
     name: '记录',
     icon: 'profile-blogs',
-    link: recordPagePath,
+    link: '/record-list/1',
+    query: {
+      pageSize: 10
+    },
   },
   {
     name: '导航',
@@ -49,11 +55,12 @@ function isCurrentRoute(item: string) {
   return item === fullPath;
 }
 
-function handleNav(index: number) {
+function handleNav(index: number, query?: Record<string, any>) {
   currentIndex.value = index;
 
   navigateTo({
-    path: navList.value[index].link
+    path: navList.value[index].link,
+    query
   });
 }
 
@@ -87,7 +94,7 @@ function handleAvatarJump() {
           :class="{
             'active': isCurrentRoute(item.link)
           }"
-          @click="handleNav(index)"
+          @click="handleNav(index, item.query)"
         >
           <com-icon class="nav__icon" :icon="item.icon"></com-icon>
           <span v-show="isCurrentRoute(item.link)" class="fs18">{{ item.name }}</span>

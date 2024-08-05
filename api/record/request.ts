@@ -33,7 +33,7 @@ export async function apiGetRankList(length: number) {
   return res;
 }
 
-export async function apiQueryList(params: Type.QueryParam) {
+export async function apiQueryDataList(params: Type.QueryParam) {
   const res = await httpClient<ResponsePagination<Type.List>>(recordQueryListPath, {
     method: 'get',
     params

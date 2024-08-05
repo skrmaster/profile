@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import type { UserModel, UpdateInfo } from '~/api/user/model';
+import { apiSkillGetList } from '~/api/skill/request';
 
 type Prop = {
 	width?: number;
-  skillName: Skill.SkillName[];
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -24,31 +24,21 @@ const proficiencyMap: Record<number, string> = {
   70: '18',
 }
 
+const params: Omit<Pagination, 'total'> = {
+  page: 1,
+  pageSize: 15
+}
+const { data: skillsData } = await useAsyncData('skills', () => apiSkillGetList(params));
+
 const userInfo = useState<UserModel | undefined>("userInfo");
 const isAuth = computed(() => userInfo.value?.permission?.includes('1') || false);
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skillsName = computed(() => props.skillName);
+const skillsName = computed(() => skillsData.value?.data.list || []);
 const skills = ref<Array<Skill.Skill>>([]);
 let elementResize: null | ResizeObserver = null;
 let functionId: ReturnType<typeof setTimeout>;
-let once = false;
-
-watch(() => props.skillName, (val) => {
-  if (!once && skillBox.value) {
-    elementResize = resize(skillBox.value, (wh) => {
-      minWidth = skillCircle.value!.offsetLeft;
-      minHeight = skillCircle.value!.offsetTop;
-      maxWidth = minWidth + 250;
-      maxHeight = minHeight + 250;
-          
-      heightGap = skillBox.value!.clientHeight / 5;
-      debounceMoutedskills();
-    });
-  }
-})
-  
 let widthGap = 0;
 let heightGap = 0;
 let minWidth = 0;
@@ -98,8 +88,7 @@ function handleAddSkill() {
 
 const debounceMoutedskills = debounce(mountedSkills, 500);
 function mountedSkills() {
-  once = true;
-  skills.value = skillsName.value.map((e, i: number) => {
+  skills.value = skillsName.value?.map((e, i: number) => {
     let xCount = 0;
     let yCount = 0;
 
@@ -139,7 +128,7 @@ function mountedSkills() {
       class: `skills-animate-${Math.floor(Math.random() * 3) + 1}`,
       originClass: `skills-animate-${Math.floor(Math.random() * 3) + 1}`,
     }
-  });
+  }) || [];
 
   nextTick(() => {
     const gap = 30;
@@ -190,7 +179,18 @@ function mountedSkills() {
 }
 
 onMounted(() => {
-  once = false;
+  if (!skillBox.value) {
+    return;
+  }
+  elementResize = resize(skillBox.value, (wh) => {
+    minWidth = skillCircle.value!.offsetLeft;
+    minHeight = skillCircle.value!.offsetTop;
+    maxWidth = minWidth + 250;
+    maxHeight = minHeight + 250;
+    
+    heightGap = skillBox.value!.clientHeight / 5;
+    debounceMoutedskills();
+  });
 });
 
 onBeforeUnmount(() => {

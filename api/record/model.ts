@@ -30,7 +30,7 @@ export type ListItem = EditModel & {
 }
 
 export type QueryParam = Omit<Pagination, 'total'> & {
-  title: string;
+  title?: string;
 }
 
 export type List = Array<ListItem>;

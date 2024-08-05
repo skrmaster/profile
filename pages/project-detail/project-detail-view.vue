@@ -29,61 +29,66 @@ const endTime = ref('');
 const content = ref('');
 const playLink = ref('');
 
-init();
+const { data: detailData } = await useAsyncData(`project-detail-${props.projectId}`, () => apiGetInfo(props.projectId));
+
 function init() {
-  apiGetInfo(props.projectId)
-  .then(res => {
-    title.value = res.data.name;
-    content.value = res.data.summary?.slice(0, 100) || '';
-    playLink.value = res.data.playLink as string;
+  const res = detailData.value;
+  if (!res) {
+    return;
+  }
 
-    detailList.value = ['summary', 'description', 'department'].map((e, i) => {
-      const item = {
-        label: ['概述', '介绍', '负责部分'][i],
-        content: res.data[e]
+  title.value = res.data.name;
+  content.value = res.data.summary?.slice(0, 100) || '';
+  playLink.value = res.data.playLink as string;
+
+  detailList.value = ['summary', 'description', 'department'].map((e, i) => {
+    const item = {
+      label: ['概述', '介绍', '负责部分'][i],
+      content: res.data[e]
+    }
+    return item;
+  });
+
+  const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
+      
+  list.value = stackIds?.map(e => {
+    return {
+      name: e,
+      icon: '',
+      officalUrl: '',
+      isChoose: false
+    }
+  });
+
+  const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
+  imageList.value = imageIds.map((e, i) => {
+    return {
+      id: e.id,
+      image: splicingImageUrl(e.fullPath) || ""
+    }
+  });
+
+  startTime.value = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
+  endTime.value = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
+
+  useHead({
+    title,
+    meta: [
+      {
+        name: 'description',
+        content: content.value
       }
-      return item;
-    });
-
-    const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
-    
-    list.value = stackIds?.map(e => {
-      return {
-        name: e,
-        icon: '',
-        officalUrl: '',
-        isChoose: false
-      }
-    });
-
-    const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
-    imageList.value = imageIds.map((e, i) => {
-      return {
-        id: e.id,
-        image: splicingImageUrl(e.fullPath) || ""
-      }
-    });
-
-    startTime.value = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
-    endTime.value = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
-
-    useHead({
-      title,
-      meta: [
-        {
-          name: 'description',
-          content: content.value
-        }
-      ]
-    });
-  }).catch((e) => {
-    console.log(e);
+    ]
   });
 }
 
 function goBack() {
   router.back();
 }
+
+onNuxtReady(() => {
+  init();
+});
 </script>
 <template>
   <com-background 

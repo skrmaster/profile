@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { apiSkillGetList } from '~/api/skill/request';
 
-import walkingGif from 'assets/images/walking.gif';
-import siting from 'assets/images/siting.png';
 import roadPath from 'assets/json/road.json';
 import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
@@ -18,14 +16,10 @@ type Park = {
   horizon: number;
 }
 
-useHead({
-  title: "首页-skrmaster.fun一个记录个人技术成长的网站",
-  meta: [
-    {
-      name: "description",
-      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
-    }
-  ]
+useSeoMeta({
+  title: `首页-${import.meta.env.VITE_PROJECT_DOMAIN}一个记录个人技术成长的网站`,
+  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`,
+  keywords: 'skrmaster,首页,个人首页,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
 });
 
 const roadData = roadPath.data;
@@ -113,13 +107,6 @@ const bench = {
   smallHeight: 239,
 }
 
-const light = {
-  width: 183,
-  height: 845,
-  smallWidth: 92,
-  smallHeight: 408,
-}
-
 const grass = {
   count: 0,
   width: 564,
@@ -127,9 +114,7 @@ const grass = {
   gap: 110,
 }
 
-let offscreenCtx: CanvasRenderingContext2D | null;
 let tmpCanvas: HTMLCanvasElement | null;
-
 let man = {
   x: 0,
   y: 0,
@@ -152,7 +137,7 @@ let walkingImage = reactive({
   x: -250,
   y: 0,
   time: 0,
-  data: walkingGif,
+  data: '',
   sitingTime: 2000,
   walkToSitingWaitTime: 100,
   sitingToWalkToWaitTime: 100,
@@ -182,26 +167,6 @@ let scrollBarWidth: number;
 let img: HTMLImageElement;
 let lightImg: HTMLImageElement;
 
-const skillsName = ref<Skill.SkillName[]>([]);
-function fetchSkillsData() {
-  const params: Omit<Pagination, 'total'> = {
-    page: 1,
-    pageSize: 15
-  }
-
-  apiSkillGetList(params).then(res => {
-    skillsName.value = res.data.list.map(e => {
-      return {
-        name: e.name,
-        proficiency: e.proficiency,
-        id: e.id
-      }
-    });
-  }).catch(() => {
-    skillsName.value = [];
-  });
-}
-
 function clearAnimate() {
   for (let item in timer) {
     clearTimeout(timer[item]);
@@ -212,59 +177,6 @@ function clearAnimate() {
       window.cancelAnimationFrame(requestTimer[item] as number);
     }
   }
-}
-
-function drawImageWalking() {
-  if (walkingImage.time % 10 === 0) {
-    startAnimate.value = true;
-    if ((walkingImage.time / 10) * 5  > (walkingImage.walkWidth / 2 + 250 / 2)) {
-      if (walkingImage.walkToSitingWaitTime > 0) {
-        if (walkingImage.walkToSitingWaitTime % 10 === 0) {
-          walkingImage.y += ((walkingImage.walkToSitingWaitTime / 10 - 10) * 2);
-        }
-        walkingImage.walkToSitingWaitTime--;
-        window.requestAnimationFrame(drawImageWalking);
-        return;
-      } else if (walkingImage.walkToSitingWaitTime === 0 && walkingImage.sitingTime > 0) {
-        walkingImage.data = siting;
-        walkingImage.sitingTime--;
-        window.requestAnimationFrame(drawImageWalking);
-        return;
-      } else if (walkingImage.walkToSitingWaitTime === 0 && walkingImage.sitingTime === 0 && walkingImage.sitingToWalkToWaitTime > 0) {
-        walkingImage.data = walkingGif;
-        if (walkingImage.sitingToWalkToWaitTime % 10 === 0) {
-          walkingImage.y -= ((walkingImage.sitingToWalkToWaitTime / 10 - 10) * 2);
-        }
-        walkingImage.sitingToWalkToWaitTime--;
-        window.requestAnimationFrame(drawImageWalking);
-        return;
-      } else {
-        walkingImage.x += 5;
-
-        if (walkingImage.x > man.walkWidth + 250) {
-          walkingImage.x = -250;
-          walkingImage.time = 0;
-          walkingImage.sitingTime = 2000;
-          walkingImage.walkToSitingWaitTime = 100;
-          walkingImage.sitingToWalkToWaitTime = 100;
-          startAnimate.value = false;
-          setTimeout(() => {
-            window.requestAnimationFrame(drawImageWalking);
-          }, 5000);
-          return;
-        }
-
-        walkingImage.time++;
-        window.requestAnimationFrame(drawImageWalking);
-        return;
-      }
-    } else {
-      walkingImage.x += 5;
-    }
-  }
-
-  walkingImage.time++;
-  window.requestAnimationFrame(drawImageWalking);
 }
 
 async function initCanvas() {
@@ -293,7 +205,7 @@ async function initCanvas() {
   }
 
   walkingImage.x = -250;
-  walkingImage.data = walkingGif;
+  walkingImage.data = '';
   walkingImage.time = 0;
   walkingImage.sitingTime = 2000;
   walkingImage.walkToSitingWaitTime = 100;
@@ -301,7 +213,6 @@ async function initCanvas() {
   startAnimate.value = false;
 
   man.timeControl = 0;
-  drawIndex = 0;
   man.sitingTime = 100;
   man.walkToSitingWaitTime = 10;
   man.sitingToWalkToWaitTime = 10;
@@ -315,17 +226,6 @@ async function initCanvas() {
   if (!canvas) {
     return;
   }
-  
-  // offscreenCanvas = document.createElement('canvas');
-  // offscreenCtx = offscreenCanvas.getContext('2d');
-  // offscreenCanvas.width = parkCanvas.width;
-  // offscreenCanvas.height = parkCanvas.height;
-
-
-  // offscreenCanvas = document.createElement('canvas');
-  // offscreenCtx = offscreenCanvas.getContext('2d');
-  // offscreenCanvas.width = parkCanvas.width;
-  // offscreenCanvas.height = parkCanvas.height;
 
   if (windowWidth.value <= 992) {
     let reallyWidth = windowWidth.value;
@@ -362,15 +262,6 @@ async function initCanvas() {
   parkCanvas.horizon = (canvas.height * parkScale.value) / 2;
 
   parkCanvas.ctx?.clearRect(0, 0, 5000, 5000);
-  // parkCanvas.ctx?.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-  //   parkCanvas.height / 2 - bench.smallHeight / 10, 
-  //   bench.smallWidth, bench.smallHeight);
-    
-  // parkCanvas.ctx?.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-  //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
-  //   light.smallWidth, light.smallHeight);
-
-  // requestTimer.animateTimerTop = window.requestAnimationFrame(draw);
   worker.onmessage = (event: MessageEvent) => {
     const imageBitmap = event.data as ImageBitmap;
     parkCanvas.ctx?.clearRect(0, 0, 5000, 5000);
@@ -379,27 +270,8 @@ async function initCanvas() {
     
   tmpCanvas = document.createElement('canvas');
   const offscreenCanvas = tmpCanvas.transferControlToOffscreen();
-  // offscreenCtx = offscreenCanvas.getContext('2d');
-  // offscreenCanvas.width = parkCanvas.width;
-  // offscreenCanvas.height = parkCanvas.height;
-
-
-  // const imgCanvas = document.createElement('canvas');
-  // imgCanvas.width = img.width;
-  // imgCanvas.height = img.height;
-  // const imgCanvasCtx = imgCanvas.getContext('2d')!;
-  // imgCanvasCtx.drawImage(img, 0, 0);
-  // const imgData = imgCanvasCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
   const imgData = await createImageBitmap(img, 0, 0, img.width, img.height);
-
-  // const lightImgCanvas = document.createElement('canvas');
-  // lightImgCanvas.width = lightImg.width;
-  // lightImgCanvas.height = lightImg.height;
-  // const lightImgCanvasCtx = lightImgCanvas.getContext('2d')!;
-  // lightImgCanvasCtx.drawImage(lightImg, 0, 0);
-  // const lightImgData = imgCanvasCtx.getImageData(0, 0, lightImgCanvas.width, lightImgCanvas.height);
   const lightImgData = await createImageBitmap(lightImg, 0, 0, lightImg.width, lightImg.height);
-
   const parkCloneCanvas = {
     ...parkCanvas,
     ctx: offscreenCanvas
@@ -419,253 +291,6 @@ async function initCanvas() {
     lightImgData,
     themeType
   }, [parkCloneCanvas.ctx]);
-}
-
-function draw() {
-  let ctx: CanvasRenderingContext2D ;
-  if (parkCanvas.ctx) {
-    ctx = parkCanvas.ctx
-  } else {
-    draw();
-    return;
-  }
-
-  //循环动画第一帧
-  if (man.stepX * (man.timeControl / 100 - 2) > man.walkWidth + man.stepX * 3) {
-    man.timeControl = 0;
-    drawIndex = 0;
-    man.sitingTime = 100;
-    man.walkToSitingWaitTime = 10;
-    man.sitingToWalkToWaitTime = 10;
-    timer.lastFrameTimer = setTimeout(() => {
-      requestTimer.animateTimerTop6 = window.requestAnimationFrame(draw);
-    }, 5000);
-    return;
-  }
-
-  //动画
-  if (man.timeControl % 10 === 0) {
-    if (isNull(parkCanvas.ctx)) {
-      return; 
-    }
-    // ctx.clearRect(0, 0, 5000, 5000);
-    // ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-    //   parkCanvas.height / 2 - bench.smallHeight / 10, 
-    //   bench.smallWidth, bench.smallHeight);
-    
-    // ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-    //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
-    //   light.smallWidth, light.smallHeight);
-    
-    //从屏幕外进入
-    if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX && man.sitingTime > 0) {
-      if (man.sitingToWalkToWaitTime > 0 && man.sitingTime === 1) {
-        //离开凳子
-        man.y -= ((man.sitingToWalkToWaitTime - 10) * 2);
-        drawWalking(
-          ctx, 
-          0, 
-          man.y, 
-          (man.stepX) * (man.timeControl / 50 - 2)
-        );
-        drawLight(ctx);
-        drawRoad(ctx);
-        requestTimer.animateTimerTop2 = window.requestAnimationFrame(draw);
-        man.sitingToWalkToWaitTime--;
-        return
-      } else {
-        if (man.sitingTime > 1) {
-          drawSitingMan(ctx, parkCanvas.width / 2 - bench.smallWidth / 2 + 180, (parkCanvas.height - man.height - 180 * 2));
-        } else {
-          drawWalking(
-          ctx, 
-          0, 
-          man.y, 
-          (man.stepX) * (man.timeControl / 50 - 2)
-        );
-        }
-        drawLight(ctx);
-        drawRoad(ctx);
-        man.sitingTime--;
-        requestTimer.animateTimerTop3 = window.requestAnimationFrame(draw);
-        return;
-      }
-    } else {
-      if (man.stepX * (man.timeControl / 50 - 2) >= man.walkWidth / 2 - man.stepX * 2 && man.walkToSitingWaitTime > 0) {
-        //移向凳子
-        man.y += ((man.walkToSitingWaitTime - 10) * 2);
-        drawWalking(
-          ctx, 
-          0, 
-          man.y, 
-          (man.stepX) * (man.timeControl / 50 - 2)
-        );
-        drawLight(ctx);
-        drawRoad(ctx);
-        requestTimer.animateTimerTop4 = window.requestAnimationFrame(draw);
-        man.walkToSitingWaitTime--;
-        return
-      } else {
-        drawWalking(
-          ctx, 
-          0, 
-          man.y, 
-          (man.stepX) * (man.timeControl / 50 - 2)
-        );
-      }
-    }
-  } 
-  else {
-    requestTimer.animateTimerTop5 = window.requestAnimationFrame(draw);
-    man.timeControl++;
-    return;
-  }
-  
-  man.timeControl++;
-
-  // ctx.clearRect(0, 0, 5000, 5000);
-  // ctx.drawImage(img, parkCanvas.width / 2 - bench.smallWidth / 2, 
-  //   parkCanvas.height / 2 - bench.smallHeight / 10, 
-  //   bench.smallWidth, bench.smallHeight);
-      
-  // ctx.drawImage(lightImg, parkCanvas.width / 2 + 3 * light.smallWidth, 
-  //   parkCanvas.height / 2 - light.smallHeight / 1.5, 
-  //   light.smallWidth, light.smallHeight);
-
-  drawLight(ctx);
-  drawRoad(ctx);
-  // requestTimer.animateTimerTop1 = window.requestAnimationFrame(draw);
-}
-
-let drawIndex = 0;
-function drawWalking(ctx: CanvasRenderingContext2D, x: number, y: number, offset = 0) {
-  if (drawIndex > 8) {
-    drawIndex = 0;
-  }
-  ctx.save();
-  ctx.translate(x + offset, y);
-  const path = new Path2D(walkData[1][drawIndex]);
-  const p = new Path2D();
-  p.addPath(path);
-  ctx.fillStyle = '#0a0b0b';
-  ctx.fill(p);
-  ctx.restore();
-  drawIndex++
-}
-
-function drawSitingMan(ctx: CanvasRenderingContext2D, x: number, y: number) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.scale(2, 2);
-  const path = new Path2D(walkData[0] as string);
-  const p = new Path2D();
-  p.addPath(path);
-  ctx.fillStyle = '#0a0b0b';
-  ctx.fill(p);
-  ctx.restore();
-}
-
-function drawLight(ctx: CanvasRenderingContext2D) {
-  if (theme.value === 'light') {
-    clearYellowLight(ctx, parkCanvas.width / 2 + 3.5 * light.smallWidth, 
-    parkCanvas.height / 2 - light.smallHeight / 1.5 + 90, 800);
-    return;
-  }
-  //灯光
-  simulateYellowLight(ctx, parkCanvas.width / 2 + 3.5 * light.smallWidth, 
-    parkCanvas.height / 2 - light.smallHeight / 1.5 + 90, 800)
-}
-//#region 路
-function drawRoad(ctx: CanvasRenderingContext2D) {
-  ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(0, parkCanvas.horizon);
-    ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.horizon - 100, 
-      parkCanvas.width, parkCanvas.horizon);
-    ctx.moveTo(parkCanvas.width, parkCanvas.height - 200);
-    ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 300, 
-      0, parkCanvas.height - 200);
-    ctx.stroke();
-    ctx.closePath();
-  ctx.restore();
-
-  ctx.beginPath();
-  ctx.moveTo(0, parkCanvas.height - 200);
-  ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 300, 
-    parkCanvas.width, parkCanvas.height - 200);
-  ctx.lineTo(parkCanvas.width, parkCanvas.height);
-  ctx.quadraticCurveTo(parkCanvas.width / 2, parkCanvas.height - 100, 
-    0, parkCanvas.height);
-  ctx.lineTo(0, parkCanvas.height - 200);
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.save();
-    ctx.clip();
-    ctx.translate(road.gap - 50, road.height + 150);
-    for (let i = 0; i <= road.height; i++) {
-      if (i % 2 === 1) {
-        generateRoad(ctx, () => {
-          ctx.translate((i + 1) * road.width - road.gap, road.height / 2);
-          ctx.rotate(180 * Math.PI / 180);
-          ctx.transform(1, 0, 0, 0.5, 0, 0);
-        });
-      } else {
-        generateRoad(ctx, () => {
-          ctx.translate(i * road.width, 0);
-          ctx.transform(1, 0, 0, 0.5, 0, 0);
-        });
-      }
-    }
-  ctx.restore();
-}
-//#endregion
-
-const styleMap: Record<string, 'lineWidth' | 'strokeStyle' | 'miterLimit' | 'lineCap' | 'lineJoin' | 'fillStyle'> = {
-  'stroke-width': 'lineWidth',
-  'stroke': 'strokeStyle',
-  'stroke-miterlimit': 'miterLimit',
-  'stroke-linecap': 'lineCap',
-  'stroke-linejoin': 'lineJoin',
-  'fill': 'fillStyle',
-}
-
-function simulateYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
-  let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-  gradient.addColorStop(0, 'rgba(255, 255, 0, 0.5)');
-  gradient.addColorStop(0.15, 'rgba(255, 255, 0, 0.2)');
-  gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, 2 * Math.PI);
-  ctx.fill();
-}
-
-function clearYellowLight(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
-  let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-  gradient.addColorStop(0, 'rgba(255, 255, 0, 0)');
-  gradient.addColorStop(0.15, 'rgba(255, 255, 0, 0)');
-  gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, 2 * Math.PI);
-  ctx.fill();
-}
-
-function generateRoad(ctx: CanvasRenderingContext2D, cb: () => void) {
-  ctx.save();
-  cb();
-  const tmp: Record<string, Path2D> = {};
-  roadData.forEach((e: string, i: number) => {
-    tmp[`p${i}`] = new Path2D(e);
-  });
-
-  const p = new Path2D();
-  for (const key in tmp) {
-    p.addPath(tmp[key]);
-  }
-  ctx.stroke(p);
-  ctx.restore();
 }
 
 function changeLight(val: string) {
@@ -724,13 +349,10 @@ function handleAddMessage() {
 }
 
 onNuxtReady(() => {
-  fetchSkillsData();
-  // loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', () => {
     resizeHandler();
   });
-  // drawImageWalking();
 });
 
 onBeforeUnmount(() => {
@@ -741,14 +363,6 @@ onBeforeUnmount(() => {
 <template>
   <NuxtLayout name="header-section-footer">
     <section class="p-r overflow-hidden">
-      <img
-        v-if="startAnimate"
-        class="walking"
-        :src="walkingImage.data"
-        :style="{
-          'transform': `translate(${walkingImage.x}px, ${walkingImage.y}px) ${parkTransform}`
-        }"
-      >
       <canvas 
         ref="parkCanvasRef"
         :style="{
@@ -791,8 +405,8 @@ onBeforeUnmount(() => {
         <div v-if="windowWidth > 578 && windowWidth < 992" class="introducion-seat"></div>
       </div>
     </section>
-    <index-skills :skill-name="skillsName" v-show="windowWidth >= 992" :width="windowWidth"></index-skills>
-    <index-skills-small :skills="skillsName" v-show="windowWidth < 992"></index-skills-small>
+    <index-skills v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
+    <index-skills-small v-else></index-skills-small>
     <index-projects :width="windowWidth"></index-projects>
     <div class="container">
       <div class="text-center contact__me">

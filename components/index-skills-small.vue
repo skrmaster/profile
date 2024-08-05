@@ -1,9 +1,9 @@
-<script lang="ts" setup> 
-import type { UserModel, UpdateInfo } from '~/api/user/model';
+<script lang="ts" setup>
+import { apiSkillGetList } from '~/api/skill/request';
+import type { UserModel } from '~/api/user/model';
 
 type Prop = {
 	width?: number;
-  skills: Array<Skill.SkillName>;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -11,12 +11,18 @@ const props = withDefaults(defineProps<Prop>(), {
   skills: () => []
 });
 
+const params: Omit<Pagination, 'total'> = {
+  page: 1,
+  pageSize: 15
+}
+const { data: skillsData } = await useAsyncData('skills', () => apiSkillGetList(params));
+
 const userInfo = useState<UserModel | undefined>("userInfo");
 const isAuth = computed(() => userInfo.value?.permission?.includes('1') || false);
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skills = computed(() => props.skills);
+const skills = computed(() => skillsData.value?.data.list || []);
 
 function handleAddSkill() {
   navigateTo(skillMgtPath);

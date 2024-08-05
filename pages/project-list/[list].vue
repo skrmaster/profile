@@ -2,56 +2,46 @@
 import { apiGetList }  from '~/api/project/request';
 import type { ListType, ListItem }  from '~/api/project/model';
 
-useHead({
-  title: "项目列表-开发项目列表页面",
-  meta: [
-    {
-      name: "description",
-      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
-    },
-    {
-      name: "description",
-      content: "供他人查看项目的已做开发项目列表页面"
-    }
-  ]
-});
-
+const route = useRoute();
+const param = route.params;
+const page = param.list as unknown as number;
+const pageSize = route.query.pageSize as unknown as number;
 const paginationRef = ref();
-
 const { projectDetailPath } = routerMap;
 const pagination = reactive({
   total: 0,
-  page: 1,
-  pageSize: 20
+  page: page * 1,
+  pageSize: (pageSize || 20) * 1 
 });
+
+useSeoMeta({
+  title: `项目列表-开发项目列表页面第${page}页`,
+  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
+  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
+});
+
 const data = ref<ListType>([]);
 const listLoading = ref(false);
 
-init();
-function init() {
-  getData();
+const params: Omit<Pagination, 'total'> = {
+  page: page * 1,
+  pageSize: pageSize * 1
 }
 
+listLoading.value = true;
+const { data: listData } = await useAsyncData(`project-list-page-${page}-${pageSize}`, () => apiGetList(params));
+
 function getData() {
-  const params: Omit<Pagination, 'total'> = {
-    page: pagination.page,
-    pageSize: pagination.pageSize
-  }
-  listLoading.value = true;
-  apiGetList(params).then(res => {
-    listLoading.value = false;
-    Object.assign(pagination ,res.data.pagination);
-    data.value = res.data.list.map(e => {
-      const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
-      return {
-        ...e,
-        name: e.name,
-        imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
-      };
-    });
-  }).catch(() => {
-    listLoading.value = false;
-  });
+  listLoading.value = false;
+  Object.assign(pagination ,listData.value?.data.pagination);
+  data.value = listData.value?.data.list.map(e => {
+    const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
+    return {
+      ...e,
+      name: e.name,
+      imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
+    };
+  }) || [];
 }
 
 function handleViewProject(item: ListItem) {
@@ -64,9 +54,17 @@ function handleViewProject(item: ListItem) {
 }
 
 function getDataByPagination() {
-  pagination.page = 1;
-  getData();
+  navigateTo({
+    path: `/project-list/${pagination.page}`,
+    query: {
+      pageSize: pagination.pageSize
+    }
+  });
 }
+
+onNuxtReady(() => {
+  getData();
+});
 
 </script>
 <template>
@@ -109,7 +107,7 @@ function getDataByPagination() {
         v-model:current-page="pagination.page"
         v-model:page-size="pagination.pageSize"
         @page-size-change="getDataByPagination"
-        @current-page-change="getData"
+        @current-page-change="getDataByPagination"
       ></com-pagination>
     </div>
   </com-background>

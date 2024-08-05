@@ -7,6 +7,7 @@ const mode = process.env.NODE_ENV;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: true,
   modules: [
     [
       //https://nuxt.com/modules/eslint-module
@@ -15,7 +16,7 @@ export default defineNuxtConfig({
         lintOnStart: false,
         cache: true
       }
-    ],
+    ], 
     'dayjs-nuxt'
   ],
 

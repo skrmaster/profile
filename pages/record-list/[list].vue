@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { apiGetList, apiGetRankList, apiQueryList, apiRecordCount } from '~/api/record/request';
+import { apiGetRankList, apiQueryDataList, apiRecordCount } from '~/api/record/request';
 import type { List, ListItem, QueryParam, CountParam } from '~/api/record/model';
 
 type RankItem = {
@@ -9,23 +9,18 @@ type RankItem = {
   isBold: boolean;
 }
 
-useHead({
-  title: "个人纪录-博客列表方便查看各种坑",
-  meta: [
-    {
-      name: "description",
-      content: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`
-    },
-    {
-      name: "description",
-      content: "供他人查看项目的个人所写的博客列表页面"
-    }
-  ]
+const route = useRoute();
+const param = route.params;
+const page = param.list as unknown as number;
+const pageSize = route.query?.pageSize as unknown as number;
+
+useSeoMeta({
+  title: `个人纪录-博客列表方便查看各种坑第${page}页`,
+  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
+  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt2,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
 });
 
 const router = useRouter();
-const route = useRoute();
-
 const { recordDetailPath } = routerMap;
 const searchVal = ref('');
 const blogList = ref<List>([]);
@@ -34,130 +29,96 @@ const listLoading = ref(false);
 const rankLoading = ref(false);
 const pagination = reactive({
   total: 0,
-  page: 1,
-  pageSize: 10
+  page: page * 1,
+  pageSize: (pageSize || 10) * 1
 });
 
-watch(searchVal, (val) => {
-  if (!val) {
-    getListData();
-    redirectToCurrentWithQuery();
-  } else {
-    redirectToCurrentWithQuery({ q: val });
-  }
-});
+const query = route.query?.q as string;
+searchVal.value = query || '';
 
-init();
-initRank();
-function init() {
-  const query = route.query?.q as string;
-  searchVal.value = query || '';
-  if (searchVal.value) {
-    handleSearch();
-  } else {
-    getListData();
-  }
+const params: QueryParam = {
+  title: query,
+  page: page * 1,
+  pageSize: (pageSize || 10) * 1
 }
 
-function redirectToCurrentWithQuery (query?: Record<string, string>) {
-  const currentPath = route.path
-  router.push({ path: currentPath, query })
+if (query) {
+  params.page = 1;
+}
+
+const { data: searchData, error } = await useAsyncData(`search-${pagination.page}-${pagination.pageSize}-${query ? query : 'default'}`, () => apiQueryDataList(params));
+const { data: rankData } = await useAsyncData(`rank-data`, () => apiGetRankList(5));
+
+console.log(error);
+
+
+function init() {
+  apiQueryDataList(params)
+  initRank();
+  getListData();
 }
 
 function initRank() {
+  const res = rankData.value;
+  if (!res) {
+    return;
+  }
+
   rankLoading.value = true;
-  apiGetRankList(5).then(res => {
-    let titleLen = 24;
-    rank.value = res.data.map((e, i) => {
-      if (i < 3) {
-        return {
-          id: e.id,
-          isBold: true,
-          name: e.title,
-          fontSize: 20
-        }
-      } else {
-        return {
-          id: e.id,
-          isBold: false,
-          name: e.title,
-          fontSize: 20
-        }
+  rank.value = res.data.map((e, i) => {
+    if (i < 3) {
+      return {
+        id: e.id,
+        isBold: true,
+        name: e.title,
+        fontSize: 20
       }
-    });
-    rankLoading.value = false;
-  }).catch(e => {
-    rankLoading.value = false;
+    } else {
+      return {
+        id: e.id,
+        isBold: false,
+        name: e.title,
+        fontSize: 20
+      }
+    }
   });
+  rankLoading.value = false;
 }
 
 function getListData() {
-  listLoading.value = true;
-  const params: Omit<Pagination, 'total'> = {
-    page: pagination.page,
-    pageSize: pagination.pageSize
-  }
+  Object.assign(pagination ,searchData.value?.data.pagination);
+  blogList.value = searchData.value?.data.list.map(e => {
+    const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
+    return {
+      isTread: e.isDisLike,
+      imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
+      describe: e.subtitle || e.description,
+      ...e
+    }
+  }) || [];
+}
 
-  apiGetList(params).then(res => {
-    listLoading.value = false;
-    Object.assign(pagination ,res.data.pagination);
-    blogList.value = res.data.list.map(e => {
-      const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
-      return {
-        isTread: e.isDisLike,
-        imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
-        describe: e.subtitle || e.description,
-        ...e
-      }
-    });
-  }).catch(e => {
-    console.log(e);
-    listLoading.value = false;
+async function handleJumpPage() {
+  let currentPage = pagination.page;
+  if (searchVal.value) {
+    currentPage = 1;
+  }
+  await navigateTo({
+    path: `/record-list/${currentPage}`,
+    query: {
+      pageSize: pagination.pageSize,
+      q: searchVal.value || undefined
+    }
   });
 }
 
-function handleSearch() {
-  listLoading.value = true;
-  const params: QueryParam = {
-    title: searchVal.value,
-    page: pagination.page,
-    pageSize: pagination.pageSize
-  }
-
-  apiQueryList(params).then(res => {
-    Object.assign(pagination ,res.data.pagination);
-    blogList.value = res.data.list.map(e => {
-      const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
-      return {
-        isTread: e.isDisLike,
-        imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
-        describe: e.subtitle ?? e.description,
-        ...e
-      }
-    });
-    listLoading.value = false;
-  }).catch(e => {
-    console.log(e);
-    
-    listLoading.value = false;
-  });
-}
-
-function getData() {
+function handleSearchRecord() {
+  let currentPage = pagination.page;
   if (searchVal.value) {
-    handleSearch();
-  } else {
-    getListData();
+    currentPage = 1;
   }
-}
-
-function getListDataByPagination() {
-  pagination.page = 1;
-  if (searchVal.value) {
-    handleSearch();
-  } else {
-    getListData();
-  }
+  window.open(`/record-list/${currentPage}?pageSize=${pagination.pageSize}&q=${searchVal.value}`, '_blank');
+  searchVal.value = '';
 }
 
 function handleRecordDetail(id: string) {
@@ -166,7 +127,7 @@ function handleRecordDetail(id: string) {
     query: {
       id
     }
-  })
+  });
 }
 
 /**
@@ -207,6 +168,10 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
     }
   }).catch(e => {});
 }
+
+onNuxtReady(() => {
+  init();
+});
 </script>
 <template>
   <com-background
@@ -220,7 +185,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
-    <com-search v-model="searchVal" @search="getListDataByPagination"></com-search>
+    <com-search v-model="searchVal" @search="handleSearchRecord"></com-search>
     <section class="pb5 flex1">
       <div class="container">
         <div class="flex content">
@@ -300,8 +265,8 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
               :total="pagination.total"
               v-model:current-page="pagination.page"
               v-model:page-size="pagination.pageSize"
-              @page-size-change="getListDataByPagination"
-              @current-page-change="getData"
+              @page-size-change="handleJumpPage"
+              @current-page-change="handleJumpPage"
             ></com-pagination>
           </div>
           <com-empty v-if="!listLoading && blogList.length === 0"></com-empty>
@@ -349,7 +314,6 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
 
 .blog {
   max-width: 1000px;
-  flex: 2 1 100%;
 }
 
 .blog__item {
@@ -383,6 +347,7 @@ function handleUserOperateRecord(index: number, item: ListItem, category: number
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   text-overflow: ellipsis;
   overflow: hidden;
   line-height: 1.4;
@@ -446,6 +411,7 @@ span[class^="rank__item-"] {
   height: 38px;
   line-height: 38px;
   background-color: #c0c0c0;
+  color: #fff;
 }
 
 .rank__item-3 {
@@ -453,6 +419,7 @@ span[class^="rank__item-"] {
   height: 38px;
   line-height: 38px;
   background-color: #cd7f32;
+  color: #fff;
 }
 
 span[class^="rank__item-"]:not(.rank__special) {

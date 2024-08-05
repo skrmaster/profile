@@ -40,8 +40,8 @@ export const routerMap: Record<KeyOfRouter, string> = {
   recordDetailPath: '/record-detail',
   homePath: '/',
   addressListPath: '/address-list',
-  projectPagePath: '/project-list',
-  recordPagePath: '/record-list',
+  projectPagePath: '/project-list/:page',
+  recordPagePath: '/record-list/:page',
   noAuthPath: '/not-authorized'
 }
 

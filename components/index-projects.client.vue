@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { apiGetList } from '~/api/project/request';
-import type { ListType, ListItem } from '~/api/project/model';
+import type { ListItem } from '~/api/project/model';
 
 type Prop = {
 	width?: number;
@@ -82,16 +82,11 @@ function init() {
 	loadModel2Sence();
 }
 
+const { data: projectData } = await useAsyncData('project', () => apiGetList({ page: 1, pageSize: 6 }));
+
 function initData() {
-	apiGetList({
-		page: 1,
-		pageSize: 6
-	}).then(res => {
-		list = res.data.list;
-		init();
-	}).catch(e => {
-		init();
-	});
+	list = projectData.value?.data.list || [];
+	init();
 }
 
 function loadModel2Sence() {
