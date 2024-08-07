@@ -15,9 +15,14 @@ const pagination = reactive({
 });
 
 useSeoMeta({
-  title: `项目列表-开发项目列表页面第${page}页`,
+  title: `skrmaster-项目列表-开发项目列表页面第${page}页`,
   description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
-  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
+  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染',
+  ogTitle: `skrmaster-个人网站`,
+  ogDescription: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
+  ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-project-list.png`,
+  ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
+  ogType: 'website',
 });
 
 const data = ref<ListType>([]);

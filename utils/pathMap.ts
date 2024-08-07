@@ -19,6 +19,7 @@ type KeyOfRouter = 'homePath'
 | 'projectDetailPath'
 | 'recordDetailPath'
 | 'noAuthPath'
+| 'searchedPath'
 ;
 
 export const routerMap: Record<KeyOfRouter, string> = {
@@ -42,7 +43,8 @@ export const routerMap: Record<KeyOfRouter, string> = {
   addressListPath: '/address-list',
   projectPagePath: '/project-list/:page',
   recordPagePath: '/record-list/:page',
-  noAuthPath: '/not-authorized'
+  noAuthPath: '/not-authorized',
+  searchedPath: '/searched/:page'
 }
 
 type KeyOfApi = 'loginPath'

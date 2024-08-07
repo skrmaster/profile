@@ -77,6 +77,19 @@ watchEffect(() => {
   tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
 });
 
+function removeDigits(str: string): string {
+  return str.replace(/\d+/g, '');
+}
+
+function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
+  if (!str1 || !str2) {
+    return false;
+  }
+  const str1WithoutDigits = removeDigits(str1);
+  const str2WithoutDigits = removeDigits(str2);
+  return str1WithoutDigits === str2WithoutDigits;
+}
+
 function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   const argCopy = arg;
   let minV = (argCopy[0].name?.length || 0);
@@ -148,7 +161,7 @@ function personalCenter() {
           class="nav__item flex__center"
           :style="`flex: ${item.flex}`"
           :class="{
-            'is--active': item.link === currentPath
+            'is--active': hasCommonPartIgnoringNumbers(item.link, currentPath)
           }"
           :data-type="item.type"
         >

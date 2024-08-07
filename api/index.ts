@@ -41,14 +41,10 @@ export async function http(url: string, options: Record<string, any>) {
   }
 }
 
-export async function httpClient<T>(url: string, options: Record<string, any>): Promise<ResponseModel<T>> {
-  // let tokenString: string;
-  // try {
-  //   tokenString = getToken()
-  // } catch(e) {
-  //   console.log(e);
-  // }
-
+export async function httpClient<T>(
+  url: string, 
+  options: Record<string, any>
+): Promise<ResponseModel<T>> {
   return await $fetch(
     url, 
     {
@@ -58,9 +54,7 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
       params: options.params,
       body: options.body,
       onRequest({ request, options }) {
-        // options.headers = {
-        //   Authorization: tokenString
-        // }
+
       },
       onRequestError({ request, options, error, response }) {
         if (response === undefined && error) {
@@ -81,16 +75,16 @@ export async function httpClient<T>(url: string, options: Record<string, any>): 
             navigateTo({ path: routerMap.loginPath });
           }, 1000);
         }
-        
-        // if (response.headers.get('Access-Token')) {
-        //   response._data.tokenObject = {
-        //     token: response.headers.get('Access-Token'),
-        //     refreshToken: response.headers.get('X-Access-Token')
-        //   }
-        // }
+
+        if (response.status === 429) {
+          MessageManager.show({
+            type: 'error',
+            message: '请求次数过多，请稍后再试'
+          });
+        }
       },
       onResponseError({ request, response, options }) {
-        // Handle the response errors
+
       }
     }
   );

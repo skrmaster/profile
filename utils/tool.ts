@@ -58,6 +58,30 @@ export function getImageUrl(item: Upload.FileInfo): string | undefined {
   return splicingImageUrl(item.fullPath);
 }
 
+/**
+ * @description 判断两个字符串是否有相同部分
+ * @param str1 
+ * @param str2 
+ * @returns 
+ */
+export function hasCommonPart(str1?: string, str2?: string): boolean {
+  if (!str1 || !str2) {
+    return false;
+  }
+  // 找到较短的字符串
+  const [shorter, longer] = str1.length < str2.length ? [str1, str2] : [str2, str1];
+  
+  // 遍历较短字符串的所有子串
+  for (let i = 0; i < shorter.length; i++) {
+    for (let j = i + 1; j <= shorter.length; j++) {
+      const substring = shorter.substring(i, j);
+      if (longer.includes(substring)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 /**
  * @description 获取滚动条宽度

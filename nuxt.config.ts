@@ -8,17 +8,23 @@ const mode = process.env.NODE_ENV;
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
-  modules: [
-    [
-      //https://nuxt.com/modules/eslint-module
-      '@nuxtjs/eslint-module', 
-      { 
-        lintOnStart: false,
-        cache: true
-      }
-    ], 
-    'dayjs-nuxt'
-  ],
+  modules: [[
+    //https://nuxt.com/modules/eslint-module
+    '@nuxtjs/eslint-module', 
+    { 
+      lintOnStart: false,
+      cache: true
+    }
+  ], 
+  'dayjs-nuxt', 
+  [
+    "@nuxtjs/robots",
+    {
+      UserAgent: '*',
+      Disallow: '/admin',
+      Sitemap: ''
+    }
+  ]],
 
   css: cssFiles.map(file => `~/assets/css/${file}`),
   alias: {},
@@ -35,7 +41,7 @@ export default defineNuxtConfig({
           type: 'module',
           src: '/iconfont/iconfont.js'
         }
-      ]
+      ],
     },
   },
 

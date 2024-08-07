@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { apiGetRankList, apiQueryDataList, apiRecordCount, apiGetList } from '~/api/record/request';
+import { apiGetRankList, apiQueryDataList, apiRecordCount } from '~/api/record/request';
 import type { List, ListItem, QueryParam, CountParam } from '~/api/record/model';
 
 type RankItem = {
@@ -13,16 +13,12 @@ const route = useRoute();
 const param = route.params;
 const page = param.list as unknown as number;
 const pageSize = route.query?.pageSize as unknown as number;
+const query = route.query?.q as string;
 
 useSeoMeta({
-  title: `skrmaster-个人记录-博客列表方便查看各种坑第${page}页`,
+  title: `个人纪录-博客列表方便查看各种坑--${query}查询内容`,
   description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
-  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt2,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染',
-  ogTitle: `skrmaster-个人记录`,
-  ogDescription: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
-  ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-record-list.png`,
-  ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
-  ogType: 'website',
+  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt2,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
 });
 
 const { recordDetailPath } = routerMap;
@@ -36,8 +32,6 @@ const pagination = reactive({
   page: page * 1,
   pageSize: (pageSize || 10) * 1
 });
-
-const query = route.query?.q as string;
 searchVal.value = query || '';
 
 const params: QueryParam = {
@@ -46,12 +40,8 @@ const params: QueryParam = {
   pageSize: (pageSize || 10) * 1
 }
 
-if (query) {
-  params.page = 1;
-}
-
 const { data: rankData } = await useAsyncData(`rank-data`, () => apiGetRankList(5));
-const { data: listData } = await useAsyncData(`record-${pagination.page}-${pagination.pageSize}-list`, () => apiGetList(params));
+const { data: searchData } = await useAsyncData(`search-${pagination.page}-${pagination.pageSize}-${query ? query : 'default'}`, () => apiQueryDataList(params));
 
 function init() {
   initRank();
@@ -86,8 +76,8 @@ function initRank() {
 }
 
 function getListData() {
-  Object.assign(pagination ,listData.value?.data.pagination);
-  blogList.value = listData.value?.data.list.map(e => {
+  Object.assign(pagination ,searchData.value?.data.pagination);
+  blogList.value = searchData.value?.data.list.map(e => {
     const imageIds: Upload.FileInfo[] = e.coverImageUrl ? JSON.parse(e.coverImageUrl) : [];
     return {
       isTread: e.isDisLike,
@@ -100,24 +90,6 @@ function getListData() {
 
 async function handleJumpPage() {
   let currentPage = pagination.page;
-  if (searchVal.value) {
-    currentPage = 1;
-  }
-  await navigateTo({
-    path: `/record-list/${currentPage}`,
-    query: {
-      pageSize: pagination.pageSize,
-      q: searchVal.value || undefined
-    }
-  });
-}
-
-async function handleSearchRecord() {
-  let currentPage = pagination.page;
-  if (searchVal.value) {
-    currentPage = 1;
-  }
-
   await navigateTo({
     path: `/searched/${currentPage}`,
     query: {
@@ -191,7 +163,13 @@ onNuxtReady(() => {
   >
     <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
     <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
-    <com-search v-model="searchVal" @search="handleSearchRecord"></com-search>
+    <div class="image__offset">
+      <div class="search__content flex__row">
+        <span>搜索：</span>
+        <h1 class="text-center">{{ searchVal }}</h1>
+      </div>
+      <image-offset-canvas></image-offset-canvas>
+    </div>
     <section class="pb5 flex1">
       <div class="container">
         <div class="flex content">
@@ -315,7 +293,24 @@ onNuxtReady(() => {
 </template>
 <style scoped>
 .content {
-  margin-top: 8rem;
+  margin-top: 1rem;
+}
+
+.image__offset {
+  position: relative;
+  height: 250px;
+}
+
+.search__content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 2rem;
+  background-color: var(--white-color);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--box-shadow-small);
+  z-index: 2;
 }
 
 .blog {

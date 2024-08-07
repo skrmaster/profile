@@ -3,9 +3,14 @@ import type { ListByCategory } from '~/api/address/model';
 import { apiGetListByCategory } from '~/api/address/request';
 
 useSeoMeta({
-  title: `快速导航-供个人使用的一个网站地址导航页面`,
+  title: `skrmaster-快速导航-供个人使用的一个网站地址导航页面`,
   description: `快速导航,${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站，供个人使用的一个网站地址导航页面`,
-  keywords: 'skrmaster,快速导航,导航,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
+  keywords: 'skrmaster,快速导航,导航,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染',
+  ogTitle: `skrmaster-快速导航-供个人使用的一个网站地址导航页面`,
+  ogDescription: `快速导航,${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站，供个人使用的一个网站地址导航页面`,
+  ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-address.png`,
+  ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
+  ogType: 'website',
 });
 
 const { $dayjs } = useNuxtApp();

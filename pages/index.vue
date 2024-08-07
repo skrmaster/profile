@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { apiSkillGetList } from '~/api/skill/request';
-
 import roadPath from 'assets/json/road.json';
 import benchSvg from 'assets/svg/park-bench.svg';
 import ligthOnSvg from 'assets/svg/light-on.svg';
@@ -17,9 +15,14 @@ type Park = {
 }
 
 useSeoMeta({
-  title: `首页-${import.meta.env.VITE_PROJECT_DOMAIN}一个记录个人技术成长的网站`,
-  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站`,
-  keywords: 'skrmaster,首页,个人首页,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染'
+  title: `skrmaster-个人网站`,
+  description: `一个记录个人技术成长的网站,${import.meta.env.VITE_PROJECT_DOMAIN},专注前端开发`,
+  keywords: 'skrmaster,首页,个人首页,个人网站,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染',
+  ogTitle: `skrmaster-个人网站`,
+  ogDescription: `一个记录个人技术成长的网站,${import.meta.env.VITE_PROJECT_DOMAIN},专注前端开发`,
+  ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-image.png`,
+  ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
+  ogType: 'website',
 });
 
 const roadData = roadPath.data;
