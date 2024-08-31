@@ -23,6 +23,7 @@ useSeoMeta({
   ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-record-list.png`,
   ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
   ogType: 'website',
+  ogSiteName: 'skrmaster'
 });
 
 const { recordDetailPath } = routerMap;

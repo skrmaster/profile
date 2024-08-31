@@ -23,6 +23,7 @@ useSeoMeta({
   ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-image.png`,
   ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
   ogType: 'website',
+  ogSiteName: 'skrmaster'
 });
 
 const roadData = roadPath.data;

@@ -94,5 +94,5 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
 
-  compatibilityDate: "2024-07-25"
+  compatibilityDate: "2024-08-31"
 });

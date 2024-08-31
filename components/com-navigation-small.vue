@@ -39,6 +39,7 @@ const navList = ref([
 ]);
 
 const route = useRoute();
+const currentPath = route.path;
 const currentIndex = ref(0);
 const userInfo = useState<UserModel>('userInfo');
 const currentUserInfo = computed(() => userInfo.value);
@@ -50,9 +51,17 @@ watchEffect(() => {
   tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
 });
 
-function isCurrentRoute(item: string) {
-  let fullPath = route.fullPath;
-  return item === fullPath;
+function removeDigits(str: string): string {
+  return str.replace(/\d+/g, '');
+}
+
+function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
+  if (!str1 || !str2) {
+    return false;
+  }
+  const str1WithoutDigits = removeDigits(str1);
+  const str2WithoutDigits = removeDigits(str2);
+  return str1WithoutDigits === str2WithoutDigits;
 }
 
 function handleNav(index: number, query?: Record<string, any>) {
@@ -80,7 +89,7 @@ function handleAvatarJump() {
 <template>
   <div>
     <div class="navigation--small px1">
-      <div class="mr1" @click="handleAvatarJump">
+      <div class="avatar__gap" @click="handleAvatarJump">
         <com-avatar 
           :avatar-url="tempUserInfo?.avatar" 
           :nickname="tempUserInfo?.account ? tempUserInfo?.account : tempUserInfo?.id ? '未知' : '登录'">
@@ -92,16 +101,16 @@ function handleAvatarJump() {
           :key="index"
           class="navigation__item"
           :class="{
-            'active': isCurrentRoute(item.link)
+            'active': hasCommonPartIgnoringNumbers(item.link, currentPath)
           }"
           @click="handleNav(index, item.query)"
         >
-          <com-icon class="nav__icon" :icon="item.icon"></com-icon>
-          <span v-show="isCurrentRoute(item.link)" class="fs18">{{ item.name }}</span>
+          <com-icon class="nav__icon" height="10px" width="10px" :icon="item.icon"></com-icon>
+          <span  class="fs12">{{ item.name }}</span>
         </div>
       </nav>
-      <div class="theme__control flex__row--end">
-        <com-theme-button></com-theme-button>
+      <div class="theme__control flex__center">
+        <com-theme-button type="small"></com-theme-button>
       </div>
     </div>
   </div>
@@ -112,11 +121,11 @@ function handleAvatarJump() {
   left: 50%;
   bottom: 20px;
   transform: translateX(-50%);
-  min-height: 90px;
-  max-width: 375px;
+  min-height: 60px;
+  max-width: 350px;
   width: 100%;
   background-color: var(--nav-small-bg);
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 10px 0px rgba(250, 250, 250, 0.25);
   z-index: 999;
   border-radius: 45px;
   display: flex;
@@ -124,14 +133,15 @@ function handleAvatarJump() {
 }
 
 .navigation__item {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   transition: all .2s ease;
   transform-origin: center center;
+  padding: 5px 9px;
 }
 
 .navigation__item.active {
-  padding: 10px 18px;
   background: var(--nav-small-item-active-bg);
   border-radius: 5px;
   color: var(--primary-color);
@@ -146,5 +156,14 @@ function handleAvatarJump() {
   border-left: 2px solid var(--primary-border-color);
   max-width: 65px;
   width: 100%;
+}
+
+.avatar__gap {
+  margin-right: 8px;
+}
+
+:deep(.avatar) {
+  height: 40px;
+  width: 40px;
 }
 </style>

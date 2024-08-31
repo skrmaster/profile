@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "pranaygp.vscode-css-peek",
+    "formulahendry.auto-close-tag",
+    "stylelint.vscode-stylelint",
+    "esbenp.prettier-vscode",
+    "mikestead.dotenv",
+  ],
+  "unwantedRecommendations": [
+    "octref.vetur"
+  ]
+}

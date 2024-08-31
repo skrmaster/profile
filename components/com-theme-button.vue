@@ -6,10 +6,25 @@ enum Theme {
   'dark' = 1
 }
 
+type Size = 'normal' | 'small'
+
+type Prop = {
+  type?: Size
+}
+
+const props = withDefaults(defineProps<Prop>(), {
+  type: 'normal'
+})
+
 const theme = ref<Theme>(0);
 const start = ref(false);
 const themeState = useState('theme', () => 'light');
 let storage: StorageSugerType;
+
+const sizeMap: Record<Size, object> = {
+  'normal': { width: '1em', height: '1em' },
+  'small': { width: '0.5em', height: '0.5em' }
+}
 
 function handleStart() {
   start.value = !start.value;
@@ -53,19 +68,20 @@ onMounted(() => {
     type="button" 
     class="theme__btn c-p"
     @click="handleStart"
+    :size-type="type"
   >
     <div class="theme__content flex__center"
       :class="{
         'transition': start
       }"
     >
-      <com-icon v-show="theme === 0" icon="profile-sun"></com-icon>
-      <com-icon v-show="theme === 1" icon="profile-moon"></com-icon>
+      <com-icon v-show="theme === 0" v-bind="{ ...sizeMap[type] }" icon="profile-sun"></com-icon>
+      <com-icon v-show="theme === 1" v-bind="{ ...sizeMap[type] }" icon="profile-moon"></com-icon>
     </div>
   </button>
 </template>
 <style scoped>
-.theme__btn {
+.theme__btn[size-type="normal"] {
   height: 28px;
   width: 50px;
   border: 1px solid var(--primary-border-color);
@@ -73,7 +89,15 @@ onMounted(() => {
   background: var(--nav-theme-btn-bg);
 }
 
-.theme__content {
+.theme__btn[size-type="small"] {
+  height: 14px;
+  width: 25px;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 14px;
+  background: var(--nav-theme-btn-bg);
+}
+
+.theme__btn[size-type="normal"] .theme__content {
   margin-left: 2px;
   width: 22px;
   height: 22px;
@@ -82,7 +106,20 @@ onMounted(() => {
   transition: all .2s;
 }
 
-.transition {
+.theme__btn[size-type="small"] .theme__content {
+  margin-left: 2px;
+  width: 10px;
+  height: 10px;
+  background: var(--white-color);
+  border-radius: 50%;
+  transition: all .2s;
+}
+
+.transition[size-type="normal"] {
   transform: translateX(calc(50px - 28px));
+}
+
+.transition[size-type="small"] {
+  transform: translateX(calc(25px - 14px));
 }
 </style>

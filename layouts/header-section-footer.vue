@@ -31,6 +31,6 @@ setDefaultProps();
 </template>
 <style scoped>
 .fill__block {
- height: 120px;
+ height: 100px;
 }
 </style>

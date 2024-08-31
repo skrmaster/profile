@@ -11,6 +11,7 @@ useSeoMeta({
   ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-address.png`,
   ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
   ogType: 'website',
+    ogSiteName: 'skrmaster'
 });
 
 const { $dayjs } = useNuxtApp();
