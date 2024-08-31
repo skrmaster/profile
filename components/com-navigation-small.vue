@@ -122,8 +122,9 @@ function handleAvatarJump() {
   bottom: 20px;
   transform: translateX(-50%);
   min-height: 60px;
-  max-width: 350px;
+  max-width: 375px;
   width: 100%;
+  overflow: auto hidden;
   background-color: var(--nav-small-bg);
   box-shadow: 0px 0px 10px 0px rgba(250, 250, 250, 0.25);
   z-index: 999;
@@ -165,5 +166,11 @@ function handleAvatarJump() {
 :deep(.avatar) {
   height: 40px;
   width: 40px;
+}
+
+:deep(.icon__box) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

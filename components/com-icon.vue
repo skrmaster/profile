@@ -48,9 +48,6 @@ function handleClick($event: Event) {
 .icon__box {
   text-align: center;
   color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .icon {
