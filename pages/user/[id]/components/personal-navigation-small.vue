@@ -74,7 +74,7 @@ function toggleMenu() {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 998;
+  z-index: 1000;
   max-width: 375px;
   width: 100%;
   height: 100%;
