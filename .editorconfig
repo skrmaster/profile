@@ -1,0 +1,19 @@
+# 顶级 EditorConfig 文件
+root = true
+
+# 针对所有文件的通用设置
+[*]
+charset = utf-8             # 字符编码，常用 utf-8
+indent_style = space        # 缩进类型，使用空格 (space) 或制表符 (tab)
+indent_size = 2             # 缩进宽度，比如 4 个空格
+end_of_line = lf            # 行尾符号，lf（Linux/Mac）或 crlf（Windows）
+insert_final_newline = true # 文件末尾是否保留空行
+trim_trailing_whitespace = true # 是否删除行尾的多余空白字符
+
+# 针对特定文件类型的设置
+[*.md]
+trim_trailing_whitespace = false # Markdown 文件中保留行尾空白
+indent_size = 2                   # Markdown 文件缩进宽度设为 2
+
+[*.js]
+# indent_size = 2                   # JavaScript 文件缩进宽度设为 2
