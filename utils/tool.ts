@@ -9,15 +9,23 @@ export function debounce(func: (arg: unknown) => unknown, time = 1000): (...arg:
     if (id) {
       clearTimeout(id);
     }
-    
+
     id = setTimeout(() => {
       func(args);
     }, time);
   }
 }
 
-export function throttle() {
-
+export function throttle(fn: (arg: any) => void, delay = 2000) {
+  let lastTime: number = 0;
+  return function (...arg: unknown[]) {
+    const now = Date.now()
+    const time = now - lastTime;
+    if (time >= delay) {
+      fn(arg)
+      lastTime = now
+    }
+  }
 }
 
 export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObserver {
@@ -60,9 +68,9 @@ export function getImageUrl(item: Upload.FileInfo): string | undefined {
 
 /**
  * @description 判断两个字符串是否有相同部分
- * @param str1 
- * @param str2 
- * @returns 
+ * @param str1
+ * @param str2
+ * @returns
  */
 export function hasCommonPart(str1?: string, str2?: string): boolean {
   if (!str1 || !str2) {
@@ -70,7 +78,7 @@ export function hasCommonPart(str1?: string, str2?: string): boolean {
   }
   // 找到较短的字符串
   const [shorter, longer] = str1.length < str2.length ? [str1, str2] : [str2, str1];
-  
+
   // 遍历较短字符串的所有子串
   for (let i = 0; i < shorter.length; i++) {
     for (let j = i + 1; j <= shorter.length; j++) {
@@ -85,7 +93,7 @@ export function hasCommonPart(str1?: string, str2?: string): boolean {
 
 /**
  * @description 获取滚动条宽度
- * @returns 
+ * @returns
  */
 export function getScrollBarWidth(): number {
   const div = document.createElement('div');
@@ -100,9 +108,9 @@ export function getScrollBarWidth(): number {
 
 /**
  * @description 得到一个两数之间的随机整数，包括两个数在内
- * @param min 
- * @param max 
- * @returns 
+ * @param min
+ * @param max
+ * @returns
  */
 export function getRandomIntInclusive(min: number, max: number): number {
   const minCeiled = Math.ceil(min);
@@ -137,7 +145,7 @@ export function isUrl(url?: string): boolean {
 export function isMobile() {
   const userAgent = navigator.userAgent;
   const isMobileUserAgent = /android|webOS|iPhone|iPad|iPod|blackberry|iemobile|opera mini/i.test(userAgent);
-  
+
   return isMobileUserAgent;
 }
 

@@ -1,5 +1,5 @@
 {
-  "editor.fontFamily": "JetBrains Mono NL",
+  "editor.fontFamily": "JetBrains Mono",
 
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {

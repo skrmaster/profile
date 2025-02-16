@@ -3,5 +3,8 @@
     {
       "path": "../"
     }
-  ]
+  ],
+  "settings": {
+    "editor.fontFamily": "Consolas, 'Courier New', monospace"
+  }
 }

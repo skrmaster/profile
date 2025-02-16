@@ -100,7 +100,7 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
     }
     return pre + (cur.name?.length || 1);
   }, 0);
-  
+
   argCopy.forEach(e => {
     e.flex = e.name?.length ? e.name.length / total : minV / total;
     if (e.flex < 1 && e.flex > 0) {
@@ -155,8 +155,8 @@ function personalCenter() {
   <div class="nav-box">
     <div class="container">
       <nav>
-        <li 
-          v-for="(item, index) in getFlex(navList)" 
+        <li
+          v-for="(item, index) in getFlex(navList)"
           :key="index"
           class="nav__item flex__center"
           :style="`flex: ${item.flex}`"
@@ -166,7 +166,7 @@ function personalCenter() {
           :data-type="item.type"
         >
           <div class="item__bg"></div>
-          <div 
+          <div
             v-if="item.type === 'link'"
             class="item__box c-p flex__center"
             @click="handleLink(item.link, item.query)"
@@ -176,7 +176,7 @@ function personalCenter() {
           >
             <span class="p1 nowrap">{{ item.name }}</span>
           </div>
-          <div 
+          <div
             v-if="item.type === 'theme'"
             class="item__box flex__center"
             :class="{
@@ -185,7 +185,7 @@ function personalCenter() {
           >
             <com-theme-button></com-theme-button>
           </div>
-          <div 
+          <div
             v-if="item.type === 'button'"
             class="item__box flex__center nowrap"
             :class="{
@@ -193,8 +193,8 @@ function personalCenter() {
             }"
           >
             <div v-if="!userInfo">
-              <com-button 
-                v-for="(e, i) in item.button" 
+              <com-button
+                v-for="(e, i) in item.button"
                 :key="i"
                 link
                 :class="{
@@ -208,7 +208,7 @@ function personalCenter() {
               <com-avatar
                 class="c-p"
                 style="height: 50px;width: 50px;"
-                :avatar-url="tempUserInfo?.avatar" 
+                :avatar-url="tempUserInfo?.avatar"
                 :nickname="tempUserInfo?.account || '未知'"
               ></com-avatar>
               <div class="user__menu">
@@ -242,10 +242,12 @@ function personalCenter() {
   position: sticky;
   top: 0;
   z-index: 999;
-  background-image: radial-gradient(transparent 1px, #eef1f5 1px);
+  /* background-image: radial-gradient(transparent 1px, #eef1f5 1px);
   background-size: 6px 6px;
   backdrop-filter: saturate(50%) blur(4px);
-  -webkit-backdrop-filter: saturate(50%) blur(4px);
+  -webkit-backdrop-filter: saturate(50%) blur(4px); */
+  background: var(--nav-bg-color);
+  backdrop-filter: saturate(50%) blur(4px);
 }
 
 :global(.dark-theme .nav-box) {
@@ -253,7 +255,7 @@ function personalCenter() {
   position: sticky;
   top: 0;
   z-index: 999;
-  background: var(--white-color);
+  background: var(--nav-bg-color);
 }
 
 .line-wave__up {
@@ -261,7 +263,7 @@ function personalCenter() {
   position: absolute;
   bottom: 1px;
   height: 2px;
-  background-image: linear-gradient(to right, 
+  background-image: linear-gradient(to right,
     var(--nav-wave-1) 50%, transparent 50%);
   background-size: 20px 100%;
 }
@@ -271,7 +273,7 @@ function personalCenter() {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-image: linear-gradient(to left, 
+  background-image: linear-gradient(to left,
     var(--nav-wave-1) 50%, transparent 50%);
   background-size: 20px 100%;
 }

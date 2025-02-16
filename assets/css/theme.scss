@@ -1,6 +1,7 @@
 :root {
   --background-color: #eef1f5;
   --white-color: #ffffff;
+  --nav-bg-color: rgba(255, 255, 255, 0.8);
   --nav-item-color: #0a0b0b;
   --nav-theme-btn-bg: #eef1f5;
   --nav-item-active-color: #ffffff;
@@ -60,6 +61,7 @@
 .dark-theme {
   --background-color: #0a0b0b;
   --white-color: #1b1b1b;
+  --nav-bg-color: rgba(0, 0, 0, 0.8);
   --nav-item-color: #ffffff;
   --nav-theme-btn-bg: rgba(0, 0, 0, 0.6);
   --nav-item-active-color: #ffffff;
@@ -100,7 +102,7 @@
   --w-e-textarea-slight-bg-color: #0a0b0b;
   --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
   --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
-    
+
   // toolbar - css vars
   --w-e-toolbar-color: var(--primary-color);
   --w-e-toolbar-bg-color: var(--white-color);
@@ -108,7 +110,7 @@
   --w-e-toolbar-active-bg-color: #0a0b0b;
   --w-e-toolbar-disabled-color: #999;
   --w-e-toolbar-border-color: #e8e8e8;
-    
+
   // modal - css vars
   --w-e-modal-button-bg-color: #fafafa;
   --w-e-modal-button-border-color: #d9d9d9;
