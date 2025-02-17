@@ -54,35 +54,41 @@ const formConfig: Array<FormConfig> = [
     require: true,
     field: 'userName',
     type: 'text',
-    rule: '',
+    rule: 'name',
+    data: '',
     elementConfig: {
       width: '100%',
       placeholder: '请输入姓名',
       clearable: true,
+      errorMsg: '请输入2~10个字符'
     }
   },
   {
     require: true,
     field: 'contactWay',
     type: 'text',
-    rule: '',
+    rule: 'contact',
+    data: '',
     elementConfig: {
       width: '100%',
       placeholder: '联系方式',
       clearable: true,
+      errorMsg: '请输入2~40个字符'
     }
   },
   {
     require: true,
     field: 'content',
     type: 'textarea',
-    rule: '',
+    rule: 'content',
+    data: '',
     elementConfig: {
       width: '100%',
       placeholder: '内容',
       clearable: false,
       maxLength: 200,
       rows: 8,
+      errorMsg: '请输入200字以内'
     }
   }
 ];
@@ -243,7 +249,7 @@ async function initCanvas() {
     canvas.width = windowWidth.value - scrollBarWidth - 1;
     canvas.height = 1006;
   }
-  
+
   parkCanvas.width = canvas.width;
   parkCanvas.height = canvas.height;
   road.count = Math.ceil((windowWidth.value + 50) / road.width);
@@ -255,9 +261,9 @@ async function initCanvas() {
   man.countY = man.walkWidth / 2 / man.stepX;
   man.y = windowWidth.value <= 992 ? (parkCanvas.height - man.height - 280) + (man.stepYDiff / man.countY) : (parkCanvas.height - man.height - 320) + (man.stepYDiff / man.countY);
   walkingImage.walkWidth = windowWidth.value;
-   
+
   if (windowWidth.value <= 992) {
-    walkingImage.y = (canvas.height * parkScale.value) / 2 - 450 / 4; 
+    walkingImage.y = (canvas.height * parkScale.value) / 2 - 450 / 4;
   } else {
     walkingImage.y = man.y;
   }
@@ -271,7 +277,7 @@ async function initCanvas() {
     parkCanvas.ctx?.clearRect(0, 0, 5000, 5000);
     parkCanvas.ctx?.drawImage(imageBitmap, 0, 0);
   };
-    
+
   tmpCanvas = document.createElement('canvas');
   const offscreenCanvas = tmpCanvas.transferControlToOffscreen();
   const imgData = await createImageBitmap(img, 0, 0, img.width, img.height);
@@ -323,8 +329,10 @@ function loadResource() {
 
 const formRef = ref();
 const btnLoading = ref(false);
+const submit = throttle(handleAddMessage)
 function handleAddMessage() {
-  formRef.value.vaildForm().then((val: ReturnVaildForm) => {
+  formRef.value.vaildForm()
+  .then((val: ReturnVaildForm) => {
     if (val.vaild) {
       const params: AddModel = {
         userName: val.data.userName,
@@ -367,13 +375,13 @@ onBeforeUnmount(() => {
 <template>
   <NuxtLayout name="header-section-footer">
     <section class="p-r overflow-hidden">
-      <canvas 
+      <canvas
         ref="parkCanvasRef"
         :style="{
           'transform-origin': 'top left',
           'transform': parkTransform
-        }" 
-        id="park" 
+        }"
+        id="park"
         class="z-index2"
       ></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
@@ -439,7 +447,7 @@ onBeforeUnmount(() => {
       <ClientOnly>
         <com-form ref="formRef" class="index__form mx-auto pb4" :model="formConfig">
           <div class="flex__center">
-            <com-button class="submit-btn fs20" :loading="btnLoading" is-ripple @click="handleAddMessage">提交</com-button>
+            <com-button class="submit-btn fs20" :loading="btnLoading" is-ripple @click="submit">提交</com-button>
           </div>
         </com-form>
       </ClientOnly>
@@ -480,7 +488,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   background: var(--white-color);
   opacity: 0.4;
-  filter: blur(10px); 
+  filter: blur(10px);
   z-index: -1;
 }
 

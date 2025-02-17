@@ -27,6 +27,10 @@ const tableHead = ref<TableHead[]>([
     slotName: 'icon'
   },
   {
+    name: '是否展示',
+    field: 'displayText',
+  },
+  {
     name: '创建时间',
     field: 'createTime',
   },
@@ -96,6 +100,7 @@ function getTableData() {
     tableData.value = res.data.list.map(e => {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
+      e.displayText = e.display === 1 ? '展示' : '不展示'
       return e;
     });
     loading.value = false;

@@ -44,6 +44,18 @@ const formConfig = ref<Array<FormConfig>>([
   },
   {
     require: false,
+    field: 'display',
+    type: 'switch',
+    rule: '',
+    data: '',
+    elementConfig: {
+      layout: 'column',
+      activeLabel: '展示',
+      inActiveLabel: '不展示'
+    }
+  },
+  {
+    require: false,
     field: 'iconClass',
     type: 'icon-choose',
     rule: '',
@@ -82,7 +94,8 @@ function submitData() {
         const params: AddModel = {
           name: val.data.name,
           sort: val.data.sort,
-          iconClass: val.data.iconClass
+          iconClass: val.data.iconClass,
+          display: val.data.display
         }
         apiAdd(params).then(res => {
           $message.show({
@@ -99,7 +112,8 @@ function submitData() {
           id: editId.value,
           name: val.data.name,
           sort: val.data.sort,
-          iconClass: val.data.iconClass
+          iconClass: val.data.iconClass,
+          display: val.data.display
         }
         apiUpdate(params).then(res => {
           $message.show({
@@ -157,8 +171,8 @@ defineExpose({
       <div class="mb1">
         <span class="common__title">{{ title }}</span>
       </div>
-      <com-form 
-        ref="formRef" 
+      <com-form
+        ref="formRef"
         class="flex__row--start"
         :model="formConfig"
       ></com-form>

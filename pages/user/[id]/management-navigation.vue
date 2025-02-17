@@ -27,6 +27,11 @@ const tableHead = ref<TableHead[]>([
     field: 'category',
   },
   {
+    name: '是否更新',
+    width: '100px',
+    field: 'needUpdateText',
+  },
+  {
     name: '图标icon',
     width: '150px',
     field: 'iconUrl',
@@ -105,6 +110,7 @@ function getTableData() {
       e.createTime = e.createTime ? $dayjs(e.createTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.updateTime = e.updateTime ? $dayjs(e.updateTime).format('YYYY-MM-DD HH:mm:ss') : '暂无';
       e.category = getListLabel(e.categoryId, addressNavigationList) || '';
+      e.needUpdateText = e.needUpdate === 1 ? '需要更新' : '不需要'
       return e;
     });
   }).catch((e) => {
@@ -150,7 +156,7 @@ function handleGetIcons() {
       });
       getTableDataByPagination();
     }
-  }).catch(e => { 
+  }).catch(e => {
     btnLoadingIcon.value = false;
   });
 }

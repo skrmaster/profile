@@ -13,7 +13,7 @@ function noAuthPath(fullPath: string): boolean {
 
 export async function http(url: string, options: Record<string, any>) {
   const { data, pending, error, refresh } = await useFetch(
-    url, 
+    url,
     {
       baseURL,
       method: options.method,
@@ -42,11 +42,11 @@ export async function http(url: string, options: Record<string, any>) {
 }
 
 export async function httpClient<T>(
-  url: string, 
+  url: string,
   options: Record<string, any>
 ): Promise<ResponseModel<T>> {
   return await $fetch(
-    url, 
+    url,
     {
       baseURL,
       credentials: 'include',

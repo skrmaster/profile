@@ -4,7 +4,10 @@ const dictionary: Record<string, RegExp> = {
   'password': /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/g,
   'numberCode': /^\d{6}$/g,
   'number': /(-|\+)?\d+(\.\d+)?/g,
-  'account': /^.{2,8}$/g
+  'account': /^.{2,8}$/g,
+  'name': /^.{2,10}$/g,
+  'contact': /^.{2,40}$/g,
+  'content': /^.{0,200}$/g,
 }
 
 export function vaildTest(val: string, rule: string | RegExp | undefined): [boolean, number] {
@@ -14,13 +17,13 @@ export function vaildTest(val: string, rule: string | RegExp | undefined): [bool
       result = new RegExp(dictionary[rule as string]).test(val);
     } else {
       if (!isRegExp(rule)) {
-        result = new RegExp(rule).test(val); 
+        result = new RegExp(rule).test(val);
       }
     }
   } else {
     result = val != '0' || Boolean(val);
   }
-  
+
   if (!val) {
     return [result, 0];
   } else {

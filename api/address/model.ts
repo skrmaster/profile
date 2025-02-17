@@ -21,6 +21,7 @@ export type ListByCategory = {
     name: string;
     id: number;
     iconClass: string;
+    display: number;
   }
   list: ListType;
 }[];

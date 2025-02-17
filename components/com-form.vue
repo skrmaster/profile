@@ -2,7 +2,7 @@
 const props = defineProps<{
   model: Array<FormConfig>
 }>();
-const slots = useSlots();
+const slots = defineSlots();
 const model = computed(() => {
   return props.model;
 });
@@ -28,7 +28,7 @@ class FormInstance implements Form {
     this.vnode = (<></>);
     this.config = config;
     this.data = {};
-    
+
     for (let i = 0; i < this.config.length; i++) {
       this.data[this.config[i].field] = this.config[i].data || '';
     }
@@ -70,7 +70,7 @@ class FormInstance implements Form {
   }
   generateVerificationCode(config: FormConfig): VNode {
     return (
-      <com-form-verification-code 
+      <com-form-verification-code
         class="mb1"
         v-model={ this.data[config.field] }
         { ...config.elementConfig }
@@ -109,7 +109,7 @@ class FormInstance implements Form {
   }
   generateUploadFile(config: FormConfig): VNode {
     return (
-      <com-upload 
+      <com-upload
         label={ config.elementConfig.label }
         data-list={ config.elementConfig.fileList }
         limit={ config.elementConfig.limit }
@@ -132,7 +132,7 @@ class FormInstance implements Form {
   }
   generateIconList(config: FormConfig): VNode {
     return (<>
-      <com-icon-list 
+      <com-icon-list
         v-model={ this.data[config.field] }
         { ...config.elementConfig }
       ></com-icon-list>
@@ -141,7 +141,7 @@ class FormInstance implements Form {
   renderForm(): VNode {
     return (
       <form>
-        { 
+        {
           this.config.map((e: FormConfig) => {
             if (e.type === 'verification-code') {
               return this.generateVerificationCode(e);
@@ -159,17 +159,17 @@ class FormInstance implements Form {
             else {
               return this.generateTextInput(e);
             }
-          }) 
+          })
         }
         { slots && slots.default ? slots.default() : null }
       </form>
     )
   }
-  vaildForm() {    
+  vaildForm() {
     for (let i = 0; i < this.config.length; i++) {
       if (this.config[i].require) {
         const currentRowVaild = vaildTest(this.data[this.config[i].field], this.config[i].rule);
-        
+
         if (!currentRowVaild[0]) {
           this.config[i].elementConfig.isError = true;
           return false;

@@ -25,14 +25,14 @@ function fetchData() {
   if (!res) {
     return;
   }
-  
+
   data.value = res.data.map((e) => {
     e.list = e.list.map(item => {
       item.createTime = $dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
       item.updateTime = $dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
       return item;
     })
-      
+
     return e;
   });
 }
@@ -40,8 +40,8 @@ function fetchData() {
 fetchData();
 </script>
 <template>
-  <NuxtLayout 
-    name="header-section-footer" 
+  <NuxtLayout
+    name="header-section-footer"
     bg-change-color="true"
     bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);"
   >
@@ -51,14 +51,14 @@ fetchData();
           <div class="address__item"
             v-for="(item, index) in data"
             :key="index"
-            v-show="item.list.length > 0"
+            v-show="item.list.length > 0 && item.category.display === 1"
           >
             <h3 class="address__title mt1">
               <com-icon v-show="item.category.iconClass" :icon="`profile-${item.category.iconClass}`"></com-icon>
               {{ item.category.name }}
             </h3>
             <div class="address__gird my1">
-              <NuxtLink 
+              <NuxtLink
                 class="link__item flex__row--between p1"
                 v-for="(i, idx) in item.list"
                 :key="idx"
