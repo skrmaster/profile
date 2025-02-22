@@ -74,7 +74,7 @@ function getRandomAphorisms() {
   apiGetRandom().then(res => {
     speech.value = res.data.content;
     from.value = res.data.from;
-  }).catch(e => {});
+  }).catch(e => { });
 }
 
 function drawClock() {
@@ -86,7 +86,7 @@ function drawClock() {
   const w_canvas = canvas.width;
   const h_canvas = canvas.height;
   const ctx = canvas.getContext('2d');
-  
+
   if (!ctx) {
     drawClock();
     return;
@@ -97,48 +97,56 @@ function drawClock() {
   ctx.translate(0, 500);
   ctx.scale(2, 2);
   ctx.save();
-    if (deg < currentTimeRotateDeg) {
-      ctx.rotate(-(deg * Math.PI / 180));
+
+  if (deg < currentTimeRotateDeg) {
+    ctx.rotate(-(deg * Math.PI / 180));
+  } else {
+    if (currentTimeRotateDeg < 0) {
+      if (Math.abs(currentTimeRotateDeg) > deg) {
+        ctx.rotate(deg * Math.PI / 180);
+      }
     } else {
       ctx.rotate(-(deg * Math.PI / 180));
       canvasAnimateSwitch = false;
     }
-    ctx.rotate(-(Math.PI / 60));
+  }
+
+  ctx.rotate(-(Math.PI / 60));
+  ctx.save();
+  ctx.strokeStyle = "color: black";
+
+  ctx.beginPath();
+  ctx.lineWidth = 1.5;
+  ctx.arc(0, 0, 158, 0, 2 * Math.PI, true);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.lineWidth = 1.5;
+  ctx.arc(0, 0, 122, 0, 2 * Math.PI, true);
+  ctx.stroke();
+
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 12; i++) {
     ctx.save();
-      ctx.strokeStyle = "color: black";
+    ctx.rotate(Math.PI / 6 * i);
+    ctx.translate(0, -145);
+    ctx.beginPath();
+    //字号
+    ctx.scale(1.5, 1.5);
+    const tmp: Record<string, Path2D> = {};
+    textArray[i].forEach((e: string, i: number) => {
+      tmp[`p${i}`] = new Path2D(e);
+    });
 
-      ctx.beginPath();
-      ctx.lineWidth = 1.5;
-      ctx.arc(0, 0, 158, 0, 2 * Math.PI, true);
-      ctx.stroke();
+    const p = new Path2D();
+    for (const key in tmp) {
+      p.addPath(tmp[key]);
+    }
 
-      ctx.beginPath();
-      ctx.lineWidth = 1.5;
-      ctx.arc(0, 0, 122, 0, 2 * Math.PI, true);
-      ctx.stroke();
-
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 12; i++) {
-        ctx.save();
-          ctx.rotate(Math.PI / 6 * i);
-          ctx.translate(0, -145);
-          ctx.beginPath();
-          //字号
-          ctx.scale(1.5, 1.5);
-          const tmp: Record<string, Path2D> = {};
-          textArray[i].forEach((e: string, i: number) => {
-            tmp[`p${i}`] = new Path2D(e);
-          });
-
-          const p = new Path2D();
-          for (const key in tmp) {
-            p.addPath(tmp[key]);
-          }
-
-          ctx.fill(p);
-        ctx.restore();
-      }
+    ctx.fill(p);
     ctx.restore();
+  }
+  ctx.restore();
   ctx.restore();
 
   //指针圆环
@@ -153,28 +161,30 @@ function drawClock() {
   ctx.moveTo(0, -10);
   ctx.lineTo(0, -125);
   ctx.stroke();
-    
+
   ctx.beginPath();
   ctx.moveTo(5, -125);
   ctx.lineTo(-5, -125);
   ctx.lineTo(0, -133);
   ctx.fill();
 
-  
+  ctx.restore();
+
   if (!canvasAnimateSwitch) {
     return;
   } else {
     ctx.restore();
     deg++;
   }
-  
+
   window.requestAnimationFrame(drawClock);
 }
 
 function getRotateDeg(): number {
   const year = dayDate.yearDayCount();
+
   const oneOfDeg = (360 / year);
-  const point = DayDate.numberPointNumberOfMonth('3.21', 
+  const point = DayDate.numberPointNumberOfMonth('3.21',
     DayDate.monthMap(dayDate.yearDayCount()));
   const currentDay = getTodayNumber();
   const res = (currentDay - point) * oneOfDeg;
@@ -185,47 +195,47 @@ function getTodayNumber(): number {
   const currentDate = dayjs();
   const formattedDate = currentDate.format('M.D');
 
-  return DayDate.numberPointNumberOfMonth(formattedDate, 
+  return DayDate.numberPointNumberOfMonth(formattedDate,
     DayDate.monthMap(dayDate.yearDayCount()));
 }
 
 function handleSubmit() {
   if (form.value) {
     form.value.vaildForm()
-    .then((val: ReturnVaildForm) => {
-      if (val.vaild) {
-        const params: LoginType = {
-          email: val.data.email,
-          password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
-          isRemember: rememberPassword.value
-        }
-
-        btnLoading.value = true;
-        apiLogin(params).then((data) => {
-          btnLoading.value = false;
-          cookieGetUserInfo.value = rememberPassword.value ? true.toString() : false.toString();
-          if (data.succeeded) {
-            const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
-            const storage = new StorageSuger(storageStr);
-            storage.setValue('userInfo', data.data);
-            const userInfoString = aesDecrypt(data.data);
-            const userInfoObj: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
-            userInfo.value = { ...userInfoObj };
-            navigateTo('/');
-          } else {
-            cookieGetUserInfo.value = false.toString();
-            $message.show({
-              message: data.errors,
-              type: 'error'
-            });
+      .then((val: ReturnVaildForm) => {
+        if (val.vaild) {
+          const params: LoginType = {
+            email: val.data.email,
+            password: md5(import.meta.env.VITE_PROJECT_SALT + val.data.password),
+            isRemember: rememberPassword.value
           }
-        }).catch(e => {
+
+          btnLoading.value = true;
+          apiLogin(params).then((data) => {
+            btnLoading.value = false;
+            cookieGetUserInfo.value = rememberPassword.value ? true.toString() : false.toString();
+            if (data.succeeded) {
+              const storageStr: StorageFrom = rememberPassword.value ? 'localStorage' : 'sessionStorage';
+              const storage = new StorageSuger(storageStr);
+              storage.setValue('userInfo', data.data);
+              const userInfoString = aesDecrypt(data.data);
+              const userInfoObj: UserModel = userInfoString ? JSON.parse(userInfoString) : '';
+              userInfo.value = { ...userInfoObj };
+              navigateTo('/');
+            } else {
+              cookieGetUserInfo.value = false.toString();
+              $message.show({
+                message: data.errors,
+                type: 'error'
+              });
+            }
+          }).catch(e => {
+            btnLoading.value = false;
+          });
+        } else {
           btnLoading.value = false;
-        });
-      } else {
-        btnLoading.value = false;
-      }
-    });
+        }
+      });
   }
 }
 
@@ -240,18 +250,14 @@ onNuxtReady(() => {
     setTheme('dark');
     themeState.value = 'dark';
   } else {
-    setTheme('light');    
+    setTheme('light');
     themeState.value = 'light';
   }
 });
 
 </script>
 <template>
-  <com-background
-    :bg-change-color="false"
-    :bg-style-content="''"
-    :bg-default-size="true"
-  >
+  <com-background :bg-change-color="false" :bg-style-content="''" :bg-default-size="true">
     <div class="container flex__center">
       <div class="login-box row">
         <NuxtLink class="gohome c-p underline" to="/">
@@ -259,22 +265,14 @@ onNuxtReady(() => {
         </NuxtLink>
         <div class="notice-box p1 z-index9">
           <div class="notic-box--resize">
-            <a 
-              :href="`${url}/search?q=${speech}`" 
-              target="_blank"
-            >{{ speech }}</a>
+            <a :href="`${url}/search?q=${speech}`" target="_blank">{{ speech }}</a>
             <p class="mt1 fs14 text-right">{{ from ? `--${from}` : '' }}</p>
           </div>
         </div>
         <div class="p1 flex1 z-index9">
           <div class="input-box mx-auto">
             <div class="register-icon flex__center">
-              <com-icon
-                width="56px"
-                height="53px"
-                class="sign-up--icon"
-                icon="profile-signin"
-              ></com-icon>
+              <com-icon width="56px" height="53px" class="sign-up--icon" icon="profile-signin"></com-icon>
             </div>
             <com-form ref="form" :model="config">
               <div class="w100 mb2 flex__row--between">
@@ -283,23 +281,14 @@ onNuxtReady(() => {
                   <span class="fs14 underline">忘记密码?</span>
                 </NuxtLink>
               </div>
-              <com-button 
-                :loading="btnLoading"
-                class="action-btn fs24" 
-                @click="handleSubmit"
-              >登录</com-button>
+              <com-button :loading="btnLoading" class="action-btn fs24" @click="handleSubmit">登录</com-button>
             </com-form>
             <NuxtLink to="/signup" class="w100 mt2 text-center">
               <span class="fs12 underline">👉还没账号，立即注册</span>
             </NuxtLink>
           </div>
         </div>
-        <canvas 
-          id="login-canvas" 
-          width="500" 
-          height="500" 
-          class="clock"
-        ></canvas>
+        <canvas id="login-canvas" width="500" height="500" class="clock"></canvas>
       </div>
     </div>
   </com-background>
@@ -386,4 +375,4 @@ onNuxtReady(() => {
   left: 0;
   z-index: 1;
 }
-</style> 
+</style>

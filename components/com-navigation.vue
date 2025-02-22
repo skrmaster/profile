@@ -297,19 +297,20 @@ nav {
 
 .nav__item::before {
   content: "";
-  height: 0;
+  height: 100%;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   background: var(--nav-item-bg);
+  transform: translateY(-100%);
   transition: all .2s ease 0s;
   border-radius: 0 0 10px 10px;
 }
 
 [data-type="link"].nav__item:not(.is--active):hover::before {
-  height: 100%;
+  transform: translateY(0);
   pointer-events: none;
 }
 
@@ -318,20 +319,21 @@ nav {
 }
 
 .item__bg {
-  height: 0;
+  height: 100%;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  transition: all .2s ease 0s;
+  transform: translateY(-100%);
   background-color: var(--nav-item-active-bg-color);
   border-radius: 0 0 10px 10px;
   z-index: -1;
 }
 
 .nav__item.is--active .item__bg {
-  height: 100%;
-  animation: heightTop2bottom .2s ease 0s 1 normal forwards;
+  transform: translateY(0);
 }
 
 .nav__item:not(.is--active) .item__box

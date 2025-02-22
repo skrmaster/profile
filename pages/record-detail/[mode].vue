@@ -68,7 +68,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     category: radioValue.value,
     content: $sanitize(content.value),
     coverImageUrl: JSON.stringify(formatImagesList),
-    subtitle: userSubtitle.value,
+    subtitle: userSubtitle.value || subtitle,
     description: subtitle
   }
 
@@ -157,7 +157,7 @@ function handleEditorText(text: string) {
     <section class="flex1 flex__column">
       <div class="container flex__column flex1 mb1">
         <div class="my1">
-          <com-radio 
+          <com-radio
             v-model="radioValue"
             :list="radioList"
           ></com-radio>
@@ -182,8 +182,8 @@ function handleEditorText(text: string) {
             </com-form-input>
           </div>
         </div>
-        <wang-editor 
-          v-model="content" 
+        <wang-editor
+          v-model="content"
           class="flex1"
           @getText="handleEditorText"
         ></wang-editor>

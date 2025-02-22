@@ -4,7 +4,7 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { DomEditor } from '@wangeditor/editor';
 import { apiAdd } from '~/api/upload/request';
 import type { AddModel } from '~/api/upload/model';
- 
+
 type InsertFnType = (url: string, alt: string, href: string) => void;
 
 export default {
@@ -148,31 +148,31 @@ export default {
           // onBeforeUpload(file) {    // JS 语法
               // file 选中的文件，格式如 { key: file }
               return file
-          
+
               // 可以 return
               // 1. return file 或者 new 一个 file ，接下来将上传
               // 2. return false ，不上传这个 file
           },
-        
+
           // 上传进度的回调函数
           onProgress(progress: number) {  // TS 语法
           // onProgress(progress) {       // JS 语法
               // progress 是 0-100 的数字
               console.log('progress', progress)
           },
-        
+
           // 单个文件上传成功之后
           onSuccess(file: File, res: any) {  // TS 语法
           // onSuccess(file, res) {          // JS 语法
               console.log(`${file.name} 上传成功`, res)
           },
-        
+
           // 单个文件上传失败
           onFailed(file: File, res: any) {   // TS 语法
           // onFailed(file, res) {           // JS 语法
               console.log(`${file.name} 上传失败`, res)
           },
-        
+
           // 上传错误，或者触发 timeout 超时
           onError(file: File, err: any, res: any) {  // TS 语法
           // onError(file, err, res) {               // JS 语法
@@ -223,7 +223,7 @@ export default {
     },
     valueHtml(newVal) {
       this.$emit('update:modelValue', newVal);
-      const text = this.editorRef.getHtml();
+      const text = this.editorRef.getText();
       this.$emit('getText', text);
     }
   }
@@ -232,7 +232,7 @@ export default {
 <template>
   <div class="flex__column">
     <Toolbar class="wangeditor__toolbar" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
-    <Editor 
+    <Editor
       class="wangeditor__editor flex__column"
       v-model="valueHtml"
       :defaultConfig="editorConfig"

@@ -1,3 +1,4 @@
+// 富文本代码高亮配置
 // plugins/prism.ts
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.min.css'; // 或其他你喜欢的主题
