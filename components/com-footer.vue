@@ -75,29 +75,17 @@ const otherList = ref([
           <div class="thanks__box pl1">
             <ul>
               <li v-for="(item, index) in fontList" :key="index">
-                <NuxtLink
-                  class="thanks__link underline"
-                  target="_blank"
-                  :to="item.link"
-                >{{ item.name }}</NuxtLink>
+                <NuxtLink class="thanks__link underline" target="_blank" :to="item.link">{{ item.name }}</NuxtLink>
               </li>
             </ul>
             <ul>
               <li v-for="(item, index) in backList" :key="index">
-                <NuxtLink
-                  class="thanks__link underline"
-                  target="_blank"
-                  :to="item.link"
-                >{{ item.name }}</NuxtLink>
+                <NuxtLink class="thanks__link underline" target="_blank" :to="item.link">{{ item.name }}</NuxtLink>
               </li>
             </ul>
             <ul>
               <li v-for="(item, index) in otherList" :key="index">
-                <NuxtLink
-                  class="thanks__link underline"
-                  target="_blank"
-                  :to="item.link"
-                >{{ item.name }}</NuxtLink>
+                <NuxtLink class="thanks__link underline" target="_blank" :to="item.link">{{ item.name }}</NuxtLink>
               </li>
             </ul>
           </div>
@@ -106,7 +94,8 @@ const otherList = ref([
           <p class="mt1">Copyright<span class="copy">©</span>2024 skrmaster.top All Rights Reserved</p>
           <p class="gov flex__row">
             <img class="gov__img" src="assets/images/gov.png" />
-            <NuxtLink class="gov__link fs14" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号</NuxtLink>
+            <NuxtLink class="gov__link fs14" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号-2
+            </NuxtLink>
           </p>
         </div>
       </div>
