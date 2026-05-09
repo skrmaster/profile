@@ -68,38 +68,24 @@ function handleClick($event: Event) {
 }
 </script>
 <template>
-  <button 
-    v-if="!props.link"
-    ref="rippleRef"
-    :aria-disabled="props.disabled"
-    class="btn c-p ripple-button"
-    :class="{
-      'primary': props.type === 'primary',
-      'plain': props.plain,
-      'disabled': props.disabled,
-      'loading': btnLoading
-    }"
-    :style="{
+  <button v-if="!props.link" ref="rippleRef" :aria-disabled="props.disabled" class="btn c-p ripple-button" :class="{
+    'primary': props.type === 'primary',
+    'plain': props.plain,
+    'disabled': props.disabled,
+    'loading': btnLoading
+  }" :style="{
       '--btn-box-shadow': `0px 0px 8px 2px rgba(0, 0, 0, 0.2)
-      ${ props.needInnerOutline 
-        ? ', inset 0px 0px 8px 0px rgba(255, 255, 255, 0.9)' 
-        : ';'
-      }`,
+      ${props.needInnerOutline
+          ? ', inset 0px 0px 8px 0px rgba(255, 255, 255, 0.9)'
+          : ';'
+        }`,
       backgroundColor: props.bgColor
-    }"
-    @click="handleClick"
-  >
+    }" @click="handleClick">
     <com-icon :icon="props.prefixIcon" :color="'inherit'"></com-icon>
     <slot />
     <com-icon :icon="props.suffixIcon" :color="'inherit'"></com-icon>
   </button>
-  <button v-else
-    type="button"
-    :aria-disabled="props.disabled"
-    role="link"
-    class="btn--link c-p"
-    @click="handleClick"
-  >
+  <button v-else type="button" :aria-disabled="props.disabled" role="link" class="btn--link c-p" @click="handleClick">
     <com-icon :icon="props.prefixIcon" :color="'inherit'"></com-icon>
     <slot />
     <com-icon :icon="props.suffixIcon" :color="'inherit'"></com-icon>
@@ -120,7 +106,7 @@ function handleClick($event: Event) {
 
 .btn.plain {
   box-shadow: none;
-  background: var(--white-color)!important;
+  background: var(--white-color) !important;
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
 }

@@ -39,8 +39,8 @@ class FormInstance implements Form {
       return (
         <div class="mb1 w100">
           <com-select
-            v-model={ this.data[config.field] }
-            { ...config.elementConfig }
+            v-model={this.data[config.field]}
+            {...config.elementConfig}
           >
           </com-select>
         </div>
@@ -49,8 +49,8 @@ class FormInstance implements Form {
       return (
         <>
           <com-select
-            v-model={ this.data[config.field] }
-            { ...config.elementConfig }
+            v-model={this.data[config.field]}
+            {...config.elementConfig}
           >
           </com-select>
         </>
@@ -61,9 +61,9 @@ class FormInstance implements Form {
     return (
       <com-form-input
         class="mb1"
-        v-model={ this.data[config.field] }
+        v-model={this.data[config.field]}
         {...config.elementConfig}
-        type={ config.type }
+        type={config.type}
       >
       </com-form-input>
     )
@@ -72,20 +72,20 @@ class FormInstance implements Form {
     return (
       <com-form-verification-code
         class="mb1"
-        v-model={ this.data[config.field] }
-        { ...config.elementConfig }
-        onSendMail={ () => handleSendMail(this.data) }
+        v-model={this.data[config.field]}
+        {...config.elementConfig}
+        onSendMail={() => handleSendMail(this.data)}
       >
       </com-form-verification-code>
     )
   }
-  generateSwitch(config: FormConfig): VNode{
+  generateSwitch(config: FormConfig): VNode {
     if (config.elementConfig?.layout && config.elementConfig.layout == 'column') {
       return (
         <div class="mb1 w100">
           <com-switch
-            v-model={ this.data[config.field] }
-            { ...config.elementConfig }
+            v-model={this.data[config.field]}
+            {...config.elementConfig}
           ></com-switch>
         </div>
       )
@@ -94,8 +94,8 @@ class FormInstance implements Form {
         <>
           <com-switch
             class="mb1"
-            v-model={ this.data[config.field] }
-            { ...config.elementConfig }
+            v-model={this.data[config.field]}
+            {...config.elementConfig}
           ></com-switch>
         </>
       )
@@ -110,10 +110,10 @@ class FormInstance implements Form {
   generateUploadFile(config: FormConfig): VNode {
     return (
       <com-upload
-        label={ config.elementConfig.label }
-        data-list={ config.elementConfig.fileList }
-        limit={ config.elementConfig.limit }
-        onFileMonuted={ handleFileUpload }
+        label={config.elementConfig.label}
+        data-list={config.elementConfig.fileList}
+        limit={config.elementConfig.limit}
+        onFileMonuted={handleFileUpload}
         class="mb1"
       ></com-upload>
     )
@@ -122,7 +122,7 @@ class FormInstance implements Form {
     return (
       <com-form-checkbox
         class="mb1 w100"
-        v-model={ this.data[config.field] }
+        v-model={this.data[config.field]}
         {...config.elementConfig}
       ></com-form-checkbox>
     )
@@ -133,8 +133,8 @@ class FormInstance implements Form {
   generateIconList(config: FormConfig): VNode {
     return (<>
       <com-icon-list
-        v-model={ this.data[config.field] }
-        { ...config.elementConfig }
+        v-model={this.data[config.field]}
+        {...config.elementConfig}
       ></com-icon-list>
     </>)
   }
@@ -161,7 +161,7 @@ class FormInstance implements Form {
             }
           })
         }
-        { slots && slots.default ? slots.default() : null }
+        {slots && slots.default ? slots.default() : null}
       </form>
     )
   }
@@ -217,6 +217,4 @@ defineExpose({
 <template>
   <elementForm class="flex-wrap"></elementForm>
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>

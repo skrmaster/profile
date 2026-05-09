@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 type Props = {
-  icon: string;
+  icon?: string;
   prefix?: '#icon';
   width?: string;
   height?: string;
@@ -29,17 +29,11 @@ function handleClick($event: Event) {
 </script>
 <template>
   <span class="icon__box">
-    <svg
-      v-if="props.icon"  
-      class="icon"
-      aria-hidden="true"
-      @click="handleClick"
-      :style="{
-        width: props.width,
-        height: props.height,
-        color: props.color
-      }"
-    >
+    <svg v-if="props.icon" class="icon" aria-hidden="true" @click="handleClick" :style="{
+      width: props.width,
+      height: props.height,
+      color: props.color
+    }">
       <use :xlink:href="icon"></use>
     </svg>
   </span>

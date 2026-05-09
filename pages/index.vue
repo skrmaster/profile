@@ -6,6 +6,28 @@ import ligthOffSvg from 'assets/svg/light-off.svg';
 import walking from 'assets/json/walkMan.json';
 import type { AddModel } from '~/api/message/model';
 import { apiAdd } from '~/api/message/request';
+import { useTemplateRef } from 'vue';
+import { useIntersectionObserver } from '@vueuse/core';
+
+const IndexProjects = defineAsyncComponent(
+  () => import('@/lib/components/index-projects.vue')
+)
+
+const projectsVisible = ref(false)
+const target = useTemplateRef('targetRef')
+
+useIntersectionObserver(
+  target as any,
+  ([entry]) => {
+    if (entry?.isIntersecting) {
+      projectsVisible.value = true
+      stop()
+    }
+  },
+  {
+    threshold: 0.1
+  }
+)
 
 type Park = {
   ctx: CanvasRenderingContext2D | null;
@@ -39,12 +61,6 @@ let once = false;
 watch(theme, (val) => {
   if (val) {
     changeLight(val as string);
-  }
-});
-
-watch(parkCanvasRef, () => {
-  if (!once && parkCanvasRef.value) {
-    loadResource();
   }
 });
 
@@ -332,35 +348,36 @@ const btnLoading = ref(false);
 const submit = throttle(handleAddMessage)
 function handleAddMessage() {
   formRef.value.vaildForm()
-  .then((val: ReturnVaildForm) => {
-    if (val.vaild) {
-      const params: AddModel = {
-        userName: val.data.userName,
-        contactWay: val.data.contactWay,
-        content: val.data.content
-      }
-      btnLoading.value = true;
-      apiAdd(params).then(res => {
-        btnLoading.value = false;
-        if (res.succeeded) {
-          $message.show({
-            message: '提交成功',
-            type: 'success'
-          });
-        } else {
-          $message.show({
-            message: '提交失败',
-            type: 'error'
-          });
+    .then((val: ReturnVaildForm) => {
+      if (val.vaild) {
+        const params: AddModel = {
+          userName: val.data.userName,
+          contactWay: val.data.contactWay,
+          content: val.data.content
         }
-      }).catch(e => {
-        btnLoading.value = false;
-      });
-    }
-});
+        btnLoading.value = true;
+        apiAdd(params).then(res => {
+          btnLoading.value = false;
+          if (res.succeeded) {
+            $message.show({
+              message: '提交成功',
+              type: 'success'
+            });
+          } else {
+            $message.show({
+              message: '提交失败',
+              type: 'error'
+            });
+          }
+        }).catch(e => {
+          btnLoading.value = false;
+        });
+      }
+    });
 }
 
 onNuxtReady(() => {
+  loadResource();
   const resizeHandler = debounce(initCanvas, 500);
   window.addEventListener('resize', () => {
     resizeHandler();
@@ -375,15 +392,10 @@ onBeforeUnmount(() => {
 <template>
   <NuxtLayout name="header-section-footer">
     <section class="p-r overflow-hidden">
-      <canvas
-        ref="parkCanvasRef"
-        :style="{
-          'transform-origin': 'top left',
-          'transform': parkTransform
-        }"
-        id="park"
-        class="z-index2"
-      ></canvas>
+      <canvas ref="parkCanvasRef" :style="{
+        'transform-origin': 'top left',
+        'transform': parkTransform
+      }" id="park" class="z-index2"></canvas>
       <div class="section-bg gaussian-blur z-index3"></div>
       <div class="container z-index4">
         <div class="introduction" :class="{
@@ -408,7 +420,9 @@ onBeforeUnmount(() => {
                   开发、组件二次封装、<span class="font-bold">SSR</span>网站
                   前端开发等等...
                 </p>
-                <com-button suffix-icon="profile-arrow" link><NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink></com-button>
+                <com-button suffix-icon="profile-arrow" link>
+                  <NuxtLink class="fs18" to="#skills" style="color: var(--primary-color);">了解更多</NuxtLink>
+                </com-button>
               </div>
               <div v-if="theme !== 'dark' && windowWidth > 1252" class="introduction__bg"></div>
             </div>
@@ -419,7 +433,12 @@ onBeforeUnmount(() => {
     </section>
     <index-skills v-if="windowWidth >= 992" :width="windowWidth"></index-skills>
     <index-skills-small v-else></index-skills-small>
-    <index-projects :width="windowWidth"></index-projects>
+
+    <ClientOnly>
+      <div ref="targetRef">
+        <index-projects v-if="projectsVisible" :width="windowWidth"></index-projects>
+      </div>
+    </ClientOnly>
     <div class="container">
       <div class="text-center contact__me">
         <p class="fs48">联系我</p>
@@ -511,7 +530,8 @@ onBeforeUnmount(() => {
   max-height: 100%;
 }
 
-.self-introduction ,.detail {
+.self-introduction,
+.detail {
   max-width: 350px;
   width: 100%;
 }
@@ -559,16 +579,16 @@ onBeforeUnmount(() => {
 }
 
 :deep(.index__form .form__input-box) {
-  border-style: dashed!important;
-  background: var(--white-color)!important;
+  border-style: dashed !important;
+  background: var(--white-color) !important;
 }
 
 :deep(.index__form .form__input-box .form__placeholder--active) {
-  background: var(--white-color)!important;
+  background: var(--white-color) !important;
 }
 
 :deep(.index__form .form__input-box input) {
-  background: var(--white-color)!important;
+  background: var(--white-color) !important;
 }
 
 .submit-btn {
