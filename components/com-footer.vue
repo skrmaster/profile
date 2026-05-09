@@ -94,7 +94,7 @@ const otherList = ref([
           <p class="mt1">Copyright<span class="copy">©</span>2024 skrmaster.top All Rights Reserved</p>
           <p class="gov flex__row">
             <img class="gov__img" src="assets/images/gov.png" />
-            <NuxtLink class="gov__link fs14" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号-2
+            <NuxtLink class="gov__link fs14" target="_blank" to="https://beian.miit.gov.cn">蜀ICP备2024083613号-3
             </NuxtLink>
           </p>
         </div>
