@@ -179,9 +179,9 @@ export function getImageHref(url: string | undefined): string {
     return "";
   }
 
-  if (url.includes("http")) {
+  if (url.startsWith("http")) {
     return url;
-  } else {
-    return new URL(url, imagePrefix).toString();
   }
+
+  return `/${url.replace(/^\/+/, "")}`;
 }
