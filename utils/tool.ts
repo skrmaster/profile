@@ -65,7 +65,9 @@ export function splicingImageUrl(raw: string): string | undefined {
     return;
   }
 
-  return `${siteBase}${raw}`.replace(/\/+/g, "/");
+  return !process.env.NUXT_APP_BASE_URL
+    ? `/${raw}`.replace(/\/+/g, "/")
+    : `${siteBase}${raw}`.replace(/\/+/g, "/");
 }
 
 export function getImageUrl(item: Upload.FileInfo): string | undefined {
