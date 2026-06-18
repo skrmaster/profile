@@ -1,0 +1,95 @@
+{
+  "RECORDS": [
+    {
+      "Id": 1,
+      "UserId": 1,
+      "RecordId": 32,
+      "CreateTime": "6/2/2025 20:33:00",
+      "Category": 1
+    },
+    {
+      "Id": 2,
+      "UserId": 1,
+      "RecordId": 31,
+      "CreateTime": "6/2/2025 20:33:02",
+      "Category": 1
+    },
+    {
+      "Id": 3,
+      "UserId": 1,
+      "RecordId": 30,
+      "CreateTime": "6/2/2025 20:33:02",
+      "Category": 1
+    },
+    {
+      "Id": 4,
+      "UserId": 1,
+      "RecordId": 29,
+      "CreateTime": "6/2/2025 20:33:04",
+      "Category": 1
+    },
+    {
+      "Id": 5,
+      "UserId": 1,
+      "RecordId": 28,
+      "CreateTime": "6/2/2025 20:33:05",
+      "Category": 1
+    },
+    {
+      "Id": 6,
+      "UserId": 1,
+      "RecordId": 27,
+      "CreateTime": "6/2/2025 20:33:05",
+      "Category": 1
+    },
+    {
+      "Id": 7,
+      "UserId": 1,
+      "RecordId": 26,
+      "CreateTime": "6/2/2025 20:33:07",
+      "Category": 1
+    },
+    {
+      "Id": 8,
+      "UserId": 1,
+      "RecordId": 25,
+      "CreateTime": "6/2/2025 20:33:08",
+      "Category": 1
+    },
+    {
+      "Id": 9,
+      "UserId": 1,
+      "RecordId": 24,
+      "CreateTime": "6/2/2025 20:33:09",
+      "Category": 1
+    },
+    {
+      "Id": 10,
+      "UserId": 1,
+      "RecordId": 23,
+      "CreateTime": "6/2/2025 20:33:10",
+      "Category": 1
+    },
+    {
+      "Id": 14,
+      "UserId": 1,
+      "RecordId": 32,
+      "CreateTime": "6/2/2025 20:37:45",
+      "Category": 3
+    },
+    {
+      "Id": 23,
+      "UserId": 1,
+      "RecordId": 37,
+      "CreateTime": "20/2/2025 21:48:47",
+      "Category": 1
+    },
+    {
+      "Id": 24,
+      "UserId": 1,
+      "RecordId": 36,
+      "CreateTime": "20/2/2025 21:48:48",
+      "Category": 1
+    }
+  ]
+}

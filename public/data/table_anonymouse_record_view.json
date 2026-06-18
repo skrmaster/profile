@@ -1,0 +1,102 @@
+{
+  "RECORDS": [
+    {
+      "Id": 2,
+      "RecordId": 11,
+      "ViewedAt": "22/7/2024 13:37:36",
+      "ViewSource": "::1",
+      "UseCount": 2
+    },
+    {
+      "Id": 3,
+      "RecordId": 12,
+      "ViewedAt": "21/6/2024 14:50:01",
+      "ViewSource": "172.70.91.244",
+      "UseCount": 1
+    },
+    {
+      "Id": 4,
+      "RecordId": 11,
+      "ViewedAt": "22/7/2024 13:37:36",
+      "ViewSource": "218.88.126.249",
+      "UseCount": 2
+    },
+    {
+      "Id": 5,
+      "RecordId": 18,
+      "ViewedAt": "16/2/2025 13:56:06",
+      "ViewSource": "218.88.125.17",
+      "UseCount": 2
+    },
+    {
+      "Id": 6,
+      "RecordId": 15,
+      "ViewedAt": "2/8/2024 14:08:43",
+      "ViewSource": "39.144.137.211",
+      "UseCount": 1
+    },
+    {
+      "Id": 7,
+      "RecordId": 29,
+      "ViewedAt": "9/8/2024 10:43:33",
+      "ViewSource": "39.144.139.12",
+      "UseCount": 2
+    },
+    {
+      "Id": 8,
+      "RecordId": 16,
+      "ViewedAt": "9/8/2024 10:41:08",
+      "ViewSource": "39.144.137.38",
+      "UseCount": 1
+    },
+    {
+      "Id": 9,
+      "RecordId": 20,
+      "ViewedAt": "16/2/2025 14:52:29",
+      "ViewSource": "117.173.176.188",
+      "UseCount": 2
+    },
+    {
+      "Id": 10,
+      "RecordId": 32,
+      "ViewedAt": "16/2/2025 22:47:49",
+      "ViewSource": "183.221.0.110",
+      "UseCount": 2
+    },
+    {
+      "Id": 11,
+      "RecordId": 32,
+      "ViewedAt": "16/2/2025 22:47:49",
+      "ViewSource": "117.173.246.195",
+      "UseCount": 2
+    },
+    {
+      "Id": 12,
+      "RecordId": 33,
+      "ViewedAt": "16/2/2025 13:00:47",
+      "ViewSource": "171.219.222.31",
+      "UseCount": 1
+    },
+    {
+      "Id": 13,
+      "RecordId": 19,
+      "ViewedAt": "16/2/2025 13:54:40",
+      "ViewSource": "218.203.227.92",
+      "UseCount": 1
+    },
+    {
+      "Id": 14,
+      "RecordId": 37,
+      "ViewedAt": "26/2/2025 23:32:17",
+      "ViewSource": "117.173.176.44",
+      "UseCount": 1
+    },
+    {
+      "Id": 15,
+      "RecordId": 37,
+      "ViewedAt": "3/3/2025 15:06:47",
+      "ViewSource": "222.210.191.35",
+      "UseCount": 1
+    }
+  ]
+}

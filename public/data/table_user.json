@@ -1,0 +1,24 @@
+{
+  "RECORDS": [
+    {
+      "Id": 1,
+      "Account": "skrmaster",
+      "Password": "3edb35b11643a5684a8429bc739eb35c",
+      "Avatar": "{\"id\":\"b3de4197-832d-41ba-8a4d-6d16b77727e7\",\"fullPath\":\"Uploads/2024-06-21/c9ae8911-d795-46e8-8a46-7998cdf4596f_20240621064113218.jpg\"}",
+      "Email": "zyskr@qq.com",
+      "Permission": "\"1\"",
+      "CreateTime": "1/6/2024 13:52:44",
+      "UpdateTime": "21/6/2024 14:41:48"
+    },
+    {
+      "Id": 2,
+      "Account": "abc",
+      "Password": "3edb35b11643a5684a8429bc739eb35c",
+      "Avatar": null,
+      "Email": "2970247128@qq.com",
+      "Permission": "2",
+      "CreateTime": "31/8/2024 15:06:03",
+      "UpdateTime": null
+    }
+  ]
+}

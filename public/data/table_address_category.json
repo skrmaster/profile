@@ -1,0 +1,85 @@
+{
+  "RECORDS": [
+    {
+      "Id": 1,
+      "Name": "动漫",
+      "Sort": 36,
+      "CreateTime": "23/7/2024 17:10:25",
+      "UpdateTime": "28/7/2024 15:31:24",
+      "IconClass": "dongman1",
+      "Display": 0
+    },
+    {
+      "Id": 2,
+      "Name": "漫画",
+      "Sort": 37,
+      "CreateTime": "23/7/2024 18:58:48",
+      "UpdateTime": "28/7/2024 15:31:28",
+      "IconClass": "Icon_manhuaB",
+      "Display": 0
+    },
+    {
+      "Id": 3,
+      "Name": "影视",
+      "Sort": 38,
+      "CreateTime": "23/7/2024 19:00:50",
+      "UpdateTime": "28/7/2024 15:31:33",
+      "IconClass": "dongman",
+      "Display": 0
+    },
+    {
+      "Id": 4,
+      "Name": "小说",
+      "Sort": 39,
+      "CreateTime": "23/7/2024 19:00:54",
+      "UpdateTime": "28/7/2024 15:31:40",
+      "IconClass": "xiaoshuo",
+      "Display": 0
+    },
+    {
+      "Id": 5,
+      "Name": "游戏",
+      "Sort": 40,
+      "CreateTime": "23/7/2024 19:01:00",
+      "UpdateTime": "28/7/2024 15:31:43",
+      "IconClass": "youxi",
+      "Display": 0
+    },
+    {
+      "Id": 7,
+      "Name": "前端框架",
+      "Sort": 10,
+      "CreateTime": "25/7/2024 19:37:53",
+      "UpdateTime": "17/2/2025 19:24:53",
+      "IconClass": "kuangjia1",
+      "Display": 1
+    },
+    {
+      "Id": 8,
+      "Name": "UI组件库",
+      "Sort": 11,
+      "CreateTime": "1/8/2024 18:58:20",
+      "UpdateTime": "17/2/2025 19:24:51",
+      "IconClass": "qihuiweiguanwangicon_UIsheji",
+      "Display": 1
+    },
+    {
+      "Id": 10,
+      "Name": "前端功能库",
+      "Sort": 45,
+      "CreateTime": "17/2/2025 19:32:26",
+      "UpdateTime": "17/2/2025 19:32:36",
+      "IconClass": "zujian1",
+      "Display": 1
+    },
+    {
+      "Id": 11,
+      "Name": "AI",
+      "Sort": 55,
+      "CreateTime": "15/5/2026 18:54:07",
+      "UpdateTime": null,
+      "IconClass": "",
+      "Display": 1
+    }
+  ]
+}

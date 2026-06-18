@@ -1,0 +1,139 @@
+{
+  "RECORDS": [
+    {
+      "Id": 5,
+      "Name": "HTML5",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 3,
+      "CreateTime": "19/5/2024 15:54:49",
+      "UpdateTime": "23/5/2024 17:34:03"
+    },
+    {
+      "Id": 7,
+      "Name": "vue2/3",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 4,
+      "CreateTime": "19/5/2024 16:25:44",
+      "UpdateTime": "23/5/2024 17:33:32"
+    },
+    {
+      "Id": 8,
+      "Name": "JavaScript",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 1,
+      "CreateTime": "19/5/2024 17:27:31",
+      "UpdateTime": "23/5/2024 17:33:48"
+    },
+    {
+      "Id": 9,
+      "Name": "Css3",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 10,
+      "CreateTime": "19/5/2024 17:34:24",
+      "UpdateTime": "23/5/2024 17:34:16"
+    },
+    {
+      "Id": 10,
+      "Name": "TypeScript",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 12,
+      "CreateTime": "23/5/2024 17:34:31",
+      "UpdateTime": "23/5/2024 17:34:31"
+    },
+    {
+      "Id": 11,
+      "Name": "Uni-app",
+      "UserId": 1,
+      "Proficiency": 100,
+      "Sort": 11,
+      "CreateTime": "23/5/2024 17:34:43",
+      "UpdateTime": "23/5/2024 17:34:43"
+    },
+    {
+      "Id": 12,
+      "Name": "Canvas",
+      "UserId": 1,
+      "Proficiency": 90,
+      "Sort": 13,
+      "CreateTime": "23/5/2024 17:34:59",
+      "UpdateTime": "23/5/2024 17:34:59"
+    },
+    {
+      "Id": 13,
+      "Name": "Echarts",
+      "UserId": 1,
+      "Proficiency": 90,
+      "Sort": 2,
+      "CreateTime": "23/5/2024 17:35:13",
+      "UpdateTime": "23/5/2024 17:35:13"
+    },
+    {
+      "Id": 14,
+      "Name": "Git",
+      "UserId": 1,
+      "Proficiency": 90,
+      "Sort": 15,
+      "CreateTime": "23/5/2024 17:35:25",
+      "UpdateTime": "23/5/2024 17:35:25"
+    },
+    {
+      "Id": 15,
+      "Name": "nuxt2/3",
+      "UserId": 1,
+      "Proficiency": 90,
+      "Sort": 8,
+      "CreateTime": "23/5/2024 17:35:36",
+      "UpdateTime": "23/5/2024 17:35:36"
+    },
+    {
+      "Id": 16,
+      "Name": "Sass/Less",
+      "UserId": 1,
+      "Proficiency": 90,
+      "Sort": 9,
+      "CreateTime": "23/5/2024 17:35:47",
+      "UpdateTime": "23/5/2024 17:35:47"
+    },
+    {
+      "Id": 17,
+      "Name": "Websocket",
+      "UserId": 1,
+      "Proficiency": 80,
+      "Sort": 7,
+      "CreateTime": "23/5/2024 17:36:00",
+      "UpdateTime": "23/5/2024 17:36:00"
+    },
+    {
+      "Id": 18,
+      "Name": "兼容适配",
+      "UserId": 1,
+      "Proficiency": 80,
+      "Sort": 5,
+      "CreateTime": "23/5/2024 17:36:12",
+      "UpdateTime": "23/5/2024 17:36:12"
+    },
+    {
+      "Id": 19,
+      "Name": "Photoshop",
+      "UserId": 1,
+      "Proficiency": 70,
+      "Sort": 6,
+      "CreateTime": "23/5/2024 17:36:23",
+      "UpdateTime": "23/5/2024 17:36:23"
+    },
+    {
+      "Id": 20,
+      "Name": "Illustrator",
+      "UserId": 1,
+      "Proficiency": 70,
+      "Sort": 14,
+      "CreateTime": "23/5/2024 17:36:35",
+      "UpdateTime": "23/5/2024 17:36:35"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "RECORDS": [
+    {
+      "Id": 1,
+      "Name": "admin",
+      "Description": "管理权限",
+      "CreateTime": "2/6/2024 10:40:52",
+      "UpdateTime": null
+    },
+    {
+      "Id": 2,
+      "Name": "register",
+      "Description": "注册用户",
+      "CreateTime": "6/6/2024 14:53:34",
+      "UpdateTime": null
+    }
+  ]
+}

@@ -1,0 +1,354 @@
+{
+  "RECORDS": [
+    {
+      "Id": 1,
+      "From": "超社会",
+      "Content": "我认帐，但是老子不给！嘻嘻...老子不给！不给！",
+      "CreateTime": "23/5/2024 17:16:07",
+      "UpdateTime": null
+    },
+    {
+      "Id": 2,
+      "From": "解忧杂货店",
+      "Content": "如果自己不想积极认真地生活，不管得到什么样的回答都没用。",
+      "CreateTime": "31/5/2024 16:59:08",
+      "UpdateTime": null
+    },
+    {
+      "Id": 3,
+      "From": "爱因斯坦",
+      "Content": "不要为成功而努力，要为做一个有价值的人而努力。",
+      "CreateTime": "14/6/2024 20:40:44",
+      "UpdateTime": null
+    },
+    {
+      "Id": 4,
+      "From": "高尔基",
+      "Content": "人需要真理，就像瞎子需要明眼的向导一样。",
+      "CreateTime": "14/6/2024 20:42:29",
+      "UpdateTime": null
+    },
+    {
+      "Id": 5,
+      "From": "爱迪生",
+      "Content": "失败也是我需要的，它和成功对我一样有价值。",
+      "CreateTime": "14/6/2024 20:42:41",
+      "UpdateTime": null
+    },
+    {
+      "Id": 6,
+      "From": "列夫·托尔斯泰",
+      "Content": "幸福在于为别人生活。",
+      "CreateTime": "14/6/2024 20:43:04",
+      "UpdateTime": null
+    },
+    {
+      "Id": 7,
+      "From": "艾尔·金斯",
+      "Content": "不要等到明天，明天太遥远，今天就行动。",
+      "CreateTime": "14/6/2024 20:43:20",
+      "UpdateTime": null
+    },
+    {
+      "Id": 8,
+      "From": "布莱斯塔",
+      "Content": "科学没有国界，因为它是属于全人类的财富。",
+      "CreateTime": "14/6/2024 20:43:31",
+      "UpdateTime": null
+    },
+    {
+      "Id": 9,
+      "From": "欧文",
+      "Content": "成功的秘诀是尽力于当下。",
+      "CreateTime": "14/6/2024 20:47:04",
+      "UpdateTime": null
+    },
+    {
+      "Id": 10,
+      "From": "汪国真，《生活》",
+      "Content": "生活的意义在于每个人对幸福的追求。",
+      "CreateTime": "14/6/2024 20:50:49",
+      "UpdateTime": null
+    },
+    {
+      "Id": 11,
+      "From": "高晓松，《生活不止眼前的苟且》",
+      "Content": "生活不止眼前的苟且，还有诗和远方的田野。",
+      "CreateTime": "14/6/2024 20:51:03",
+      "UpdateTime": null
+    },
+    {
+      "Id": 12,
+      "From": "尼采，《查拉图斯特拉如是说》",
+      "Content": "每一个不曾起舞的日子，都是对生命的辜负。",
+      "CreateTime": "14/6/2024 20:51:14",
+      "UpdateTime": null
+    },
+    {
+      "Id": 13,
+      "From": "艾青，《我爱这土地》",
+      "Content": "假如我是一只鸟，我也应该用嘶哑的喉咙歌唱。",
+      "CreateTime": "14/6/2024 20:51:29",
+      "UpdateTime": null
+    },
+    {
+      "Id": 14,
+      "From": "席慕蓉，《离歌》",
+      "Content": "人总是要离开的，而每一次离开，却又是为了更好的归来。",
+      "CreateTime": "14/6/2024 20:51:43",
+      "UpdateTime": null
+    },
+    {
+      "Id": 15,
+      "From": "徐志摩，《再别康桥》",
+      "Content": "轻轻的我走了，正如我轻轻的来。",
+      "CreateTime": "14/6/2024 20:51:58",
+      "UpdateTime": null
+    },
+    {
+      "Id": 16,
+      "From": "海子，《夏天的太阳》",
+      "Content": "你来人间一趟，你要看看太阳。",
+      "CreateTime": "14/6/2024 20:52:16",
+      "UpdateTime": null
+    },
+    {
+      "Id": 17,
+      "From": "海子，《面朝大海，春暖花开》",
+      "Content": "我有一所房子，面朝大海，春暖花开。",
+      "CreateTime": "14/6/2024 20:52:25",
+      "UpdateTime": null
+    },
+    {
+      "Id": 18,
+      "From": "艾青，《我爱这土地》",
+      "Content": "为什么我的眼里常含泪水，因为我对这土地爱得深沉。",
+      "CreateTime": "14/6/2024 20:52:39",
+      "UpdateTime": null
+    },
+    {
+      "Id": 19,
+      "From": "海德格尔，《存在与时间》",
+      "Content": "人是注定要自由的，因为人是被抛到世界上去的。",
+      "CreateTime": "14/6/2024 20:55:17",
+      "UpdateTime": null
+    },
+    {
+      "Id": 20,
+      "From": "尼采，《查拉图斯特拉如是说》",
+      "Content": "上帝死了。",
+      "CreateTime": "14/6/2024 20:55:32",
+      "UpdateTime": null
+    },
+    {
+      "Id": 21,
+      "From": "弗朗西斯·培根，《新工具》",
+      "Content": "知识就是力量。",
+      "CreateTime": "14/6/2024 20:55:42",
+      "UpdateTime": null
+    },
+    {
+      "Id": 22,
+      "From": "黑格尔，《法哲学原理》",
+      "Content": "存在即合理。",
+      "CreateTime": "14/6/2024 20:55:53",
+      "UpdateTime": null
+    },
+    {
+      "Id": 23,
+      "From": "卢梭，《社会契约论》",
+      "Content": "人生而自由，却无往不在枷锁之中。",
+      "CreateTime": "14/6/2024 20:56:01",
+      "UpdateTime": null
+    },
+    {
+      "Id": 24,
+      "From": "萨特，《存在与虚无》",
+      "Content": "无法选择即是选择。",
+      "CreateTime": "14/6/2024 20:56:18",
+      "UpdateTime": null
+    },
+    {
+      "Id": 25,
+      "From": "叔本华，《作为意志和表象的世界》",
+      "Content": "人类永远追求幸福，但永远不会感到满足。",
+      "CreateTime": "14/6/2024 20:56:29",
+      "UpdateTime": null
+    },
+    {
+      "Id": 26,
+      "From": "《终结者》",
+      "Content": "我会回来的。",
+      "CreateTime": "14/6/2024 20:57:30",
+      "UpdateTime": null
+    },
+    {
+      "Id": 27,
+      "From": "《这个杀手不太冷》",
+      "Content": "这是我听过最动听的谎言。",
+      "CreateTime": "14/6/2024 20:57:40",
+      "UpdateTime": null
+    },
+    {
+      "Id": 28,
+      "From": "《阿甘正传》",
+      "Content": "生活就像一盒巧克力，你永远不知道你会得到什么。",
+      "CreateTime": "14/6/2024 20:57:55",
+      "UpdateTime": null
+    },
+    {
+      "Id": 29,
+      "From": "《肖申克的救赎》",
+      "Content": "人生总要有一次为了梦想的奋不顾身。",
+      "CreateTime": "14/6/2024 20:58:12",
+      "UpdateTime": null
+    },
+    {
+      "Id": 30,
+      "From": "《当幸福来敲门》",
+      "Content": "别让别人告诉你你做不到什么。",
+      "CreateTime": "14/6/2024 20:58:26",
+      "UpdateTime": null
+    },
+    {
+      "Id": 31,
+      "From": "《头号玩家》",
+      "Content": "我选择留下。",
+      "CreateTime": "14/6/2024 20:58:38",
+      "UpdateTime": null
+    },
+    {
+      "Id": 32,
+      "From": "网络",
+      "Content": "明天又是新的一天。",
+      "CreateTime": "14/6/2024 20:59:31",
+      "UpdateTime": null
+    },
+    {
+      "Id": 33,
+      "From": "网络",
+      "Content": "生活总会给你另一个机会，这个机会叫明天。",
+      "CreateTime": "14/6/2024 20:59:45",
+      "UpdateTime": null
+    },
+    {
+      "Id": 34,
+      "From": "网络",
+      "Content": "世界那么大，我想去看看。",
+      "CreateTime": "14/6/2024 20:59:56",
+      "UpdateTime": null
+    },
+    {
+      "Id": 35,
+      "From": "网络",
+      "Content": "你要悄悄拔尖，然后惊艳所有人。",
+      "CreateTime": "14/6/2024 21:00:07",
+      "UpdateTime": null
+    },
+    {
+      "Id": 36,
+      "From": "网络",
+      "Content": "所有的遇见都是久别重逢。",
+      "CreateTime": "14/6/2024 21:00:16",
+      "UpdateTime": null
+    },
+    {
+      "Id": 37,
+      "From": "网络",
+      "Content": "再见，亦是别离。",
+      "CreateTime": "14/6/2024 21:00:24",
+      "UpdateTime": null
+    },
+    {
+      "Id": 38,
+      "From": "网络",
+      "Content": "时光不语，静待花开。",
+      "CreateTime": "14/6/2024 21:00:36",
+      "UpdateTime": null
+    },
+    {
+      "Id": 39,
+      "From": "《塞尔达传说》",
+      "Content": "生存还是毁灭，这是个问题。",
+      "CreateTime": "14/6/2024 21:01:41",
+      "UpdateTime": null
+    },
+    {
+      "Id": 40,
+      "From": "《守望先锋》",
+      "Content": "这位英雄不需要传奇，他自己就是传奇。",
+      "CreateTime": "14/6/2024 21:01:52",
+      "UpdateTime": null
+    },
+    {
+      "Id": 41,
+      "From": "《辐射》",
+      "Content": "战争，战争从未改变。",
+      "CreateTime": "14/6/2024 21:02:00",
+      "UpdateTime": null
+    },
+    {
+      "Id": 42,
+      "From": "《光环》",
+      "Content": "在每个光明的背后，都有一个黑暗的影子。",
+      "CreateTime": "14/6/2024 21:02:14",
+      "UpdateTime": null
+    },
+    {
+      "Id": 43,
+      "From": "《红色警戒2》",
+      "Content": "做好事没人记得，坏事传千里。",
+      "CreateTime": "14/6/2024 21:02:23",
+      "UpdateTime": null
+    },
+    {
+      "Id": 44,
+      "From": "《合金装备》",
+      "Content": "过去的已过去，未来还未到来。",
+      "CreateTime": "14/6/2024 21:02:45",
+      "UpdateTime": null
+    },
+    {
+      "Id": 45,
+      "From": "《火影忍者》",
+      "Content": "只要有梦想，就要坚持到底。",
+      "CreateTime": "14/6/2024 21:05:52",
+      "UpdateTime": null
+    },
+    {
+      "Id": 46,
+      "From": "《海贼王》",
+      "Content": "每个人都有属于自己的道路，不要轻易放弃。",
+      "CreateTime": "14/6/2024 21:06:04",
+      "UpdateTime": null
+    },
+    {
+      "Id": 47,
+      "From": "《海贼王》",
+      "Content": "无论遇到什么困难，都要坚持下去。",
+      "CreateTime": "14/6/2024 21:06:18",
+      "UpdateTime": null
+    },
+    {
+      "Id": 48,
+      "From": "《海贼王》",
+      "Content": "梦想是不能放弃的，即使再难，也要坚持到底。",
+      "CreateTime": "14/6/2024 21:06:33",
+      "UpdateTime": null
+    },
+    {
+      "Id": 49,
+      "From": "《海贼王》",
+      "Content": "我要成为海贼王！",
+      "CreateTime": "14/6/2024 21:06:45",
+      "UpdateTime": null
+    },
+    {
+      "Id": 50,
+      "From": "一拳超人",
+      "Content": "他把限制器解除了",
+      "CreateTime": "30/6/2024 12:51:36",
+      "UpdateTime": null
+    }
+  ]
+}
