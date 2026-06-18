@@ -1,6 +1,7 @@
 import { useDayjs } from "#dayjs";
 
 const imagePrefix = import.meta.env.VITE_PROJECT_IMAGE_PREFIX;
+const siteBase = process.env.NUXT_APP_BASE_URL || "/";
 
 export function debounce(
   func: (arg: unknown) => unknown,
@@ -64,9 +65,7 @@ export function splicingImageUrl(raw: string): string | undefined {
     return;
   }
 
-  const { app } = useRuntimeConfig();
-
-  return `${app.baseURL}${raw}`.replace(/\/+/g, "/");
+  return `${siteBase}${raw}`.replace(/\/+/g, "/");
 }
 
 export function getImageUrl(item: Upload.FileInfo): string | undefined {
