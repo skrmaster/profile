@@ -18,14 +18,18 @@ useSeoMeta({
 const { $dayjs } = useNuxtApp();
 const data = ref<ListByCategory>([]);
 
-const listData = apiGetListByCategory();
+const { data: listData } = await useAsyncData("address-list-data", () =>
+  apiGetListByCategory(),
+);
 
 function fetchData() {
-  if (!listData) {
+  const res = listData.value;
+
+  if (!res) {
     return;
   }
 
-  data.value = listData?.map((e) => {
+  data.value = res?.map((e) => {
     e.list = e.list?.map((item) => {
       item.createTime = $dayjs(item.createTime).format("YYYY-MM-DD HH:mm:ss");
       item.updateTime = $dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss");

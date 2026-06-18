@@ -30,7 +30,7 @@ export async function apiGetIcons() {
   return res;
 }
 
-export function apiGetListByCategory(): Type.ListByCategory {
+export async function apiGetListByCategory(): Promise<Type.ListByCategory> {
   const categories = keysToCamel(categoryData.RECORDS) as any[];
   const navigations = keysToCamel(navigationData.RECORDS) as any[];
 
