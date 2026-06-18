@@ -15,74 +15,39 @@ type RankItem = {
 };
 
 const route = useRoute();
-const param = route.params;
-const page = param.list as unknown as number;
-const pageSize = route.query?.pageSize as unknown as number;
-const query = route.query?.q as string;
-
-useSeoMeta({
-  title: `个人纪录-博客列表方便查看各种坑--${query}查询内容`,
-  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
-  keywords:
-    "skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt2,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染",
-});
+const { page, pageSize, q } = route.query as any;
 
 const { recordDetailPath } = routerMap;
-const searchVal = ref("");
+const searchVal = ref(q);
 const blogList = ref<List>([]);
 const rank = ref<RankItem[]>([]);
 const listLoading = ref(false);
 const rankLoading = ref(false);
 const pagination = reactive({
   total: 0,
-  page: page * 1,
-  pageSize: (pageSize || 10) * 1,
+  page: 1,
+  pageSize: 10,
 });
-searchVal.value = query || "";
+const params = reactive<QueryParam>({
+  title: q,
+  page: page || 1,
+  pageSize: pageSize || 10,
+});
 
-const params: QueryParam = {
-  title: query,
-  page: page * 1,
-  pageSize: (pageSize || 10) * 1,
-};
+useSeoMeta({
+  title: `个人纪录-博客列表方便查看各种坑--${q}查询内容`,
+  description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
+  keywords:
+    "skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt2,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染",
+});
 
-// const { data: rankData } = await useAsyncData(`rank-data`, () => apiGetRankList(5));
-const { data: searchData } = await useAsyncData(
-  `search-${pagination.page}-${pagination.pageSize}-${query ? query : "default"}`,
-  () => apiQueryDataList(params),
-);
+const searchData = computed(() => {
+  return apiQueryDataList(params);
+});
 
 function init() {
-  // initRank();
   getListData();
 }
-
-// function initRank() {
-//   const res = rankData.value;
-//   if (!res) {
-//     return;
-//   }
-
-//   rankLoading.value = true;
-//   rank.value = res.data.map((e, i) => {
-//     if (i < 3) {
-//       return {
-//         id: e.id,
-//         isBold: true,
-//         name: e.title,
-//         fontSize: 20
-//       }
-//     } else {
-//       return {
-//         id: e.id,
-//         isBold: false,
-//         name: e.title,
-//         fontSize: 20
-//       }
-//     }
-//   });
-//   rankLoading.value = false;
-// }
 
 function getListData() {
   Object.assign(pagination, searchData.value?.pagination);
@@ -100,16 +65,7 @@ function getListData() {
     }) || [];
 }
 
-async function handleJumpPage() {
-  let currentPage = pagination.page;
-  await navigateTo({
-    path: `/searched/${currentPage}`,
-    query: {
-      pageSize: pagination.pageSize,
-      q: searchVal.value || undefined,
-    },
-  });
-}
+async function handleJumpPage() {}
 
 function handleRecordDetail(id: string) {
   navigateTo({
@@ -214,7 +170,7 @@ onNuxtReady(() => {
                   <div class="blog__content__box flex1 h100">
                     <div class="describe__box flex1 flex__column--between">
                       <p class="fs16 describe">{{ item.describe }}</p>
-                      <div class="flex__row--end flex-wrap mt1">
+                      <div class="flex__row--end flex-wrap mt1" v-if="false">
                         <span class="mr1 flex__row">
                           <com-icon class="icon__gap" icon="profile-see">
                           </com-icon>
@@ -287,6 +243,7 @@ onNuxtReady(() => {
           <com-empty v-if="!listLoading && blogList.length === 0"></com-empty>
           <div
             class="rank ml1 mt1 display-2-none display-1-none display-0-none"
+            v-if="false"
           >
             <p class="font-bold fs24">点击排行榜</p>
             <div v-loading="rankLoading">
@@ -352,6 +309,7 @@ onNuxtReady(() => {
 
 .blog {
   max-width: 1000px;
+  margin-inline: auto;
 }
 
 .blog__item {

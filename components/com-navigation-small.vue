@@ -1,39 +1,27 @@
 <script lang="ts" setup>
-import type { UserModel } from '~/api/user/model';
+import type { UserModel } from "~/api/user/model";
 
-const {
-  homePath,
-  addressListPath,
-  projectPagePath,
-  recordPagePath,
-  loginPath,
-  userInfoPath
-} = routerMap
+const { homePath, addressListPath, projectPagePath, recordPagePath } =
+  routerMap;
 const navList = ref([
   {
-    name: '首页',
-    icon: 'profile-home1',
+    name: "首页",
+    icon: "profile-home1",
     link: homePath,
   },
   {
-    name: '项目',
-    icon: 'profile-projects',
-    link: '/project-list/1',
-    query: {
-      pageSize: 20
-    },
+    name: "项目",
+    icon: "profile-projects",
+    link: "/project-list",
   },
   {
-    name: '记录',
-    icon: 'profile-blogs',
-    link: '/record-list/1',
-    query: {
-      pageSize: 10
-    },
+    name: "记录",
+    icon: "profile-blogs",
+    link: "/record-list",
   },
   {
-    name: '导航',
-    icon: 'profile-address',
+    name: "导航",
+    icon: "profile-address",
     link: addressListPath,
   },
 ]);
@@ -41,21 +29,30 @@ const navList = ref([
 const route = useRoute();
 const currentPath = route.path;
 const currentIndex = ref(0);
-const userInfo = useState<UserModel>('userInfo');
+const userInfo = useState<UserModel>("userInfo");
 const currentUserInfo = computed(() => userInfo.value);
 
 const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
 
 watchEffect(() => {
-  const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
-  tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
+  const avatar: Upload.FileInfo = userInfo.value?.avatar
+    ? JSON.parse(userInfo.value?.avatar)
+    : "";
+  tempUserInfo.value = {
+    ...currentUserInfo.value,
+    avatar: getImageUrl(avatar),
+  };
 });
 
 function removeDigits(str: string): string {
-  return str.replace(/\d+/g, '');
+  return str.replace(/\d+/g, "");
 }
 
 function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
+  if (str1 == "/record-list" && str1 && str2 && str2.includes(str1)) {
+    return true;
+  }
+
   if (!str1 || !str2) {
     return false;
   }
@@ -69,44 +66,45 @@ function handleNav(index: number, query?: Record<string, any>) {
 
   navigateTo({
     path: navList.value[index].link,
-    query
+    query,
   });
 }
 
-function handleAvatarJump() {
-  if (currentUserInfo.value) {
-    navigateTo({
-      path: userInfoPath
-    });
-  } else {
-    navigateTo({
-      path: loginPath
-    });
-  }
-}
-
+function handleAvatarJump() {}
 </script>
 <template>
   <div>
     <div class="navigation--small px1">
       <div class="avatar__gap" @click="handleAvatarJump">
-        <com-avatar 
-          :avatar-url="tempUserInfo?.avatar" 
-          :nickname="tempUserInfo?.account ? tempUserInfo?.account : tempUserInfo?.id ? '未知' : '登录'">
+        <com-avatar
+          :avatar-url="tempUserInfo?.avatar"
+          :nickname="
+            tempUserInfo?.account
+              ? tempUserInfo?.account
+              : tempUserInfo?.id
+                ? '未知'
+                : '登录'
+          "
+        >
         </com-avatar>
       </div>
       <nav class="flex1 flex__row--between">
-        <div 
-          v-for="(item, index) in navList" 
+        <div
+          v-for="(item, index) in navList"
           :key="index"
           class="navigation__item"
           :class="{
-            'active': hasCommonPartIgnoringNumbers(item.link, currentPath)
+            active: hasCommonPartIgnoringNumbers(item.link, currentPath),
           }"
-          @click="handleNav(index, item.query)"
+          @click="handleNav(index)"
         >
-          <com-icon class="nav__icon" height="10px" width="10px" :icon="item.icon"></com-icon>
-          <span  class="fs12">{{ item.name }}</span>
+          <com-icon
+            class="nav__icon"
+            height="10px"
+            width="10px"
+            :icon="item.icon"
+          ></com-icon>
+          <span class="fs12">{{ item.name }}</span>
         </div>
       </nav>
       <div class="theme__control flex__center">
@@ -137,7 +135,7 @@ function handleAvatarJump() {
   white-space: nowrap;
   display: flex;
   align-items: center;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
   transform-origin: center center;
   padding: 5px 9px;
 }
@@ -151,7 +149,6 @@ function handleAvatarJump() {
 .navigation__item.active .nav__icon {
   margin-right: 4px;
 }
-
 
 .theme__control {
   border-left: 2px solid var(--primary-border-color);

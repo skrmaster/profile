@@ -18,19 +18,18 @@ export async function apiGetInfo(id: string) {
   return res;
 }
 
-export async function apiGetList(
+export function apiGetList(
   params?: Omit<Pagination, "total">,
-): Promise<ResponsePagination<Type.ListType>> {
-  const data = keysToCamel(projectData) as any;
+): ResponsePagination<Type.ListType> {
+  const data = keysToCamel(projectData.RECORDS) as any;
 
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
-
   const start = (page - 1) * pageSize;
-  const end = start + pageSize;
+  const end = start * 1 + pageSize * 1;
 
   return {
-    list: data.slice(start, end),
+    list: data?.slice(start, end),
     pagination: {
       total: data.length,
       page,

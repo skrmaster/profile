@@ -9,18 +9,18 @@ type Prop = {
   groupCount?: number;
   eachPageCount?: number;
   unit?: string;
-}
+};
 
 type PageItem = {
   name: number;
   isActive: boolean;
-}
+};
 
 const emit = defineEmits<{
-  'update:currentPage': [val: number];
-  'update:pageSize': [val: number];
-  'pageSizeChange': [],
-  'currentPageChange': []
+  "update:currentPage": [val: number];
+  "update:pageSize": [val: number];
+  pageSizeChange: [];
+  currentPageChange: [];
 }>();
 
 const props = withDefaults(defineProps<Prop>(), {
@@ -31,8 +31,8 @@ const props = withDefaults(defineProps<Prop>(), {
   pagerCount: 1,
   groupCount: 1,
   eachPageCount: 5,
-  unit: '条',
-  pageSizes: () => [20, 40, 60, 80, 100]
+  unit: "条",
+  pageSizes: () => [20, 40, 60, 80, 100],
 });
 
 const paginationRef = ref();
@@ -41,14 +41,14 @@ const currentPage = toRef(props.currentPage);
 const groupCount = toRef(props.groupCount);
 const prevDisable = ref(true);
 const nextDisable = ref(true);
-const jumpPage = ref<string>('');
+const jumpPage = ref<string>("");
 const currentPageSize = ref(props.pageSize);
 const pageSizeList = toRef(() => props.pageSizes);
 const isCenterLayout = ref(true);
 let elementResize: ResizeObserver | null = null;
 
 const currentPageValue = computed(() => {
-  return props.currentPage
+  return props.currentPage;
 });
 
 watch(currentPageValue, (val) => {
@@ -65,31 +65,35 @@ const maxPage = computed(() => {
 const group = computed(() => {
   const pageCount = Math.ceil(props.total / props.pageSize);
   const groupCount = Math.ceil(pageCount / (props.eachPageCount - 1));
-  const res: number[][] = Array.from({length: groupCount}).fill([]) as number[][];
-  
-  res.forEach((e: number[] , i) => {    
+  const res: number[][] = Array.from({ length: groupCount }).fill(
+    [],
+  ) as number[][];
+
+  res.forEach((e: number[], i) => {
     let tmp: number[] = [];
     for (let m = 0; m < props.eachPageCount; m++) {
-      tmp.push((m + 1) + i * (props.eachPageCount - 1));
-    }    
+      tmp.push(m + 1 + i * (props.eachPageCount - 1));
+    }
     res[i] = res[i].concat(tmp);
   });
 
   return res;
 });
 
-const pageItems = computed((): PageItem[] => {  
-  const res: number[] = Array.from({ length: props.eachPageCount }, 
-    (x: number, i: number) => 
-    i + 1 + (props.eachPageCount - 1) * (groupCount.value - 1));
-  return res.flatMap(e => {
+const pageItems = computed((): PageItem[] => {
+  const res: number[] = Array.from(
+    { length: props.eachPageCount },
+    (x: number, i: number) =>
+      i + 1 + (props.eachPageCount - 1) * (groupCount.value - 1),
+  );
+  return res.flatMap((e) => {
     if (e > maxPage.value) {
       return [];
     } else {
       return {
         name: e,
-        isActive: false
-      }
+        isActive: false,
+      };
     }
   });
 });
@@ -101,12 +105,14 @@ watch(jumpPage, (newVal: string) => {
       return;
     }
     group.value.forEach((e: number[], i: number) => {
-      if (e.find(item => item === val)) {
+      if (e.find((item) => item === val)) {
         groupCount.value = i + 1;
       }
-    })
+    });
     currentPage.value = val;
-    emit('currentPageChange');
+
+    emit("update:currentPage", val);
+    emit("currentPageChange");
   }
 });
 
@@ -127,13 +133,13 @@ watch(maxPage, (page) => {
   }
 });
 
-watch(currentPageSize, (val) => {  
+watch(currentPageSize, (val) => {
   if (val) {
-    emit('update:pageSize', val);
-    emit('pageSizeChange');
+    emit("update:pageSize", val);
+    emit("pageSizeChange");
   } else {
-    emit('update:pageSize', pageSizeList.value[0]);
-    emit('pageSizeChange');
+    emit("update:pageSize", pageSizeList.value[0]);
+    emit("pageSizeChange");
   }
 });
 
@@ -151,17 +157,20 @@ function handleChangePage(page: number) {
   }
 
   currentPage.value = page;
-  emit('update:currentPage', page);
-  emit('currentPageChange');
+  emit("update:currentPage", page);
+  emit("currentPageChange");
 }
 
 function handlePrevPage() {
   if (prevDisable.value) {
-    return
+    return;
   }
   nextDisable.value = false;
 
-  if (currentPage.value !== (props.eachPageCount - 1) * (groupCount.value - 1) + 1) {
+  if (
+    currentPage.value !==
+    (props.eachPageCount - 1) * (groupCount.value - 1) + 1
+  ) {
     handleChangePage(--currentPage.value);
   } else {
     groupCount.value -= 1;
@@ -169,16 +178,18 @@ function handlePrevPage() {
   }
 }
 
-function handleNextPage() { 
+function handleNextPage() {
   if (nextDisable.value) {
-    return
+    return;
   }
   prevDisable.value = false;
-  
+
   if (Math.ceil(props.total / props.pageSize) !== 1) {
-    if (currentPage.value !== 
-      (props.eachPageCount - (groupCount.value % props.eachPageCount - 1)) +
-      props.eachPageCount * (groupCount.value - 1)
+    if (
+      currentPage.value !==
+      props.eachPageCount -
+        ((groupCount.value % props.eachPageCount) - 1) +
+        props.eachPageCount * (groupCount.value - 1)
     ) {
       handleChangePage(++currentPage.value);
     } else {
@@ -209,49 +220,55 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div ref="paginationRef" 
-    class="pagination" 
+  <div
+    ref="paginationRef"
+    class="pagination"
     :class="{
-      'flex__center': isCenterLayout,
-      'flex__row--start': !isCenterLayout
+      flex__center: isCenterLayout,
+      'flex__row--start': !isCenterLayout,
     }"
     v-if="props.total > 0"
   >
-    <div class="pagination-box" :class="{
-      background: props.background
-    }">
-      <div class="pagination__prev pagination__item flex__center"
+    <div
+      class="pagination-box"
+      :class="{
+        background: props.background,
+      }"
+    >
+      <div
+        class="pagination__prev pagination__item flex__center"
         :class="{
-          disabled: prevDisable
+          disabled: prevDisable,
         }"
         @click="handlePrevPage"
       >
-        <com-icon 
-          icon="profile-left" 
+        <com-icon
+          icon="profile-left"
           class="pagination__control"
           :color="prevDisable ? 'var(--disabled-color)' : 'currentcolor'"
         ></com-icon>
       </div>
-      <div 
-        v-for="(item, index) in pageItems" 
+      <div
+        v-for="(item, index) in pageItems"
         :key="index"
         class="pagination__item flex__center"
         :id="`${item.name}`"
         :class="{
-          'is-active': currentPageValue === item.name
+          'is-active': currentPageValue == item.name,
         }"
         @click="handleChangePage(item.name)"
       >
         {{ item.name }}
       </div>
-      <div class="pagination__next pagination__item flex__center"
+      <div
+        class="pagination__next pagination__item flex__center"
         @click="handleNextPage"
         :class="{
-          disabled: nextDisable
+          disabled: nextDisable,
         }"
       >
-        <com-icon 
-          icon="profile-left" 
+        <com-icon
+          icon="profile-left"
           class="pagination__control icon__right"
           :color="nextDisable ? 'var(--disabled-color)' : 'currentcolor'"
         ></com-icon>
@@ -259,7 +276,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="flex__center mx1">
       <span class="fs14 nowrap">跳转到：</span>
-      <com-form-input 
+      <com-form-input
         class="pagination-input"
         :is-label="false"
         :text-align="'center'"
@@ -271,13 +288,14 @@ onBeforeUnmount(() => {
       ></com-form-input>
     </div>
     <div class="flex__center mr1">
-      <p class="fs14 nowrap">共:
+      <p class="fs14 nowrap">
+        共:
         <span>{{ props.total }}</span>
         {{ props.unit }}
       </p>
     </div>
     <div class="flex__center">
-      <com-select 
+      <com-select
         v-model="currentPageSize"
         :option-list="pageSizeList"
         :placeholder="`${pageSizeList[0]}/页`"
@@ -291,7 +309,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-flow: row nowrap;
   overflow: auto;
-  color: var(--primary-color)
+  color: var(--primary-color);
 }
 
 .pagination-box {
@@ -316,7 +334,7 @@ onBeforeUnmount(() => {
   width: 40px;
   height: 40px;
   margin: 0 5px;
-  transition: all .2s ease-in;
+  transition: all 0.2s ease-in;
 }
 
 .pagination__item.is-active {
@@ -336,8 +354,8 @@ onBeforeUnmount(() => {
   text-align: start;
 }
 
-:deep(.form__input-field)
-, :deep(select) {
+:deep(.form__input-field),
+:deep(select) {
   background: var(--white-color);
   color: var(--primary-color);
 }

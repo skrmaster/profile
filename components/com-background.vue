@@ -1,6 +1,6 @@
 <script lang="tsx" setup>
 interface BgSettingProps {
-  bgChangeColor?: boolean;
+  bgChangeColor?: any;
   bgStyleContent?: string;
   bgDefaultSize?: boolean;
 }
@@ -8,25 +8,25 @@ interface BgSettingProps {
 const props = withDefaults(defineProps<BgSettingProps>(), {
   bgChangeColor: false,
   bgDefaultSize: false,
-  bgStyleContent: 'background: #FFFFFF;'
+  bgStyleContent: "background: #FFFFFF;",
 });
 
 const slots = useSlots();
 
 function generateElement() {
-  const boolSize = props.bgDefaultSize
-  const boolColor = props.bgChangeColor
+  const boolSize = props.bgDefaultSize;
+  const boolColor = props.bgChangeColor;
   const className = {
-    'background': !boolColor,
-    'default-size': boolSize,
-  }
+    background: !boolColor,
+    "default-size": boolSize,
+  };
   const style = props.bgStyleContent;
 
   return (
-    <div class={ className } style={ boolColor ? style : '' }>
-      { slots && slots.default ? slots.default() : null  }
+    <div class={className} style={boolColor ? style : ""}>
+      {slots && slots.default ? slots.default() : null}
     </div>
-  )
+  );
 }
 </script>
 <template>
@@ -34,7 +34,10 @@ function generateElement() {
 </template>
 <style scoped>
 .background {
-  background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+  background-image: radial-gradient(
+    var(--white-color) 0,
+    var(--background-color) 100%
+  );
   background-blend-mode: screen;
 }
 

@@ -34,10 +34,10 @@ export async function apiGetRankList(length: number) {
   return res;
 }
 
-export async function apiQueryDataList(
+export function apiQueryDataList(
   params: Type.QueryParam,
-): Promise<ResponsePagination<Type.List>> {
-  let data = keysToCamel(recordData) as any;
+): ResponsePagination<Type.List> {
+  let data = keysToCamel(recordData.RECORDS) as any;
 
   if (params.title?.trim()) {
     const keyword = params.title.trim().toLowerCase();
@@ -51,10 +51,10 @@ export async function apiQueryDataList(
   const pageSize = params.pageSize ?? 10;
 
   const start = (page - 1) * pageSize;
-  const end = start + pageSize;
+  const end = start * 1 + pageSize * 1;
 
   return {
-    list: data.slice(start, end),
+    list: data?.slice(start, end),
     pagination: {
       total: data.length,
       page,
@@ -62,7 +62,7 @@ export async function apiQueryDataList(
     },
   };
 }
-export async function apiGetList(params: Omit<Pagination, "total">) {
+export function apiGetList(params: Omit<Pagination, "total">) {
   return apiQueryDataList(params);
 }
 

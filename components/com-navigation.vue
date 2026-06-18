@@ -8,16 +8,10 @@ type NavItemType = {
   type: "link" | "button" | "theme";
   button?: Array<NavItemType>;
   flex?: number;
+  children?: string[];
 };
 
-const {
-  homePath,
-  addressListPath,
-  projectPagePath,
-  recordPagePath,
-  loginPath,
-  registerPath,
-} = routerMap;
+const { homePath, addressListPath } = routerMap;
 
 const navList: Array<NavItemType> = [
   {
@@ -26,20 +20,15 @@ const navList: Array<NavItemType> = [
     type: "link",
   },
   {
-    link: "/project-list/1",
+    link: "/project-list",
     name: "项目列表",
     type: "link",
-    query: {
-      pageSize: 20,
-    },
   },
   {
-    link: "/record-list/1",
-    query: {
-      pageSize: 10,
-    },
+    link: "/record-list",
     name: "问题记录",
     type: "link",
+    children: ["record-list-1"],
   },
   {
     link: addressListPath,
@@ -71,6 +60,10 @@ function removeDigits(str: string): string {
 }
 
 function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
+  if (str1 == "/record-list" && str1 && str2 && str2.includes(str1)) {
+    return true;
+  }
+
   if (!str1 || !str2) {
     return false;
   }
@@ -100,13 +93,9 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   return argCopy;
 }
 
-async function handleLink(
-  url?: string,
-  query?: Record<string, string | number>,
-) {
+async function handleLink(url?: string) {
   await navigateTo({
     path: url,
-    query,
   });
 }
 
@@ -140,7 +129,7 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
           <div
             v-if="item.type === 'link'"
             class="item__box c-p flex__center"
-            @click="handleLink(item.link, item.query)"
+            @click="handleLink(item.link)"
             :class="{
               line: getLine(navList[index + 1], item),
             }"

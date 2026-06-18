@@ -109,19 +109,7 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    preset: "node-server",
-    prerender: {
-      routes: [
-        "/record-list/1",
-        "/record-list/2",
-        "/record-list/3",
-        "/project-list/1",
-        "/project-list/2",
-        "/project-list/3",
-      ],
-    },
-  },
+  nitro: {},
 
   compatibilityDate: "2024-08-31",
 });

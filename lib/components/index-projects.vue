@@ -88,12 +88,8 @@ function init() {
   loadModel2Sence();
 }
 
-const { data: projectData } = await useAsyncData("project", () =>
-  apiGetList({ page: 1, pageSize: 6 }),
-);
-
 function initData() {
-  list = projectData.value?.list || [];
+  list = apiGetList({ page: 1, pageSize: 6 }).list || [];
   init();
 }
 

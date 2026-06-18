@@ -19,9 +19,19 @@ type RankItem = {
 };
 
 const route = useRoute();
-const param = route.params;
-const page = param.list as unknown as number;
-const pageSize = route.query?.pageSize as unknown as number;
+const { page, pageSize, q } = route.query as any;
+
+const { recordDetailPath } = routerMap;
+const searchVal = ref("");
+const blogList = ref<List>([]);
+const rank = ref<RankItem[]>([]);
+const listLoading = ref(false);
+const rankLoading = ref(false);
+const pagination = reactive({
+  total: 0,
+  page: page || 1,
+  pageSize: pageSize || 10,
+});
 
 useSeoMeta({
   title: `skrmaster-个人记录-博客列表方便查看各种坑第${page}页`,
@@ -36,70 +46,19 @@ useSeoMeta({
   ogSiteName: "skrmaster",
 });
 
-const { recordDetailPath } = routerMap;
-const searchVal = ref("");
-const blogList = ref<List>([]);
-const rank = ref<RankItem[]>([]);
-const listLoading = ref(false);
-const rankLoading = ref(false);
-const pagination = reactive({
-  total: 0,
-  page: page * 1,
-  pageSize: (pageSize || 10) * 1,
+const params: QueryParam = reactive({
+  title: q || "",
+  page: page || 1,
+  pageSize: pageSize || 10,
 });
 
-const query = route.query?.q as string;
-searchVal.value = query || "";
-
-const params: QueryParam = {
-  title: query,
-  page: page * 1,
-  pageSize: (pageSize || 10) * 1,
-};
-
-if (query) {
-  params.page = 1;
-}
-
-// const { data: rankData } = await useAsyncData(`rank-data`, () =>
-//   apiGetRankList(5),
-// );
-const { data: listData } = await useAsyncData(
-  `record-${pagination.page}-${pagination.pageSize}-list`,
-  () => apiGetList(params),
-);
+const listData = computed(() => {
+  return apiGetList(params);
+});
 
 function init() {
-  // initRank();
   getListData();
 }
-
-// function initRank() {
-//   const res = rankData.value;
-//   if (!res) {
-//     return;
-//   }
-
-//   rankLoading.value = true;
-//   rank.value = res.data.map((e, i) => {
-//     if (i < 3) {
-//       return {
-//         id: e.id,
-//         isBold: true,
-//         name: e.title,
-//         fontSize: 20,
-//       };
-//     } else {
-//       return {
-//         id: e.id,
-//         isBold: false,
-//         name: e.title,
-//         fontSize: 20,
-//       };
-//     }
-//   });
-//   rankLoading.value = false;
-// }
 
 function getListData() {
   Object.assign(pagination, listData.value?.pagination);
@@ -111,7 +70,7 @@ function getListData() {
       return {
         isTread: e.isDisLike,
         imageUrl: splicingImageUrl(imageIds[0]?.fullPath),
-        describe: e.subtitle || e.description,
+        describe: e.content,
         ...e,
       };
     }) || [];
@@ -122,24 +81,42 @@ async function handleJumpPage() {
   if (searchVal.value) {
     currentPage = 1;
   }
+
   await navigateTo({
-    path: `/record-list/${currentPage}`,
+    path: `/record-list`,
     query: {
+      page: currentPage,
       pageSize: pagination.pageSize,
       q: searchVal.value || undefined,
     },
   });
+
+  params.page = params.pageSize === pagination.pageSize ? currentPage : 1;
+  params.pageSize = pagination.pageSize;
+  params.title = searchVal.value;
+
+  getListData();
 }
 
+const { $message } = useNuxtApp();
+
 async function handleSearchRecord() {
+  if (!searchVal.value.trim()) {
+    return $message.show({
+      type: "warning",
+      message: "请输入要查找的内容",
+    });
+  }
+
   let currentPage = pagination.page;
   if (searchVal.value) {
     currentPage = 1;
   }
 
   await navigateTo({
-    path: `/searched/${currentPage}`,
+    path: `/searched`,
     query: {
+      page: currentPage,
       pageSize: pagination.pageSize,
       q: searchVal.value || undefined,
     },
@@ -199,10 +176,7 @@ function handleUserOperateRecord(
     })
     .catch((e) => {});
 }
-
-onNuxtReady(() => {
-  init();
-});
+init();
 </script>
 <template>
   <com-background
@@ -220,7 +194,11 @@ onNuxtReady(() => {
     <com-navigation-small
       class="display-5-none display-4-none display-3-none"
     ></com-navigation-small>
-    <com-search v-model="searchVal" @search="handleSearchRecord"></com-search>
+    <com-search
+      v-model="searchVal"
+      required
+      @search="handleSearchRecord"
+    ></com-search>
     <section class="pb5 flex1">
       <div class="container">
         <div class="flex content">
@@ -296,7 +274,7 @@ onNuxtReady(() => {
                     <div class="thumbnail display-0-none pb2">
                       <img v-if="item.imageUrl" :src="item.imageUrl" />
                       <div v-else class="image__seat wh100">
-                        <com-empty info="暂无封面"></com-empty>
+                        <com-empty></com-empty>
                       </div>
                     </div>
                   </div>
@@ -360,7 +338,7 @@ onNuxtReady(() => {
 </template>
 <style scoped>
 .content {
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 
 .blog {
@@ -398,8 +376,8 @@ onNuxtReady(() => {
 .describe {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 8;
+  line-clamp: 8;
   text-overflow: ellipsis;
   overflow: hidden;
   line-height: 1.4;

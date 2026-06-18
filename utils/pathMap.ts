@@ -3,48 +3,50 @@ type KeyOfRouter =
   | "projectPagePath"
   | "recordPagePath"
   | "addressListPath"
-  | "loginPath"
-  | "registerPath"
-  | "userInfoPath"
-  | "followPath"
-  | "recordListPath"
-  | "projectListPath"
-  | "skillMgtPath"
-  | "tagMgtPath"
-  | "projectMgtPath"
-  | "recordMgtPath"
-  | "navigationPath"
-  | "navigationCategoryPath"
-  | "aphorismsPath"
-  | "userMessagePath"
+  // | "loginPath"
+  // | "registerPath"
+  // | "userInfoPath"
+  // | "followPath"
+  // | "recordListPath"
+  // | "projectListPath"
+  // | "skillMgtPath"
+  // | "tagMgtPath"
+  // | "projectMgtPath"
+  // | "recordMgtPath"
+  // | "navigationPath"
+  // | "navigationCategoryPath"
+  // | "aphorismsPath"
+  // | "userMessagePath"
   | "projectDetailPath"
   | "recordDetailPath"
+  | "recordPaegPathCopy"
   | "noAuthPath"
   | "searchedPath";
 
 export const routerMap: Record<KeyOfRouter, string> = {
-  loginPath: "/",
-  registerPath: "/signup",
-  userInfoPath: "/user/:id/user-info",
-  followPath: "/user/:id/follow",
-  recordListPath: "/user/:id/record-list",
-  projectListPath: "/user/:id/project-list",
-  skillMgtPath: "/user/:id/management-skill",
-  tagMgtPath: "/user/:id/management-tag",
-  projectMgtPath: "/user/:id/management-project",
-  recordMgtPath: "/user/:id/management-record",
-  navigationPath: "/user/:id/management-navigation",
-  navigationCategoryPath: "/user/:id/management-category",
-  aphorismsPath: "/user/:id/management-aphorisms",
-  userMessagePath: "/user/:id/management-message",
+  // loginPath: "/",
+  // registerPath: "/signup",
+  // userInfoPath: "/user/:id/user-info",
+  // followPath: "/user/:id/follow",
+  // recordListPath: "/user/:id/record-list",
+  // projectListPath: "/user/:id/project-list",
+  // skillMgtPath: "/user/:id/management-skill",
+  // tagMgtPath: "/user/:id/management-tag",
+  // projectMgtPath: "/user/:id/management-project",
+  // recordMgtPath: "/user/:id/management-record",
+  // navigationPath: "/user/:id/management-navigation",
+  // navigationCategoryPath: "/user/:id/management-category",
+  // aphorismsPath: "/user/:id/management-aphorisms",
+  // userMessagePath: "/user/:id/management-message",
   projectDetailPath: "/project-detail",
   recordDetailPath: "/record-detail",
   homePath: "/",
   addressListPath: "/address-list",
-  projectPagePath: "/project-list/:page",
-  recordPagePath: "/record-list/:page",
+  projectPagePath: "/project-list",
+  recordPagePath: "/record-list",
+  recordPaegPathCopy: "/record-list-1",
   noAuthPath: "/not-authorized",
-  searchedPath: "/searched/:page",
+  searchedPath: "/searched",
 };
 
 type KeyOfApi =

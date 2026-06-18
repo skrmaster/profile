@@ -15,22 +15,19 @@ const params: Omit<Pagination, "total"> = {
   page: 1,
   pageSize: 15,
 };
-const { data: skillsData } = await useAsyncData("skills", () =>
-  apiSkillGetList(params),
-);
+const skillsData = computed(() => {
+  return apiSkillGetList(params);
+});
 
 const userInfo = useState<UserModel | undefined>("userInfo");
 const isAuth = computed(
   () => userInfo.value?.permission?.includes("1") || false,
 );
-const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
 const skills = computed(() => skillsData.value?.list || []);
 
-function handleAddSkill() {
-  navigateTo(skillMgtPath);
-}
+function handleAddSkill() {}
 </script>
 <template>
   <div id="skills" class="container">
