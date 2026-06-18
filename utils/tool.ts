@@ -182,5 +182,5 @@ export function getImageHref(url: string | undefined): string {
     return url;
   }
 
-  return `/${url.replace(/^\/+/, "")}`;
+  return `${siteBase}/${url.replace(/^\/+/, "")}`;
 }
