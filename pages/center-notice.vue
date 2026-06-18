@@ -6,7 +6,7 @@ function wheel(callback: () => void) {
   return setTimeout(() => {
     time.value--;
     if (time.value === 0) {
-      clearTimeout(counter);
+      // clearTimeout(counter);
       callback();
       return;
     }
@@ -15,12 +15,12 @@ function wheel(callback: () => void) {
 }
 
 onNuxtReady(() => {
-  counter = wheel(() => {
-    navigateTo({
-      path: '/login'
-    })
-  });
-})
+  // counter = wheel(() => {
+  //   navigateTo({
+  //     path: "/login",
+  //   });
+  // });
+});
 </script>
 <template>
   <com-background
@@ -31,13 +31,14 @@ onNuxtReady(() => {
     <div class="container">
       <div class="flex__center h100 fs24 text__box">
         <div>
-          <p>注册完成👍，
+          <p>
+            注册完成👍，
             <span class="mr1">{{ time }}s</span>
             后即将自动跳转登录页面
           </p>
           <p>
             若没有自动跳转
-            <NuxtLink to="/login">
+            <NuxtLink to="/">
               <span class="link">点击此处跳转</span>
             </NuxtLink>
           </p>
