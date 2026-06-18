@@ -1,11 +1,14 @@
-import { useDayjs } from '#dayjs';
+import { useDayjs } from "#dayjs";
 
 const imagePrefix = import.meta.env.VITE_PROJECT_IMAGE_PREFIX;
 
-export function debounce(func: (arg: unknown) => unknown, time = 1000): (...arg: unknown[]) => void {
+export function debounce(
+  func: (arg: unknown) => unknown,
+  time = 1000,
+): (...arg: unknown[]) => void {
   let id: null | ReturnType<typeof setTimeout> = null;
 
-  return function(...args: unknown[]) {
+  return function (...args: unknown[]) {
     if (id) {
       clearTimeout(id);
     }
@@ -13,28 +16,31 @@ export function debounce(func: (arg: unknown) => unknown, time = 1000): (...arg:
     id = setTimeout(() => {
       func(args);
     }, time);
-  }
+  };
 }
 
 export function throttle(fn: (arg: any) => void, delay = 2000) {
   let lastTime: number = 0;
   return function (...arg: unknown[]) {
-    const now = Date.now()
+    const now = Date.now();
     const time = now - lastTime;
     if (time >= delay) {
-      fn(arg)
-      lastTime = now
+      fn(arg);
+      lastTime = now;
     }
-  }
+  };
 }
 
-export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObserver {
+export function resize(
+  el: HTMLElement,
+  cb: (arg: Resize) => unknown,
+): ResizeObserver {
   const resizeObserver = new ResizeObserver((entries) => {
     for (const entry of entries) {
       const obj: Resize = {
         w: entry.borderBoxSize[0].inlineSize,
-        h: entry.borderBoxSize[0].blockSize
-      }
+        h: entry.borderBoxSize[0].blockSize,
+      };
       cb(obj);
     }
   });
@@ -45,17 +51,22 @@ export function resize(el: HTMLElement, cb: (arg: Resize) => unknown): ResizeObs
   return resizeObserver;
 }
 
-export function timeNullFormat(time?: string, formatString = 'YYYY-MM-DD HH:mm:ss'): string {
+export function timeNullFormat(
+  time?: string,
+  formatString = "YYYY-MM-DD HH:mm:ss",
+): string {
   const dayjs = useDayjs();
-  return time ? dayjs(time).format(formatString) : '暂无';
+  return time ? dayjs(time).format(formatString) : "暂无";
 }
 
 export function splicingImageUrl(raw: string): string | undefined {
   if (!raw) {
     return;
   }
-  const url = new URL(raw, imagePrefix);
-  return url.toString();
+
+  const { app } = useRuntimeConfig();
+
+  return `${app.baseURL}${raw}`.replace(/\/+/g, "/");
 }
 
 export function getImageUrl(item: Upload.FileInfo): string | undefined {
@@ -77,7 +88,8 @@ export function hasCommonPart(str1?: string, str2?: string): boolean {
     return false;
   }
   // 找到较短的字符串
-  const [shorter, longer] = str1.length < str2.length ? [str1, str2] : [str2, str1];
+  const [shorter, longer] =
+    str1.length < str2.length ? [str1, str2] : [str2, str1];
 
   // 遍历较短字符串的所有子串
   for (let i = 0; i < shorter.length; i++) {
@@ -96,10 +108,10 @@ export function hasCommonPart(str1?: string, str2?: string): boolean {
  * @returns
  */
 export function getScrollBarWidth(): number {
-  const div = document.createElement('div');
-  div.style.overflowY = 'scroll';
-  div.style.width = '50px';
-  div.style.height = '50px';
+  const div = document.createElement("div");
+  div.style.overflowY = "scroll";
+  div.style.width = "50px";
+  div.style.height = "50px";
   document.body.appendChild(div);
   const scrollbarWidth = div.offsetWidth - div.clientWidth;
   document.body.removeChild(div);
@@ -125,7 +137,7 @@ export function formatUploadUrl(url?: string): string | undefined {
   try {
     const newUrl = new URL(url);
     return newUrl.pathname.slice(1);
-  } catch(e) {
+  } catch (e) {
     return url;
   }
 }
@@ -137,14 +149,17 @@ export function isUrl(url?: string): boolean {
   try {
     const curUrl = new URL(url);
     return true;
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 }
 
 export function isMobile() {
   const userAgent = navigator.userAgent;
-  const isMobileUserAgent = /android|webOS|iPhone|iPad|iPod|blackberry|iemobile|opera mini/i.test(userAgent);
+  const isMobileUserAgent =
+    /android|webOS|iPhone|iPad|iPod|blackberry|iemobile|opera mini/i.test(
+      userAgent,
+    );
 
   return isMobileUserAgent;
 }
@@ -154,14 +169,14 @@ export function getDomainNameFromUrl(url: string): string {
     const parsedUrl = new URL(url);
     return parsedUrl.hostname;
   } catch (error) {
-    console.log('Invalid URL:', error);
-    return '';
+    console.log("Invalid URL:", error);
+    return "";
   }
 }
 
 export function getImageHref(url: string | undefined): string {
   if (!url) {
-    return '';
+    return "";
   }
 
   if (url.includes("http")) {

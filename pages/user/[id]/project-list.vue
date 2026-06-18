@@ -1,84 +1,84 @@
 <script lang="ts" setup>
-import type { ListType } from '~/api/project/model';
-import PersonalCenter from './components/personal-center.vue';
-import { apiGetList, apiDelete } from '~/api/project/request';
+import type { ListType } from "~/api/project/model";
+import PersonalCenter from "./components/personal-center.vue";
+import { apiGetList, apiDelete } from "~/api/project/request";
 
 const { $confirm, $message } = useNuxtApp();
 const { tagList } = options;
-const { projectDetailPath } = routerMap
+const { projectDetailPath } = routerMap;
 const paginationRef = ref();
 const loading = ref(false);
 const tableHead = ref<TableHead[]>([
   {
-    name: '项目名称',
-    field: 'name',
-    width: '180px'
+    name: "项目名称",
+    field: "name",
+    width: "180px",
   },
   {
-    name: '项目开始时间',
-    width: '200px',
-    field: 'startTime'
+    name: "项目开始时间",
+    width: "200px",
+    field: "startTime",
   },
   {
-    name: '项目结束时间',
-    width: '200px',
-    field: 'endTime',
+    name: "项目结束时间",
+    width: "200px",
+    field: "endTime",
   },
   {
-    name: '项目概述',
-    width: '200px',
-    field: 'summary',
+    name: "项目概述",
+    width: "200px",
+    field: "summary",
   },
   {
-    name: '项目描述',
-    width: '200px',
-    field: 'description',
+    name: "项目描述",
+    width: "200px",
+    field: "description",
   },
   {
-    name: '负责部分',
-    width: '200px',
-    field: 'department',
+    name: "负责部分",
+    width: "200px",
+    field: "department",
   },
   {
-    name: '演示地址',
-    width: '200px',
-    field: 'playLink',
+    name: "演示地址",
+    width: "200px",
+    field: "playLink",
   },
   {
-    name: '技术栈',
-    width: '200px',
-    field: 'stackIds',
+    name: "技术栈",
+    width: "200px",
+    field: "stackIds",
   },
   {
-    name: '项目图片',
-    width: '200px',
-    field: 'imageIds',
+    name: "项目图片",
+    width: "200px",
+    field: "imageIds",
   },
   {
-    name: '项目排序',
-    width: '100px',
-    field: 'sort',
+    name: "项目排序",
+    width: "100px",
+    field: "sort",
   },
   {
-    name: '创建时间',
-    field: 'createTime',
+    name: "创建时间",
+    field: "createTime",
   },
   {
-    name: '更新时间',
-    field: 'updateTime',
+    name: "更新时间",
+    field: "updateTime",
   },
   {
-    name: '操作',
-    width: '150px',
-    fixed: 'right',
-    operate: ['delete']
-  }
+    name: "操作",
+    width: "150px",
+    fixed: "right",
+    operate: ["delete"],
+  },
 ]);
 const tableData = ref<ListType>([]);
 const pagination = reactive({
   total: 0,
   page: 1,
-  pageSize: 20
+  pageSize: 20,
 });
 
 function handleAdd() {
@@ -91,8 +91,8 @@ function handleEdit(item: Record<string, any>) {
   navigateTo({
     path: `${projectDetailPath}/edit`,
     query: {
-      id: item.id
-    }
+      id: item.id,
+    },
   });
 }
 
@@ -100,57 +100,62 @@ function handleView(item: Record<string, any>) {
   navigateTo({
     path: `${projectDetailPath}/view`,
     query: {
-      id: item.id
-    }
+      id: item.id,
+    },
   });
 }
 
 function handleDelete(item: Record<string, any>) {
-  $confirm.confirm({
-    message: '请确认，这将会删除该条数据'
-  }).then(() => {
-    apiDelete(item.id).then(_ => {
-      $message.show({
-        type: 'success',
-        message: '操作成功'
+  $confirm
+    .confirm({
+      message: "请确认，这将会删除该条数据",
+    })
+    .then(() => {
+      apiDelete(item.id).then((_) => {
+        $message.show({
+          type: "success",
+          message: "操作成功",
+        });
+        getTableData();
       });
-      getTableData();
-    });
-  }).catch(() => {});
+    })
+    .catch(() => {});
 }
 
 function getTableData() {
   loading.value = true;
-  const params: Omit<Pagination, 'total'> = {
+  const params: Omit<Pagination, "total"> = {
     page: pagination.page,
-    pageSize: pagination.pageSize
-  }
+    pageSize: pagination.pageSize,
+  };
 
-  apiGetList(params).then(res => {
-    Object.assign(pagination ,res.data.pagination);
-    tableData.value = res.data.list.map(e => {
-      e.startTime = timeNullFormat(e.startTime);
-      e.endTime = timeNullFormat(e.endTime);
-      e.createTime = timeNullFormat(e.createTime);
-      e.updateTime = timeNullFormat(e.updateTime);
-      e.category = getListLabel(e.category, tagList) || '';
-      return e;
+  apiGetList(params)
+    .then((res) => {
+      Object.assign(pagination, res.pagination);
+      tableData.value = res.list.map((e) => {
+        e.startTime = timeNullFormat(e.startTime);
+        e.endTime = timeNullFormat(e.endTime);
+        e.createTime = timeNullFormat(e.createTime);
+        e.updateTime = timeNullFormat(e.updateTime);
+        e.category = getListLabel(e.category, tagList) || "";
+        return e;
+      });
+      loading.value = false;
+    })
+    .catch(() => {
+      loading.value = false;
     });
-    loading.value = false;
-  }).catch(() => {
-    loading.value = false;
-  });
 }
 
 function handleTableClick(type: TableCell, data: Record<string, any>) {
   switch (type) {
-    case 'edit':
+    case "edit":
       handleEdit(data);
       break;
-    case 'delete':
+    case "delete":
       handleDelete(data);
       break;
-    case 'view':
+    case "view":
       handleView(data);
       break;
     default:
@@ -172,7 +177,11 @@ getTableData();
         <com-button icon="profileadd" @click="handleAdd">新增项目</com-button>
       </div>
       <div class="flex1" v-loading="loading">
-        <com-table :head="tableHead" :data="tableData" @click="handleTableClick">
+        <com-table
+          :head="tableHead"
+          :data="tableData"
+          @click="handleTableClick"
+        >
           <template #image="{ data }">
             <div class="table__cell">
               <img class="table__image" :src="data.icon" :alt="data.name" />

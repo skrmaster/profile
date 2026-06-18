@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { apiGetList }  from '~/api/project/request';
-import type { ListType, ListItem }  from '~/api/project/model';
+import { apiGetList } from "~/api/project/request";
+import type { ListType, ListItem } from "~/api/project/model";
 
 const route = useRoute();
 const param = route.params;
@@ -11,67 +11,73 @@ const { projectDetailPath } = routerMap;
 const pagination = reactive({
   total: 0,
   page: page * 1,
-  pageSize: (pageSize || 20) * 1 
+  pageSize: (pageSize || 20) * 1,
 });
 
 useSeoMeta({
   title: `skrmaster-项目列表-开发项目列表页面第${page}页`,
   description: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
-  keywords: 'skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染',
+  keywords:
+    "skrmaster,个人网站,项目展示,skr,threejs,nuxtjs,nuxt3,nuxt,vue,vue3,vue3+ts,ts,typescript,记录,博客,踩坑,前端,web开发,ssr,服务端渲染的个人网站,服务端渲染",
   ogTitle: `skrmaster-个人网站`,
   ogDescription: `${import.meta.env.VITE_PROJECT_DOMAIN}专注前端开发一个记录个人技术成长的网站,供他人查看项目的已做开发项目列表页面`,
   ogImage: `https://${import.meta.env.VITE_PROJECT_DOMAIN}/images/og-project-list.png`,
   ogUrl: `https://${import.meta.env.VITE_PROJECT_DOMAIN}`,
-  ogType: 'website',
-  ogSiteName: 'skrmaster'
+  ogType: "website",
+  ogSiteName: "skrmaster",
 });
 
 const data = ref<ListType>([]);
 const listLoading = ref(false);
 
-const params: Omit<Pagination, 'total'> = {
+const params: Omit<Pagination, "total"> = {
   page: page * 1,
-  pageSize: pageSize * 1
-}
+  pageSize: pageSize * 1,
+};
 
 listLoading.value = true;
-const { data: listData } = await useAsyncData(`project-list-page-${page}-${pageSize}`, () => apiGetList(params));
+const { data: listData } = await useAsyncData(
+  `project-list-page-${page}-${pageSize}`,
+  () => apiGetList(params),
+);
 
 function getData() {
   listLoading.value = false;
-  Object.assign(pagination ,listData.value?.data.pagination);
-  data.value = listData.value?.data.list.map(e => {
-    const imageIds: Upload.FileInfo[] = e.imageIds ? JSON.parse(e.imageIds) : [];
-    return {
-      ...e,
-      name: e.name,
-      imageUrl: splicingImageUrl(imageIds[0].fullPath) || ""
-    };
-  }) || [];
+  Object.assign(pagination, listData.value?.pagination);
+  data.value =
+    listData.value?.list.map((e) => {
+      const imageIds: Upload.FileInfo[] = e.imageIds
+        ? JSON.parse(e.imageIds)
+        : [];
+      return {
+        ...e,
+        name: e.name,
+        imageUrl: splicingImageUrl(imageIds[0].fullPath) || "",
+      };
+    }) || [];
 }
 
 function handleViewProject(item: ListItem) {
   navigateTo({
-    path: projectDetailPath + '/view',
+    path: projectDetailPath + "/view",
     query: {
-      id: item.id
-    }
-  })
+      id: item.id,
+    },
+  });
 }
 
 function getDataByPagination() {
   navigateTo({
     path: `/project-list/${pagination.page}`,
     query: {
-      pageSize: pagination.pageSize
-    }
+      pageSize: pagination.pageSize,
+    },
   });
 }
 
 onNuxtReady(() => {
   getData();
 });
-
 </script>
 <template>
   <com-background
@@ -82,18 +88,24 @@ onNuxtReady(() => {
       background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);`"
   >
     <div class="h100 flex__column">
-      <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
-      <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+      <com-navigation
+        class="display-2-none display-1-none display-0-none"
+      ></com-navigation>
+      <com-navigation-small
+        class="display-5-none display-4-none display-3-none"
+      ></com-navigation-small>
       <section class="flex1 overflow-auto">
         <div class="container">
           <div style="color: var(--primary-color)">
             <p class="py3 fs24">项目列表</p>
-            <div class="project-gird pb2" 
+            <div
+              class="project-gird pb2"
               v-loading="listLoading"
               :style="data.length === 0 ? `min-height: 200px;` : ''"
             >
-              <div class="project__item"
-                v-for="(item, index) in data" 
+              <div
+                class="project__item"
+                v-for="(item, index) in data"
                 :key="index"
                 @click="handleViewProject(item)"
               >
@@ -118,7 +130,10 @@ onNuxtReady(() => {
     </div>
   </com-background>
   <com-footer></com-footer>
-  <div style="height: 120px;" class="display-5-none display-4-none display-3-none"></div>
+  <div
+    style="height: 120px"
+    class="display-5-none display-4-none display-3-none"
+  ></div>
 </template>
 <style scoped>
 .project-gird {
@@ -143,7 +158,7 @@ onNuxtReady(() => {
 
 .project__image img {
   max-width: 100%;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .project__image img:hover {

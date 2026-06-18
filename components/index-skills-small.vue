@@ -1,40 +1,43 @@
 <script lang="ts" setup>
-import { apiSkillGetList } from '~/api/skill/request';
-import type { UserModel } from '~/api/user/model';
+import { apiSkillGetList } from "~/api/skill/request";
+import type { UserModel } from "~/api/user/model";
 
 type Prop = {
-	width?: number;
-}
+  width?: number;
+};
 
 const props = withDefaults(defineProps<Prop>(), {
-	width: 0,
-  skills: () => []
+  width: 0,
+  skills: () => [],
 });
 
-const params: Omit<Pagination, 'total'> = {
+const params: Omit<Pagination, "total"> = {
   page: 1,
-  pageSize: 15
-}
-const { data: skillsData } = await useAsyncData('skills', () => apiSkillGetList(params));
+  pageSize: 15,
+};
+const { data: skillsData } = await useAsyncData("skills", () =>
+  apiSkillGetList(params),
+);
 
 const userInfo = useState<UserModel | undefined>("userInfo");
-const isAuth = computed(() => userInfo.value?.permission?.includes('1') || false);
+const isAuth = computed(
+  () => userInfo.value?.permission?.includes("1") || false,
+);
 const { skillMgtPath } = routerMap;
 const skillBox = ref<HTMLElement>();
 const skillCircle = ref<HTMLElement>();
-const skills = computed(() => skillsData.value?.data.list || []);
+const skills = computed(() => skillsData.value?.list || []);
 
 function handleAddSkill() {
   navigateTo(skillMgtPath);
 }
-
 </script>
 <template>
   <div id="skills" class="container">
     <div class="skills-text" ref="skillCircle">
       <p class="fs36 font-bold">
         <span>技能(SKILLS)</span>
-        <com-icon 
+        <com-icon
           v-if="isAuth && skills.length === 0"
           class="ml1"
           @click="handleAddSkill"
@@ -42,15 +45,8 @@ function handleAddSkill() {
         ></com-icon>
       </p>
     </div>
-    <div 
-      ref="skillBox"
-      class="skills-box skills-grid"
-    >
-      <div 
-        v-for="(item, index) in skills" 
-        :key="index"
-        class="skills__item"
-      >
+    <div ref="skillBox" class="skills-box skills-grid">
+      <div v-for="(item, index) in skills" :key="index" class="skills__item">
         <div class="flex__center wh100">
           {{ item.name }}
         </div>

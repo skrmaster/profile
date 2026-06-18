@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import type { UserModel } from '~/api/user/model';
-import { apiUserLogout } from '~/api/user/request';
+import type { UserModel } from "~/api/user/model";
 
 type NavItemType = {
   link?: string;
   name?: string;
-  query?: Record<string, string | number>,
-  type: 'link' | 'button' | 'theme';
+  query?: Record<string, string | number>;
+  type: "link" | "button" | "theme";
   button?: Array<NavItemType>;
   flex?: number;
-}
+};
 
 const {
   homePath,
@@ -23,62 +22,52 @@ const {
 const navList: Array<NavItemType> = [
   {
     link: homePath,
-    name: '首页',
-    type: 'link'
+    name: "首页",
+    type: "link",
   },
   {
-    link: '/project-list/1',
-    name: '项目列表',
-    type: 'link',
+    link: "/project-list/1",
+    name: "项目列表",
+    type: "link",
     query: {
-      pageSize: 20
+      pageSize: 20,
     },
   },
   {
-    link: '/record-list/1',
+    link: "/record-list/1",
     query: {
-      pageSize: 10
+      pageSize: 10,
     },
-    name: '问题记录',
-    type: 'link'
+    name: "问题记录",
+    type: "link",
   },
   {
     link: addressListPath,
-    name: '快速导航',
-    type: 'link'
+    name: "快速导航",
+    type: "link",
   },
   {
-    type: 'theme'
+    type: "theme",
   },
-  {
-    type: 'button',
-    button: [
-      {
-        type: 'link',
-        link: loginPath,
-        name: '登录'
-      },
-      {
-        type: 'link',
-        link: registerPath,
-        name: '注册'
-      }
-    ]
-  }
-]
+];
 const route = useRoute();
 const currentPath = route.path;
-const userInfo = useState<UserModel>('userInfo');
+const userInfo = useState<UserModel>("userInfo");
 const currentUserInfo = computed(() => userInfo.value);
 const tempUserInfo = ref<UserModel>({ ...currentUserInfo.value });
 
 watchEffect(() => {
-  const avatar: Upload.FileInfo = userInfo.value?.avatar ? JSON.parse(userInfo.value?.avatar) : "";
-  tempUserInfo.value = { ...currentUserInfo.value, avatar: getImageUrl(avatar) };
+  const avatar: Upload.FileInfo = userInfo.value?.avatar
+    ? JSON.parse(userInfo.value?.avatar)
+    : "";
+  tempUserInfo.value = {
+    ...currentUserInfo.value,
+    avatar: getImageUrl(avatar),
+  };
 });
 
 function removeDigits(str: string): string {
-  return str.replace(/\d+/g, '');
+  return str.replace(/\d+/g, "");
 }
 
 function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
@@ -92,16 +81,16 @@ function hasCommonPartIgnoringNumbers(str1?: string, str2?: string): boolean {
 
 function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   const argCopy = arg;
-  let minV = (argCopy[0].name?.length || 0);
+  let minV = argCopy[0].name?.length || 0;
   const total = argCopy.reduce((pre, cur) => {
-    const curLen = (cur.name?.length || 0);
-    if (cur.type === 'link') {
-      minV <= curLen ? 0 : minV = curLen;
+    const curLen = cur.name?.length || 0;
+    if (cur.type === "link") {
+      minV <= curLen ? 0 : (minV = curLen);
     }
     return pre + (cur.name?.length || 1);
   }, 0);
 
-  argCopy.forEach(e => {
+  argCopy.forEach((e) => {
     e.flex = e.name?.length ? e.name.length / total : minV / total;
     if (e.flex < 1 && e.flex > 0) {
       e.flex *= 10;
@@ -111,10 +100,13 @@ function getFlex(arg: Array<NavItemType>): Array<NavItemType> {
   return argCopy;
 }
 
-async function handleLink(url?: string, query?: Record<string, string | number>) {
+async function handleLink(
+  url?: string,
+  query?: Record<string, string | number>,
+) {
   await navigateTo({
     path: url,
-    query
+    query,
   });
 }
 
@@ -129,27 +121,6 @@ function getLine(arg1?: NavItemType, arg2?: NavItemType): boolean {
     return false;
   }
 }
-
-async function loginout() {
-  apiUserLogout().then(async (res) => {
-    if (res.succeeded) {
-      clearNuxtState();
-      const localStorage = new StorageSuger("localStorage");
-      const sectionStorage = new StorageSuger("sessionStorage");
-      localStorage.clearAll();
-      sectionStorage.clearAll();
-
-      await navigateTo('/');
-      location.reload();
-    }
-  }).catch(e => {});
-}
-
-function personalCenter() {
-  const userId = tempUserInfo.value.id;
-  navigateTo(`/user/${userId}/user-info`);
-}
-
 </script>
 <template>
   <div class="nav-box">
@@ -161,7 +132,7 @@ function personalCenter() {
           class="nav__item flex__center"
           :style="`flex: ${item.flex}`"
           :class="{
-            'is--active': hasCommonPartIgnoringNumbers(item.link, currentPath)
+            'is--active': hasCommonPartIgnoringNumbers(item.link, currentPath),
           }"
           :data-type="item.type"
         >
@@ -171,7 +142,7 @@ function personalCenter() {
             class="item__box c-p flex__center"
             @click="handleLink(item.link, item.query)"
             :class="{
-              line: getLine(navList[index+1], item)
+              line: getLine(navList[index + 1], item),
             }"
           >
             <span class="p1 nowrap">{{ item.name }}</span>
@@ -180,54 +151,10 @@ function personalCenter() {
             v-if="item.type === 'theme'"
             class="item__box flex__center"
             :class="{
-              line: getLine(navList[index+1], item)
+              line: getLine(navList[index + 1], item),
             }"
           >
             <com-theme-button></com-theme-button>
-          </div>
-          <div
-            v-if="item.type === 'button'"
-            class="item__box flex__center nowrap"
-            :class="{
-              line: getLine(navList[index+1], item)
-            }"
-          >
-            <div v-if="!userInfo">
-              <com-button
-                v-for="(e, i) in item.button"
-                :key="i"
-                link
-                :class="{
-                  mr1: i < item.button!.length - 1
-                }"
-                class="underline"
-                @click="handleLink(e.link)"
-              >{{ e.name }}</com-button>
-            </div>
-            <div class="p-r menu__trigger" v-else>
-              <com-avatar
-                class="c-p"
-                style="height: 50px;width: 50px;"
-                :avatar-url="tempUserInfo?.avatar"
-                :nickname="tempUserInfo?.account || '未知'"
-              ></com-avatar>
-              <div class="user__menu">
-                <div class="p-r">
-                  <div class="menu__box">
-                    <ul>
-                      <li class="menu__item c-p" @click="personalCenter">
-                        <com-icon icon="profile-signin"></com-icon>
-                        个人中心
-                      </li>
-                      <li class="menu__item c-p" @click="loginout">
-                        <com-icon icon="profile-login-out"></com-icon>
-                        登出
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </li>
       </nav>
@@ -263,8 +190,11 @@ function personalCenter() {
   position: absolute;
   bottom: 1px;
   height: 2px;
-  background-image: linear-gradient(to right,
-    var(--nav-wave-1) 50%, transparent 50%);
+  background-image: linear-gradient(
+    to right,
+    var(--nav-wave-1) 50%,
+    transparent 50%
+  );
   background-size: 20px 100%;
 }
 
@@ -273,13 +203,16 @@ function personalCenter() {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-image: linear-gradient(to left,
-    var(--nav-wave-1) 50%, transparent 50%);
+  background-image: linear-gradient(
+    to left,
+    var(--nav-wave-1) 50%,
+    transparent 50%
+  );
   background-size: 20px 100%;
 }
 
 nav {
-  margin-left: auto;
+  margin-inline: auto;
   max-width: 1000px;
   width: 100%;
   height: 100%;
@@ -305,7 +238,7 @@ nav {
   right: 0;
   background: var(--nav-item-bg);
   transform: translateY(-100%);
-  transition: all .2s ease 0s;
+  transition: all 0.2s ease 0s;
   border-radius: 0 0 10px 10px;
 }
 
@@ -325,7 +258,7 @@ nav {
   bottom: 0;
   left: 0;
   right: 0;
-  transition: all .2s ease 0s;
+  transition: all 0.2s ease 0s;
   transform: translateY(-100%);
   background-color: var(--nav-item-active-bg-color);
   border-radius: 0 0 10px 10px;
@@ -336,8 +269,8 @@ nav {
   transform: translateY(0);
 }
 
-.nav__item:not(.is--active) .item__box
-, .item__box :deep(.btn--link) {
+.nav__item:not(.is--active) .item__box,
+.item__box :deep(.btn--link) {
   color: var(--nav-item-color);
 }
 
@@ -352,12 +285,12 @@ nav {
 
 .menu__trigger:hover .user__menu {
   visibility: visible;
-  transition: all .2s ease 0s;
+  transition: all 0.2s ease 0s;
 }
 
 .user__menu {
   visibility: hidden;
-  transition: all .2s ease .3s;
+  transition: all 0.2s ease 0.3s;
   cursor: auto;
   position: absolute;
   top: 120%;

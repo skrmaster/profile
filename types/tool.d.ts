@@ -1,12 +1,15 @@
 type Resize = {
   w: number;
   h: number;
-}
+};
 
-type StorageFrom = 'localStorage' | 'sessionStorage';
+type StorageFrom = "localStorage" | "sessionStorage";
 
 function resize(el: Element, cb: (arg: Resize) => unknown): ResizeObserver;
-function debounce(func: (arg: any) => unknown, time = 1000): (...args: unknown[]) => void;
+function debounce(
+  func: (arg: any) => unknown,
+  time = 1000,
+): (...args: unknown[]) => void;
 
 type Option = {
   message: string;
@@ -16,7 +19,7 @@ type Option = {
   zIndex?: string;
   id?: string;
   onlyShowConfirm?: boolean;
-}
+};
 
 interface MessageConfirm {
   show: (options: Option) => Promise<void>;
@@ -25,12 +28,16 @@ interface MessageConfirm {
 
 type MessageOptions = {
   message: string;
-  type?: 'success' | 'warning' | 'info' | 'error';
+  type?: "success" | "warning" | "info" | "error";
   duration?: number;
   id?: string;
   topOffset?: string;
-}
+};
 
 interface MessageManager {
-  show: (options: MessageOptions) => void
+  show: (options: MessageOptions) => void;
 }
+
+type JSONData<T> = {
+  RECORDS: T;
+};

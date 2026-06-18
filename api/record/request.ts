@@ -1,7 +1,7 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
 
-const { 
+const {
   recordListPath,
   recordAddPath,
   recordEditPath,
@@ -11,91 +11,117 @@ const {
   recordQueryListPath,
   recordCollectionListPath,
   recordCountPath,
-  recordAnonymousViewPath
+  recordAnonymousViewPath,
 } = apiMap;
 
 export async function apiGetInfo(id: string) {
-  const url = recordGetInfoPath + `/${id}`
+  const url = recordGetInfoPath + `/${id}`;
 
   const res = await httpClient<Type.EditModel>(url, {
-    method: 'get'
+    method: "get",
   });
   return res;
 }
 
 export async function apiGetRankList(length: number) {
   const res = await httpClient<Type.List>(recordRankListPath, {
-    method: 'get',
+    method: "get",
     params: {
-      length
-    }
+      length,
+    },
   });
   return res;
 }
 
-export async function apiQueryDataList(params: Type.QueryParam) {
-  const res = await httpClient<ResponsePagination<Type.List>>(recordQueryListPath, {
-    method: 'get',
-    params
-  });
-  return res;
-}
+export async function apiQueryDataList(
+  params: Type.QueryParam,
+): Promise<ResponsePagination<Type.List>> {
+  const { app } = useRuntimeConfig();
+  const json = (
+    await $fetch<JSONData<Type.List>>(`${app.baseURL}data/table_record.json`)
+  ).RECORDS;
 
-export async function apiGetList(params: Omit<Pagination, 'total'>) {
+  let data = keysToCamel(json);
+
+  if (params.title?.trim()) {
+    const keyword = params.title.trim().toLowerCase();
+
+    data = data.filter((item) => item.title?.toLowerCase().includes(keyword));
+  }
+
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 10;
+
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+
+  return {
+    list: data.slice(start, end),
+    pagination: {
+      total: data.length,
+      page,
+      pageSize,
+    },
+  };
+}
+export async function apiGetList(params: Omit<Pagination, "total">) {
   const res = await httpClient<ResponsePagination<Type.List>>(recordListPath, {
-    method: 'get',
-    params
+    method: "get",
+    params,
   });
   return res;
 }
 
-export async function apiCollectionList(params: Omit<Pagination, 'total'>) {
-  const res = await httpClient<ResponsePagination<Type.List>>(recordCollectionListPath, {
-    method: 'get',
-    params
-  });
+export async function apiCollectionList(params: Omit<Pagination, "total">) {
+  const res = await httpClient<ResponsePagination<Type.List>>(
+    recordCollectionListPath,
+    {
+      method: "get",
+      params,
+    },
+  );
   return res;
 }
 
 export async function apiRecordCount(params: Type.CountParam) {
   const res = await httpClient<boolean>(recordCountPath, {
-    method: 'get',
-    params
+    method: "get",
+    params,
   });
   return res;
 }
 
 export async function apiAnonymousRecordCount(recordId: string) {
   const res = await httpClient<boolean>(recordAnonymousViewPath, {
-    method: 'GET',
+    method: "GET",
     params: {
-      recordId
-    }
+      recordId,
+    },
   });
   return res;
 }
 
 export async function apiAdd(params: Type.AddModel) {
   const res = await httpClient<string>(recordAddPath, {
-    method: 'post',
-    body: params
+    method: "post",
+    body: params,
   });
   return res;
 }
 
 export async function apiUpdate(params: Type.EditModel) {
-  const updateUrl = recordEditPath + `/${params.id}`
+  const updateUrl = recordEditPath + `/${params.id}`;
   const res = await httpClient<string>(updateUrl, {
-    method: 'put',
-    body: params
+    method: "put",
+    body: params,
   });
   return res;
 }
 
 export async function apiDelete(id: number) {
-  const deleteUrl = recordDeletePath + `/${id}`
+  const deleteUrl = recordDeletePath + `/${id}`;
   const res = await httpClient<string>(deleteUrl, {
-    method: 'delete'
+    method: "delete",
   });
   return res;
 }

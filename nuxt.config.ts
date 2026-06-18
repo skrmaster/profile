@@ -33,6 +33,7 @@ export default defineNuxtConfig({
   devtools: { enabled: mode === "development" },
 
   app: {
+    baseURL: "/profile/",
     head: {
       htmlAttrs: {
         lang: "zh-cn",

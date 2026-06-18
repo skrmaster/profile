@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { apiAnonymousRecordCount, apiGetInfo } from '~/api/record/request';
-import type { ListItem, CountParam } from '~/api/record/model';
-import type { UserModel } from '~/api/user/model';
+import { apiAnonymousRecordCount, apiGetInfo } from "~/api/record/request";
+import type { ListItem, CountParam } from "~/api/record/model";
+import type { UserModel } from "~/api/user/model";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,11 +15,14 @@ const scrollBarWidth = ref(0);
 const editorRef = ref();
 const { $prism } = useNuxtApp();
 const data = reactive<Partial<ListItem>>({
-  content: '',
-  title: ''
+  content: "",
+  title: "",
 });
 const status = ref();
-const { data: recordData } = await useAsyncData(`record-detail-${recordId}`, () => apiGetInfo(recordId));
+const { data: recordData } = await useAsyncData(
+  `record-detail-${recordId}`,
+  () => apiGetInfo(recordId),
+);
 
 function init() {
   const res = recordData.value;
@@ -28,42 +31,45 @@ function init() {
   }
 
   Object.assign(data, res.data);
-  data.content = $sanitize(res.data.content) ?? '';
+  data.content = $sanitize(res.data.content) ?? "";
   nextTick(() => {
     $prism.highlightAll();
   });
   data.createTime = timeNullFormat(data.createTime);
   data.updateTime = timeNullFormat(data.updateTime);
   status.value = getListLabel(data.category, recordCategory);
-  useHead({ title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`, meta: [
-    {
-      name: 'description',
-      content: data.description?.slice(0, 150)
-    }
-  ] });
+  useHead({
+    title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`,
+    meta: [
+      {
+        name: "description",
+        content: data.description?.slice(0, 150),
+      },
+    ],
+  });
 }
 
 function goBack() {
   router.back();
 }
 
-function handleCopy (event: ClipboardEvent) {
+function handleCopy(event: ClipboardEvent) {
   const selection = window.getSelection();
   if (!selection) return;
   const selectedText = selection.toString();
-  const additionalText = `\n\n-- ${data.author?.account + '&' + data.author?.email}所有`;
+  const additionalText = `\n\n-- ${data.author?.account + "&" + data.author?.email}所有`;
   const newText = selectedText + additionalText;
   event.preventDefault();
   if (event.clipboardData) {
-    event.clipboardData.setData('text/plain', newText);
+    event.clipboardData.setData("text/plain", newText);
   }
 }
 
 function handleViewAdd() {
   const params: CountParam = {
     category: 0,
-    recordId
-  }
+    recordId,
+  };
 
   apiAnonymousRecordCount(params.recordId);
 }
@@ -78,20 +84,19 @@ onNuxtReady(() => {
   scrollBarWidth.value = getScrollBarWidth();
   init();
   viewCountAddAfter5min();
-  document.addEventListener('copy', handleCopy);
+  document.addEventListener("copy", handleCopy);
 });
 
 onUnmounted(() => {
   if (timer) {
     clearTimeout(timer);
   }
-  document.removeEventListener('copy', handleCopy);
+  document.removeEventListener("copy", handleCopy);
 });
-
 </script>
 <template>
-  <NuxtLayout 
-    name="header-section-footer" 
+  <NuxtLayout
+    name="header-section-footer"
     bg-change-color="true"
     bg-style-content="display: flex;flex-direction: column;min-height: 100vh;background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);"
   >
@@ -103,7 +108,7 @@ onUnmounted(() => {
         </div>
         <div class="line-wave__up"></div>
       </div>
-      <div>
+      <div v-if="false">
         <div>
           <h1 class="text-center">{{ data.title }}</h1>
           <p class="text-center my1">
@@ -125,10 +130,10 @@ onUnmounted(() => {
           </p>
         </div>
       </div>
-      <p class="my1" style="line-height: 2;">
+      <p class="my1" style="line-height: 2">
         <span class="mr1 stack__item">{{ status }}</span>
         <span class="mr1">创建时间：{{ data.createTime }}</span>
-        <span class="mr1">创建人：{{ data.author?.account || '未知' }}</span>
+        <span class="mr1">创建人：{{ data.author?.account || "未知" }}</span>
       </p>
       <div class="w-e-text-container">
         <div v-html="data.content" class="view__editor" data-slate-editor></div>
@@ -154,16 +159,16 @@ onUnmounted(() => {
   border-radius: 4px;
 }
 
-:deep(.w-e-text-container [data-slate-editor] pre>code) {
+:deep(.w-e-text-container [data-slate-editor] pre > code) {
   text-shadow: none;
-  background-color: var(--code-bg-color)!important;
+  background-color: var(--code-bg-color) !important;
   border: 0;
   font-weight: 500;
   letter-spacing: 1px;
   color: var(--white-color);
 }
 
-:deep(pre[class*=language-]) {
+:deep(pre[class*="language-"]) {
   padding: 0;
   margin: 0;
   background-color: var(--code-bg-color);
@@ -178,13 +183,16 @@ onUnmounted(() => {
   position: absolute;
   bottom: 1px;
   height: 2px;
-  background-image: linear-gradient(to right, 
-    var(--primary-color) 50%, transparent 50%);
+  background-image: linear-gradient(
+    to right,
+    var(--primary-color) 50%,
+    transparent 50%
+  );
   background-size: 10px 100%;
 }
 
 .view__editor {
-  padding: 2rem!important;
+  padding: 2rem !important;
 }
 
 .stack__item {
