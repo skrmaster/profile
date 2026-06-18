@@ -1,5 +1,6 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
+import projectData from "~/public/data/table_project.json";
 
 const {
   projectGetPath,
@@ -20,14 +21,7 @@ export async function apiGetInfo(id: string) {
 export async function apiGetList(
   params?: Omit<Pagination, "total">,
 ): Promise<ResponsePagination<Type.ListType>> {
-  const { app } = useRuntimeConfig();
-  const json = (
-    await $fetch<JSONData<Type.ListType>>(
-      `${app.baseURL}data/table_project.json`,
-    )
-  ).RECORDS;
-
-  const data = keysToCamel(json);
+  const data = keysToCamel(projectData) as any;
 
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;

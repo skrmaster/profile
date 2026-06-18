@@ -1,5 +1,6 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
+import recordData from "~/public/data/table_record.json";
 
 const {
   recordListPath,
@@ -36,17 +37,14 @@ export async function apiGetRankList(length: number) {
 export async function apiQueryDataList(
   params: Type.QueryParam,
 ): Promise<ResponsePagination<Type.List>> {
-  const { app } = useRuntimeConfig();
-  const json = (
-    await $fetch<JSONData<Type.List>>(`${app.baseURL}data/table_record.json`)
-  ).RECORDS;
-
-  let data = keysToCamel(json);
+  let data = keysToCamel(recordData) as any;
 
   if (params.title?.trim()) {
     const keyword = params.title.trim().toLowerCase();
 
-    data = data.filter((item) => item.title?.toLowerCase().includes(keyword));
+    data = data.filter((item: any) =>
+      item.title?.toLowerCase().includes(keyword),
+    );
   }
 
   const page = params.page ?? 1;

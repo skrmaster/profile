@@ -1,5 +1,6 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
+import skillData from "~/public/data/table_skill.json";
 
 const {
   skillListPath,
@@ -12,12 +13,7 @@ const {
 export async function apiSkillGetList(
   params?: Omit<Pagination, "total">,
 ): Promise<ResponsePagination<Type.ListType>> {
-  const { app } = useRuntimeConfig();
-  const json = (
-    await $fetch<JSONData<Type.ListType>>(`${app.baseURL}data/table_skill.json`)
-  ).RECORDS;
-
-  const data = keysToCamel(json);
+  const data = keysToCamel(skillData) as any;
 
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;

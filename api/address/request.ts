@@ -1,5 +1,7 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
+import categoryData from "~/public/data/table_address_category.json";
+import navigationData from "~/public/data/table_address_navigation.json";
 
 const {
   navigationListPath,
@@ -28,16 +30,9 @@ export async function apiGetIcons() {
   return res;
 }
 
-export async function apiGetListByCategory(): Promise<Type.ListByCategory> {
-  const { app } = useRuntimeConfig();
-
-  const [categoryRes, navigationRes] = await Promise.all([
-    $fetch<JSONData<any>>(`${app.baseURL}data/table_address_category.json`),
-    $fetch<JSONData<any>>(`${app.baseURL}data/table_address_navigation.json`),
-  ]);
-
-  const categories = keysToCamel(categoryRes.RECORDS);
-  const navigations = keysToCamel(navigationRes.RECORDS);
+export function apiGetListByCategory(): Type.ListByCategory {
+  const categories = keysToCamel(categoryData.RECORDS) as any[];
+  const navigations = keysToCamel(navigationData.RECORDS) as any[];
 
   const navigationMap = new Map<number, any[]>();
 
