@@ -4,7 +4,7 @@ import { apiGetInfo } from "~/api/project/request";
 type Prop = {
   projectId: string;
 };
-
+const { $message, $sanitize, $dayjs } = useNuxtApp();
 const props = withDefaults(defineProps<Prop>(), {});
 const router = useRouter();
 const title = ref("");
@@ -46,14 +46,12 @@ function init() {
   detailList.value = ["summary", "description", "department"].map((e, i) => {
     const item = {
       label: ["概述", "介绍", "负责部分"][i],
-      content: res.data[e],
+      content: res[e],
     };
     return item;
   });
 
-  const stackIds: string[] = res.data.stackIds
-    ? JSON.parse(res.data.stackIds)
-    : [];
+  const stackIds: string[] = res.stackIds ? JSON.parse(res.stackIds) : [];
 
   list.value = stackIds?.map((e) => {
     return {
@@ -64,8 +62,8 @@ function init() {
     };
   });
 
-  const imageIds: Upload.FileInfo[] = res.data.imageIds
-    ? JSON.parse(res.data.imageIds)
+  const imageIds: Upload.FileInfo[] = res.imageIds
+    ? JSON.parse(res.imageIds)
     : [];
   imageList.value = imageIds.map((e, i) => {
     return {
@@ -74,8 +72,16 @@ function init() {
     };
   });
 
-  startTime.value = timeNullFormat(res.data.startTime, "YYYY-MM-DD");
-  endTime.value = timeNullFormat(res.data.endTime, "YYYY-MM-DD");
+  startTime.value = $dayjs(res.startTime, [
+    "DD/M/YYYY HH:mm:ss",
+    "D/M/YYYY HH:mm:ss",
+    "D/MM/YYYY HH:mm:ss",
+  ]).format("YYYY-MM-DD");
+  endTime.value = $dayjs(res.endTime, [
+    "DD/M/YYYY HH:mm:ss",
+    "D/M/YYYY HH:mm:ss",
+    "D/MM/YYYY HH:mm:ss",
+  ]).format("YYYY-MM-DD");
 
   useHead({
     title,

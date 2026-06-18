@@ -28,6 +28,10 @@ export default defineNuxtConfig({
       },
     ],
   ],
+  dayjs: {
+    plugins: ["customParseFormat"],
+    externalPlugins: [],
+  },
 
   css: cssFiles.map((file) => `~/assets/css/${file}`),
   alias: {},

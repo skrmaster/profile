@@ -4,7 +4,7 @@ import type { ListItem, CountParam } from "~/api/record/model";
 
 const route = useRoute();
 const router = useRouter();
-const { $message, $sanitize } = useNuxtApp();
+const { $message, $sanitize, $dayjs } = useNuxtApp();
 const recordId = route.query.id as string;
 const { recordCategory } = options;
 const viewJudgeTime = 1000 * 60 * 1;
@@ -29,13 +29,24 @@ function init() {
     return;
   }
 
-  Object.assign(data, res.data);
-  data.content = $sanitize(res.data.content) ?? "";
+  Object.assign(data, res);
+
+  data.content = $sanitize(res.content) ?? "";
   nextTick(() => {
     $prism.highlightAll();
   });
-  data.createTime = timeNullFormat(data.createTime);
-  data.updateTime = timeNullFormat(data.updateTime);
+
+  data.createTime = $dayjs(data.createTime, [
+    "DD/M/YYYY HH:mm:ss",
+    "D/M/YYYY HH:mm:ss",
+    "D/MM/YYYY HH:mm:ss",
+  ]).format("YYYY-MM-DD");
+
+  data.updateTime = $dayjs(data.updateTime, [
+    "DD/M/YYYY HH:mm:ss",
+    "D/M/YYYY HH:mm:ss",
+    "D/MM/YYYY HH:mm:ss",
+  ]).format("YYYY-MM-DD");
   status.value = getListLabel(data.category, recordCategory);
   useHead({
     title: data.title + `-${import.meta.env.VITE_PROJECT_DOMAIN}个人网站`,
@@ -56,7 +67,7 @@ function handleCopy(event: ClipboardEvent) {
   const selection = window.getSelection();
   if (!selection) return;
   const selectedText = selection.toString();
-  const additionalText = `\n\n-- ${data.author?.account + "&" + data.author?.email}所有`;
+  const additionalText = `\n\n-- ${data.author}所有`;
   const newText = selectedText + additionalText;
   event.preventDefault();
   if (event.clipboardData) {
@@ -132,7 +143,7 @@ onUnmounted(() => {
       <p class="my1" style="line-height: 2">
         <span class="mr1 stack__item">{{ status }}</span>
         <span class="mr1">创建时间：{{ data.createTime }}</span>
-        <span class="mr1">创建人：{{ data.author?.account || "未知" }}</span>
+        <span class="mr1">创建人：{{ data.author || "未知" }}</span>
       </p>
       <div class="w-e-text-container">
         <div v-html="data.content" class="view__editor" data-slate-editor></div>

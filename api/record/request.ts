@@ -1,6 +1,7 @@
 import type * as Type from "./model";
 import { httpClient } from "../index";
 import recordData from "~/public/data/table_record.json";
+import userJSONData from "~/public/data/table_user.json";
 
 const {
   recordListPath,
@@ -17,8 +18,12 @@ const {
 
 export function apiGetInfo(id: string): Type.EditModel {
   const data = keysToCamel(recordData.RECORDS) as any;
+  const userData = keysToCamel(userJSONData.RECORDS) as any;
 
-  return data.find((e: any) => e.id == id);
+  const res: Type.EditModel = data.find((e: any) => e.id == id);
+  res.author = userData.find((e: any) => e.id == res.authorId).account;
+
+  return res;
 }
 
 export async function apiGetRankList(length: number) {
