@@ -4,6 +4,7 @@ import path from "path";
 const cssDir = path.resolve(__dirname, "assets/css");
 const cssFiles = fs.readdirSync(cssDir).filter((file) => file.endsWith(".css"));
 const mode = process.env.NODE_ENV;
+const { app } = useRuntimeConfig();
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -37,11 +38,16 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "zh-cn",
       },
-      link: [],
+      link: [
+        {
+          rel: "icon",
+          href: `${app.baseURL}favicon.ico`,
+        },
+      ],
       script: [
         {
           type: "module",
-          src: "/iconfont/iconfont.js",
+          src: `${app.baseURL}iconfont/iconfont.js`,
         },
       ],
     },

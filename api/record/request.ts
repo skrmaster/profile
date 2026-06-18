@@ -63,11 +63,7 @@ export async function apiQueryDataList(
   };
 }
 export async function apiGetList(params: Omit<Pagination, "total">) {
-  const res = await httpClient<ResponsePagination<Type.List>>(recordListPath, {
-    method: "get",
-    params,
-  });
-  return res;
+  return apiQueryDataList(params);
 }
 
 export async function apiCollectionList(params: Omit<Pagination, "total">) {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const showCookie = ref(false);
 const smallCookie = ref(false);
 const cookieRef = ref();
@@ -24,8 +23,8 @@ function handleLayout() {
 }
 
 onNuxtReady(() => {
-  const auth = useCookie('s-auth-cookie');
-  const userAuth = auth.value ? JSON.parse(auth.value) : false;  
+  const auth = useCookie("s-auth-cookie");
+  const userAuth = auth.value ? JSON.parse(auth.value) : false;
 
   if (!userAuth) {
     timer = setTimeout(() => {
@@ -37,18 +36,21 @@ onNuxtReady(() => {
 onUnmounted(() => {
   clearTimeout(timer);
 });
-
 </script>
 <template>
   <slot></slot>
-  <div ref="cookieRef">
+  <div v-if="false" ref="cookieRef">
     <Transition name="bottom2top">
-      <com-cookie v-if="showCookie && !smallCookie" @close="showCookie = false"></com-cookie>
-      <com-cookie-small v-else-if="showCookie && smallCookie" @close="showCookie = false"></com-cookie-small>
+      <com-cookie
+        v-if="showCookie && !smallCookie"
+        @close="showCookie = false"
+      ></com-cookie>
+      <com-cookie-small
+        v-else-if="showCookie && smallCookie"
+        @close="showCookie = false"
+      ></com-cookie-small>
     </Transition>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

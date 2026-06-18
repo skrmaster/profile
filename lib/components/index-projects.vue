@@ -68,8 +68,11 @@ controls.enableZoom = false;
 controls.enablePan = false;
 // controls.update();
 
+const { app } = useRuntimeConfig();
 const loader = new GLTFLoader();
-const loadModelOrigin = await loader.loadAsync("/models/signpost.gltf");
+const loadModelOrigin = await loader.loadAsync(
+  `${app.baseURL}models/signpost.gltf`,
+);
 const loadModel = loadModelOrigin.scene;
 
 // 射线投射器

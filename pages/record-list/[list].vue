@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {
   apiGetRankList,
-  apiQueryDataList,
   apiRecordCount,
   apiGetList,
 } from "~/api/record/request";
@@ -103,9 +102,9 @@ function initRank() {
 }
 
 function getListData() {
-  Object.assign(pagination, listData.value?.data.pagination);
+  Object.assign(pagination, listData.value?.pagination);
   blogList.value =
-    listData.value?.data.list.map((e) => {
+    listData.value?.list.map((e) => {
       const imageIds: Upload.FileInfo[] = e.coverImageUrl
         ? JSON.parse(e.coverImageUrl)
         : [];
