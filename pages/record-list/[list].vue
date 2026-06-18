@@ -61,45 +61,45 @@ if (query) {
   params.page = 1;
 }
 
-const { data: rankData } = await useAsyncData(`rank-data`, () =>
-  apiGetRankList(5),
-);
+// const { data: rankData } = await useAsyncData(`rank-data`, () =>
+//   apiGetRankList(5),
+// );
 const { data: listData } = await useAsyncData(
   `record-${pagination.page}-${pagination.pageSize}-list`,
   () => apiGetList(params),
 );
 
 function init() {
-  initRank();
+  // initRank();
   getListData();
 }
 
-function initRank() {
-  const res = rankData.value;
-  if (!res) {
-    return;
-  }
+// function initRank() {
+//   const res = rankData.value;
+//   if (!res) {
+//     return;
+//   }
 
-  rankLoading.value = true;
-  rank.value = res.data.map((e, i) => {
-    if (i < 3) {
-      return {
-        id: e.id,
-        isBold: true,
-        name: e.title,
-        fontSize: 20,
-      };
-    } else {
-      return {
-        id: e.id,
-        isBold: false,
-        name: e.title,
-        fontSize: 20,
-      };
-    }
-  });
-  rankLoading.value = false;
-}
+//   rankLoading.value = true;
+//   rank.value = res.data.map((e, i) => {
+//     if (i < 3) {
+//       return {
+//         id: e.id,
+//         isBold: true,
+//         name: e.title,
+//         fontSize: 20,
+//       };
+//     } else {
+//       return {
+//         id: e.id,
+//         isBold: false,
+//         name: e.title,
+//         fontSize: 20,
+//       };
+//     }
+//   });
+//   rankLoading.value = false;
+// }
 
 function getListData() {
   Object.assign(pagination, listData.value?.pagination);

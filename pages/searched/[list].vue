@@ -1,9 +1,5 @@
 <script lang="ts" setup>
-import {
-  apiGetRankList,
-  apiQueryDataList,
-  apiRecordCount,
-} from "~/api/record/request";
+import { apiQueryDataList, apiRecordCount } from "~/api/record/request";
 import type {
   List,
   ListItem,
