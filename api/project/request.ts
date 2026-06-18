@@ -10,12 +10,10 @@ const {
   projectDeletePath,
 } = apiMap;
 
-export async function apiGetInfo(id: string) {
-  const url = projectGetPath + `/${id}`;
-  const res = await httpClient<Type.EditModel>(url, {
-    method: "get",
-  });
-  return res;
+export function apiGetInfo(id: string): Type.EditModel {
+  const data = keysToCamel(projectData.RECORDS) as any;
+
+  return data.find((e: any) => e.id == id);
 }
 
 export function apiGetList(

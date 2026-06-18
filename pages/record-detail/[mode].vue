@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-import { apiGetInfo, apiAdd, apiUpdate } from '~/api/record/request';
-import { apiAdd as fileApiAdd } from '~/api/upload/request';
-import type { AddModel, EditModel } from '~/api/record/model';
-import type { AddModel as FileAddModel } from '~/api/upload/model';
-import RecordDetailView from './record-detail-view.vue';
+import { apiGetInfo, apiAdd, apiUpdate } from "~/api/record/request";
+import { apiAdd as fileApiAdd } from "~/api/upload/request";
+import type { AddModel, EditModel } from "~/api/record/model";
+import type { AddModel as FileAddModel } from "~/api/upload/model";
+import RecordDetailView from "./record-detail-view.vue";
 
 const route = useRoute();
 const router = useRouter();
 const mode = route.params.mode as DetailTitle.Mode;
 const recordId = route.query.id as string;
 
-if (mode === 'add') {
+if (mode === "add") {
   useHead({
-    title: '添加记录'
+    title: "添加记录",
   });
-} else if (mode === 'edit') {
+} else if (mode === "edit") {
   useHead({
-    title: '编辑记录'
+    title: "编辑记录",
   });
   init();
 }
 
 const { $message, $sanitize } = useNuxtApp();
 const { recordCategory } = options;
-const recordName = ref('');
-const radioValue = ref('1');
+const recordName = ref("");
+const radioValue = ref("1");
 const radioList = ref(recordCategory);
-const content = ref('');
+const content = ref("");
 const status = ref<string | number | undefined>();
 const images = ref<Upload.FileInfo[]>([]);
 const fileList = ref<Array<Upload.FileInfo>>([]);
@@ -34,32 +34,31 @@ const userSubtitle = ref();
 let subtitle: string | undefined;
 
 function init() {
-  apiGetInfo(recordId).then(res => {
-    content.value = res.data.content ?? '';
-    recordName.value = res.data.title;
-    radioValue.value = res.data.category.toString();
-    status.value = res.data.status;
+  const res = apiGetInfo(recordId);
+  content.value = res.data.content ?? "";
+  recordName.value = res.data.title;
+  radioValue.value = res.data.category.toString();
+  status.value = res.data.status;
 
-    userSubtitle.value = res.data.subtitle;
-    subtitle = res.data.description;
-    const imageIds: Upload.FileInfo[] = res.data.coverImageUrl ? JSON.parse(res.data.coverImageUrl) : [];
-    fileList.value = imageIds.map((e) => {
-      return {
-        id: e.id,
-        fullPath: splicingImageUrl(e.fullPath) || ""
-      }
-    });
-  }).catch(e => {
-
+  userSubtitle.value = res.data.subtitle;
+  subtitle = res.data.description;
+  const imageIds: Upload.FileInfo[] = res.data.coverImageUrl
+    ? JSON.parse(res.data.coverImageUrl)
+    : [];
+  fileList.value = imageIds.map((e) => {
+    return {
+      id: e.id,
+      fullPath: splicingImageUrl(e.fullPath) || "",
+    };
   });
 }
 
 function handleSubmit(val: DetailTitle.Action, title: string) {
-  const formatImagesList = images.value.map(e => {
+  const formatImagesList = images.value.map((e) => {
     return {
       id: e.id,
-      fullPath: formatUploadUrl(e.fullPath)
-    }
+      fullPath: formatUploadUrl(e.fullPath),
+    };
   });
 
   let isEdit = false;
@@ -69,21 +68,21 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     content: $sanitize(content.value),
     coverImageUrl: JSON.stringify(formatImagesList),
     subtitle: userSubtitle.value || subtitle,
-    description: subtitle
-  }
+    description: subtitle,
+  };
 
   if (status.value?.toString()) {
     isEdit = true;
   }
 
   switch (val) {
-    case 'submit':
+    case "submit":
       params.status = 1;
       break;
-    case 'submit-tmp':
+    case "submit-tmp":
       params.status = 0;
       break;
-    case 'submit-edit':
+    case "submit-edit":
       params.status = 1;
       isEdit = true;
       break;
@@ -91,34 +90,34 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       break;
   }
   if (!isEdit) {
-    apiAdd(params).then(res => {
-      $message.show({
-        message: res.data ?? res.errors,
-        type: res.succeeded ? 'success' : 'info'
-      });
-      if (res.succeeded) {
-        router.back();
-      }
-    }).catch(() => {
-
-    });
+    apiAdd(params)
+      .then((res) => {
+        $message.show({
+          message: res.data ?? res.errors,
+          type: res.succeeded ? "success" : "info",
+        });
+        if (res.succeeded) {
+          router.back();
+        }
+      })
+      .catch(() => {});
   } else {
     const p: EditModel = {
       ...params,
       id: recordId,
-    }
+    };
 
-    apiUpdate(p).then(res => {
-      $message.show({
-        message: res.data ?? res.errors,
-        type: res.succeeded ? 'success' : 'info'
-      });
-      if (res.succeeded) {
-        router.back();
-      }
-    }).catch(e => {
-
-    });
+    apiUpdate(p)
+      .then((res) => {
+        $message.show({
+          message: res.data ?? res.errors,
+          type: res.succeeded ? "success" : "info",
+        });
+        if (res.succeeded) {
+          router.back();
+        }
+      })
+      .catch((e) => {});
   }
 }
 
@@ -130,13 +129,13 @@ async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
 
     const params: FileAddModel = {
       category: 0,
-      file: item
-    }
-    fileApiAdd(params).then(res => {
-      images.value.push(res.data)
-    }).catch(() => {
-
-    });
+      file: item,
+    };
+    fileApiAdd(params)
+      .then((res) => {
+        images.value.push(res.data);
+      })
+      .catch(() => {});
   }
 }
 
@@ -157,10 +156,7 @@ function handleEditorText(text: string) {
     <section class="flex1 flex__column">
       <div class="container flex__column flex1 mb1">
         <div class="my1">
-          <com-radio
-            v-model="radioValue"
-            :list="radioList"
-          ></com-radio>
+          <com-radio v-model="radioValue" :list="radioList"></com-radio>
           <div class="my1">
             <label>封面</label>
             <com-upload
@@ -194,7 +190,10 @@ function handleEditorText(text: string) {
 </template>
 <style scoped>
 .mode__background {
-  background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
+  background-image: radial-gradient(
+    var(--white-color) 0,
+    var(--background-color) 100%
+  );
   background-blend-mode: screen;
   max-width: 100vw;
   width: 100%;

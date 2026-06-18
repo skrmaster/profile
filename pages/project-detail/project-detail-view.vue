@@ -1,35 +1,37 @@
 <script lang="ts" setup>
-import { apiGetInfo } from '~/api/project/request';
+import { apiGetInfo } from "~/api/project/request";
 
 type Prop = {
   projectId: string;
-}
+};
 
 const props = withDefaults(defineProps<Prop>(), {});
 const router = useRouter();
-const title = ref('');
+const title = ref("");
 const list = ref<StackItem[]>([]);
 const imageList = ref<Carousel.ImageList[]>([]);
 const detailList = ref([
   {
-    label: '概述',
-    content: ''
+    label: "概述",
+    content: "",
   },
   {
-    label: '介绍',
-    content: ''
+    label: "介绍",
+    content: "",
   },
   {
-    label: '负责部分',
-    content: ''
-  }
+    label: "负责部分",
+    content: "",
+  },
 ]);
-const startTime = ref('');
-const endTime = ref('');
-const content = ref('');
-const playLink = ref('');
+const startTime = ref("");
+const endTime = ref("");
+const content = ref("");
+const playLink = ref("");
 
-const { data: detailData } = await useAsyncData(`project-detail-${props.projectId}`, () => apiGetInfo(props.projectId));
+const detailData = computed(() => {
+  return apiGetInfo(props.projectId);
+});
 
 function init() {
   const res = detailData.value;
@@ -37,48 +39,52 @@ function init() {
     return;
   }
 
-  title.value = res.data.name;
-  content.value = res.data.summary?.slice(0, 100) || '';
-  playLink.value = res.data.playLink as string;
+  title.value = res.name;
+  content.value = res.summary?.slice(0, 100) || "";
+  playLink.value = res.playLink as string;
 
-  detailList.value = ['summary', 'description', 'department'].map((e, i) => {
+  detailList.value = ["summary", "description", "department"].map((e, i) => {
     const item = {
-      label: ['概述', '介绍', '负责部分'][i],
-      content: res.data[e]
-    }
+      label: ["概述", "介绍", "负责部分"][i],
+      content: res.data[e],
+    };
     return item;
   });
 
-  const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
-      
-  list.value = stackIds?.map(e => {
+  const stackIds: string[] = res.data.stackIds
+    ? JSON.parse(res.data.stackIds)
+    : [];
+
+  list.value = stackIds?.map((e) => {
     return {
       name: e,
-      icon: '',
-      officalUrl: '',
-      isChoose: false
-    }
+      icon: "",
+      officalUrl: "",
+      isChoose: false,
+    };
   });
 
-  const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
+  const imageIds: Upload.FileInfo[] = res.data.imageIds
+    ? JSON.parse(res.data.imageIds)
+    : [];
   imageList.value = imageIds.map((e, i) => {
     return {
       id: e.id,
-      image: splicingImageUrl(e.fullPath) || ""
-    }
+      image: splicingImageUrl(e.fullPath) || "",
+    };
   });
 
-  startTime.value = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
-  endTime.value = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
+  startTime.value = timeNullFormat(res.data.startTime, "YYYY-MM-DD");
+  endTime.value = timeNullFormat(res.data.endTime, "YYYY-MM-DD");
 
   useHead({
     title,
     meta: [
       {
-        name: 'description',
-        content: content.value
-      }
-    ]
+        name: "description",
+        content: content.value,
+      },
+    ],
   });
 }
 
@@ -91,9 +97,9 @@ onNuxtReady(() => {
 });
 </script>
 <template>
-  <com-background 
+  <com-background
     name="background-setting"
-    bg-change-color 
+    bg-change-color
     bg-style-content="
       display: flex;
       flex-direction: column;
@@ -101,16 +107,20 @@ onNuxtReady(() => {
       background-image: radial-gradient(var(--white-color) 0, var(--background-color) 100%);
     "
   >
-    <com-navigation class="display-2-none display-1-none display-0-none"></com-navigation>
-    <com-navigation-small class="display-5-none display-4-none display-3-none"></com-navigation-small>
+    <com-navigation
+      class="display-2-none display-1-none display-0-none"
+    ></com-navigation>
+    <com-navigation-small
+      class="display-5-none display-4-none display-3-none"
+    ></com-navigation-small>
     <section>
       <div class="container flex__column">
         <div class="title flex__center mt2 mb3">
           <div class="back">
             <div class="flex__row" @click="goBack">
-              <com-icon 
-                width="20px" 
-                height="40px" 
+              <com-icon
+                width="20px"
+                height="40px"
                 icon="profile-left"
               ></com-icon>
               <span class="fs24 nowrap display-0-none c-p">返回</span>
@@ -123,14 +133,18 @@ onNuxtReady(() => {
           </div>
         </div>
         <div style="overflow: hidden">
-          <com-carousel
-            :list="imageList"
-          ></com-carousel>
+          <com-carousel :list="imageList"></com-carousel>
         </div>
         <div>
           <label>演示地址</label>
           <p class="mt1">
-            <NuxtLink v-if="isUrl(playLink)" class="playlink" target="_blank" :to="playLink">{{ playLink }}</NuxtLink>
+            <NuxtLink
+              v-if="isUrl(playLink)"
+              class="playlink"
+              target="_blank"
+              :to="playLink"
+              >{{ playLink }}</NuxtLink
+            >
             <span v-else>{{ playLink }}</span>
           </p>
         </div>
@@ -145,14 +159,11 @@ onNuxtReady(() => {
         <div class="stack__box">
           <p><label>技术栈</label></p>
           <div class="mt1">
-            <com-tech-stack 
-              :data-list="list"
-              mode="view"
-            ></com-tech-stack>
+            <com-tech-stack :data-list="list" mode="view"></com-tech-stack>
           </div>
         </div>
         <div class="flex__column">
-          <div 
+          <div
             v-for="(item, index) in detailList"
             :key="index"
             class="stack-content mb2"
@@ -169,7 +180,10 @@ onNuxtReady(() => {
     </section>
     <com-footer></com-footer>
   </com-background>
-  <div style="height: 120px;" class="display-5-none display-4-none display-3-none"></div>
+  <div
+    style="height: 120px"
+    class="display-5-none display-4-none display-3-none"
+  ></div>
 </template>
 <style scoped>
 .background {
@@ -213,14 +227,14 @@ onNuxtReady(() => {
 }
 
 .stack-content:hover .stack-content__label {
-  box-sizing: content-box!important;
+  box-sizing: content-box !important;
   border-top: 1px solid var(--primary-border-color);
   border-left: 1px solid var(--primary-border-color);
   border-right: 1px solid var(--primary-border-color);
 }
 
 .stack-content:hover .content__item {
-  box-sizing: content-box!important;
+  box-sizing: content-box !important;
   border: 1px solid var(--primary-border-color);
 }
 

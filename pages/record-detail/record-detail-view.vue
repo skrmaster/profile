@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { apiAnonymousRecordCount, apiGetInfo } from "~/api/record/request";
 import type { ListItem, CountParam } from "~/api/record/model";
-import type { UserModel } from "~/api/user/model";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,10 +18,10 @@ const data = reactive<Partial<ListItem>>({
   title: "",
 });
 const status = ref();
-const { data: recordData } = await useAsyncData(
-  `record-detail-${recordId}`,
-  () => apiGetInfo(recordId),
-);
+
+const recordData = computed(() => {
+  return apiGetInfo(recordId);
+});
 
 function init() {
   const res = recordData.value;

@@ -15,13 +15,10 @@ const {
   recordAnonymousViewPath,
 } = apiMap;
 
-export async function apiGetInfo(id: string) {
-  const url = recordGetInfoPath + `/${id}`;
+export function apiGetInfo(id: string): Type.EditModel {
+  const data = keysToCamel(recordData.RECORDS) as any;
 
-  const res = await httpClient<Type.EditModel>(url, {
-    method: "get",
-  });
-  return res;
+  return data.find((e: any) => e.id == id);
 }
 
 export async function apiGetRankList(length: number) {

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { apiAdd as fileApiAdd } from '~/api/upload/request';
-import { apiAdd, apiGetInfo, apiUpdate } from '~/api/project/request';
-import type { AddModel as FileAddModel } from '~/api/upload/model';
-import type { AddModel, EditModel } from '~/api/project/model';
-import projectDetailView from './project-detail-view.vue';
+import { apiAdd as fileApiAdd } from "~/api/upload/request";
+import { apiAdd, apiGetInfo, apiUpdate } from "~/api/project/request";
+import type { AddModel as FileAddModel } from "~/api/upload/model";
+import type { AddModel, EditModel } from "~/api/project/model";
+import projectDetailView from "./project-detail-view.vue";
 
 const { $message, $dayjs } = useNuxtApp();
 const route = useRoute();
@@ -11,13 +11,13 @@ const router = useRouter();
 const mode = route.params.mode as DetailTitle.Mode;
 const projectId = route.query.id as string;
 
-if (mode === 'add') {
+if (mode === "add") {
   useHead({
-    title: '添加项目'
+    title: "添加项目",
   });
-} else if (mode === 'edit') {
+} else if (mode === "edit") {
   useHead({
-    title: '编辑项目'
+    title: "编辑项目",
   });
   initEditData();
 }
@@ -27,67 +27,70 @@ const images = ref<Upload.FileInfo[]>([]);
 const fileList = ref<Array<Upload.FileInfo>>([]);
 const status = ref<string | number | undefined>();
 
-const formData = reactive<Omit<AddModel, 'name' | 'status'>>({
-  playLink: '',
-  summary: '',
-  description: '',
-  department: '',
-  startTime: $dayjs().format('YYYY-MM-DD'),
-  endTime: $dayjs().format('YYYY-MM-DD'),
-  sort: 1
+const formData = reactive<Omit<AddModel, "name" | "status">>({
+  playLink: "",
+  summary: "",
+  description: "",
+  department: "",
+  startTime: $dayjs().format("YYYY-MM-DD"),
+  endTime: $dayjs().format("YYYY-MM-DD"),
+  sort: 1,
 });
 const startMinTime = ref();
 const endMinTime = ref();
-const projectName = ref('');
+const projectName = ref("");
 
-watch(() => formData.startTime, (val) => {
-  if ($dayjs(val).isAfter($dayjs(formData.endTime))) {
-    formData.endTime = formData.startTime;
-  }
-  endMinTime.value = val;
-});
+watch(
+  () => formData.startTime,
+  (val) => {
+    if ($dayjs(val).isAfter($dayjs(formData.endTime))) {
+      formData.endTime = formData.startTime;
+    }
+    endMinTime.value = val;
+  },
+);
 
 function initEditData() {
-  apiGetInfo(projectId)
-  .then(res => {
-    Object.assign(formData, res.data);
-    projectName.value = res.data.name;
+  const res = apiGetInfo(projectId);
+  Object.assign(formData, res.data);
+  projectName.value = res.data.name;
 
-    const stackIds: string[] = res.data.stackIds ? JSON.parse(res.data.stackIds) : [];
-    
-    list.value = stackIds?.map(e => {
-      return {
-        name: e,
-        icon: '',
-        officalUrl: '',
-        isChoose: false
-      }
-    });
+  const stackIds: string[] = res.data.stackIds
+    ? JSON.parse(res.data.stackIds)
+    : [];
 
-    status.value = res.data.status;
-    formData.startTime = timeNullFormat(res.data.startTime, 'YYYY-MM-DD');
-    formData.endTime = timeNullFormat(res.data.endTime, 'YYYY-MM-DD');
-
-    const imageIds: Upload.FileInfo[] = res.data.imageIds ? JSON.parse(res.data.imageIds) : [];
-    fileList.value = imageIds.map((e) => {
-      return {
-        id: e.id,
-        fullPath: splicingImageUrl(e.fullPath) || ""
-      }
-    });
-    images.value = [...fileList.value];
-  }).catch((e) => {
-    console.log(e);
+  list.value = stackIds?.map((e) => {
+    return {
+      name: e,
+      icon: "",
+      officalUrl: "",
+      isChoose: false,
+    };
   });
+
+  status.value = res.data.status;
+  formData.startTime = timeNullFormat(res.data.startTime, "YYYY-MM-DD");
+  formData.endTime = timeNullFormat(res.data.endTime, "YYYY-MM-DD");
+
+  const imageIds: Upload.FileInfo[] = res.data.imageIds
+    ? JSON.parse(res.data.imageIds)
+    : [];
+  fileList.value = imageIds.map((e) => {
+    return {
+      id: e.id,
+      fullPath: splicingImageUrl(e.fullPath) || "",
+    };
+  });
+  images.value = [...fileList.value];
 }
 
 function handleStackListChange(val: StackItem[]) {
   let remainArr = [];
   let addArr = [];
-  
+
   for (let i = 0; i < val.length; i++) {
     let e = val[i];
-    let idx = list.value.findIndex(item => item.name === e.name);
+    let idx = list.value.findIndex((item) => item.name === e.name);
 
     if (idx > -1) {
       remainArr.push(e);
@@ -107,22 +110,22 @@ async function handleFileUpload(list: Array<Upload.FileInfo | File>) {
 
     const params: FileAddModel = {
       category: 0,
-      file: item
-    }
-    fileApiAdd(params).then(res => {
-      images.value.push(res.data)
-    }).catch(() => {
-
-    });
+      file: item,
+    };
+    fileApiAdd(params)
+      .then((res) => {
+        images.value.push(res.data);
+      })
+      .catch(() => {});
   }
 }
 
 function handleSubmit(val: DetailTitle.Action, title: string) {
-  const formatImagesList = images.value.map(e => {
+  const formatImagesList = images.value.map((e) => {
     return {
       id: e.id,
-      fullPath: formatUploadUrl(e.fullPath)
-    }
+      fullPath: formatUploadUrl(e.fullPath),
+    };
   });
 
   let isEdit = false;
@@ -131,59 +134,62 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
     ...formData,
     name: title,
     imageIds: JSON.stringify(unref(formatImagesList)),
-    stackIds: JSON.stringify(unref(list).map(e => e.name)),
-  }
+    stackIds: JSON.stringify(unref(list).map((e) => e.name)),
+  };
 
   switch (val) {
-    case 'submit':
+    case "submit":
       params.status = 1;
       break;
-    case 'submit-tmp':
+    case "submit-tmp":
       params.status = 0;
       break;
-    case 'submit-edit':
+    case "submit-edit":
       isEdit = true;
       break;
     default:
       break;
   }
   if (!isEdit) {
-    apiAdd(params).then(res => {
-      $message.show({
-        message: res.data,
-        type: res.succeeded ? 'success' : 'info'
-      });
-      if (res.succeeded) {
-        router.back();
-      }
-    }).catch(() => {});
+    apiAdd(params)
+      .then((res) => {
+        $message.show({
+          message: res.data,
+          type: res.succeeded ? "success" : "info",
+        });
+        if (res.succeeded) {
+          router.back();
+        }
+      })
+      .catch(() => {});
   } else {
     const p: EditModel = {
       ...params,
       id: projectId,
-    }
-    apiUpdate(p).then(res => {
-      $message.show({
-        message: res.data,
-        type: res.succeeded ? 'success' : 'info'
-      });
-      if (res.succeeded) {
-        router.back();
-      }
-    }).catch(e => {});
+    };
+    apiUpdate(p)
+      .then((res) => {
+        $message.show({
+          message: res.data,
+          type: res.succeeded ? "success" : "info",
+        });
+        if (res.succeeded) {
+          router.back();
+        }
+      })
+      .catch((e) => {});
   }
 }
-
 </script>
 <template>
-  <com-background 
+  <com-background
     v-if="mode !== 'view'"
     name="background-setting"
     :bg-change-color="false"
     :bg-style-content="''"
     :bg-default-size="false"
   >
-    <detail-title 
+    <detail-title
       :mode="mode"
       :status="status"
       :title-value="projectName"
@@ -194,35 +200,33 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
       <div class="container flex__column">
         <div>
           <div class="flex__row mt5 flex-wrap">
-            <label class="demo__label text-center">
-              演示地址
-            </label>
+            <label class="demo__label text-center"> 演示地址 </label>
             <div class="flex1">
               <com-form-input
                 class="demo__input"
                 width="625"
-                v-model="formData.playLink" 
+                v-model="formData.playLink"
                 placeholder="演示地址"
                 :is-label="false"
               ></com-form-input>
             </div>
           </div>
           <div class="flex__row my2">
-            <label>
-              项目开始时间
-            </label>
-            <input type="date" v-model="formData.startTime" :min="startMinTime" />
+            <label> 项目开始时间 </label>
+            <input
+              type="date"
+              v-model="formData.startTime"
+              :min="startMinTime"
+            />
           </div>
           <div class="flex__row my2">
-            <label>
-              项目结束时间
-            </label>
+            <label> 项目结束时间 </label>
             <input type="date" v-model="formData.endTime" :min="endMinTime" />
           </div>
           <div class="flex__row my2">
             <label class="stack__label flex__center">技术栈</label>
             <!-- <div class="stack flex__center">+</div> -->
-            <com-tech-stack 
+            <com-tech-stack
               :data-list="list"
               mode="add"
               @update="handleStackListChange"
@@ -244,7 +248,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
                 width="100"
                 :is-label="false"
                 placeholder="请输入排序"
-                v-model="formData.sort" 
+                v-model="formData.sort"
                 type="number"
               ></com-form-input>
             </div>
@@ -252,11 +256,11 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
           <div class="flex__row--start my3 flex-wrap">
             <label>概述</label>
             <div class="flex1">
-              <com-form-input 
+              <com-form-input
                 class="detail__textarea"
                 :is-label="false"
                 placeholder="请输入概述"
-                v-model="formData.summary" 
+                v-model="formData.summary"
                 type="textarea"
               ></com-form-input>
             </div>
@@ -264,11 +268,11 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
           <div class="flex__row--start my3 flex-wrap">
             <label>介绍</label>
             <div class="flex1">
-              <com-form-input 
+              <com-form-input
                 class="detail__textarea"
                 :is-label="false"
                 placeholder="请输入介绍"
-                v-model="formData.description" 
+                v-model="formData.description"
                 type="textarea"
               ></com-form-input>
             </div>
@@ -276,11 +280,11 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
           <div class="flex__row--start my3">
             <label>负责部分</label>
             <div class="flex1">
-              <com-form-input 
+              <com-form-input
                 class="detail__textarea"
                 placeholder="请输入负责部分"
                 :is-label="false"
-                v-model="formData.department" 
+                v-model="formData.department"
                 type="textarea"
               ></com-form-input>
             </div>
@@ -322,7 +326,7 @@ function handleSubmit(val: DetailTitle.Action, title: string) {
   height: 70px;
   background-color: var(--white-color);
   border-radius: 10px;
-  text-indent: 1.5em!important;
+  text-indent: 1.5em !important;
 }
 
 label {
