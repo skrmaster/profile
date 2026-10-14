@@ -75,7 +75,7 @@ function handleAvatarJump() {}
 <template>
   <div>
     <div class="navigation--small px1">
-      <div class="avatar__gap" @click="handleAvatarJump">
+      <div v-show="false" class="avatar__gap" @click="handleAvatarJump">
         <com-avatar
           :avatar-url="tempUserInfo?.avatar"
           :nickname="
